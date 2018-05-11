@@ -5,6 +5,7 @@ wisatawanController.getCurrentUserId = () => {
     return authController.getAuthId
 }
 
+// Create User
 wisatawanController.createUser = (req, res) => {
     var username = req.body.username,
         email = req.body.email;
@@ -35,6 +36,7 @@ wisatawanController.createUser = (req, res) => {
     }
 }
 
+// Get semua User
 wisatawanController.getUser = (req, res) => {
     req.getConnection(function(err,connection){
         connection.query('SELECT * FROM user',function(err,rows){
@@ -55,16 +57,18 @@ wisatawanController.getUser = (req, res) => {
     });
 }
 
+// Get user dengan ID
 wisatawanController.getUserById = (req, res) => {
-    var a = req.params.id
+    var user_id = req.params.id
     var query = 'SELECT * FROM user WHERE user_id = ?'
     req.getConnection(function (err, conn) {
-        conn.query(query, a, function (err, rows) {
+        conn.query(query, user_id, function (err, rows) {
             res.json(rows)
         })
     })
 }
 
+// Update informasi User
 wisatawanController.updateUserById = (req, res) => {
     var user_id = req.params.id;
     var username = req.body.username,
@@ -93,6 +97,27 @@ wisatawanController.updateUserById = (req, res) => {
     });
     }
     
+}
+//Delete user
+wisatawanController.deleteUserById = (req, res) => {
+    var user_id = req.params.id;
+    var queryDeleteUserById = 'DELETE FROM user WHERE user_id = ?';
+    if(req.body.role != 'Admin') {
+        res.status(403).json({status:403,message:"Forbidden Access"});
+    } else {
+      req.getConnection(function(err,connection){
+        connection.query(queryDeleteUserById,[user_id],function(err,results){
+            if(err)
+              console.log("Error Selecting : %s ", err);
+            else if(results.length){
+              res.status(404).json({ message: 'User ID not Found' });
+            }
+            else{
+              res.status(200).json({ message: 'Success Delete User' });   
+            }
+        });
+    });
+    }    
 }
 
 
