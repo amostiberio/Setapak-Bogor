@@ -1,6 +1,10 @@
 var wisatawanController = {}
 var authController = require("./authControllers")
-// cie coba 
+
+wisatawanController.getCurrentUserId = () => {
+    return authController.getAuthId
+}
+
 wisatawanController.createUser = (req, res) => {
     var username = req.body.username,
         email = req.body.email;
