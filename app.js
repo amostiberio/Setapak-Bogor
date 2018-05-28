@@ -2,11 +2,14 @@ var express = require('express')
 var app = express()
 var mysql = require('mysql')
 var api = require('./routes/api')
-// var userRouter = require('./routes/userRouter')
+
 var index = require('./routes/index')
 var cors = require('cors')
 var passport = require('passport')
 var jwt = require('jsonwebtoken')
+var multer = require('multer');
+var path = require('path');
+
 app.set('view engine', 'ejs')
 var myConnection  = require('express-myconnection')
 var config = require('./config')
@@ -56,6 +59,7 @@ var session = require('express-session');
 //     cookie: { maxAge: 60000 }
 // }))
 
+// Default Api Awal
 app.use('/api', api())
 // app.use('/user', userRouter())
 
