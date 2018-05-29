@@ -115,9 +115,7 @@ homestayController.getPemanduHomestay = (req, res) => {
 				    });
 	            }
 	    	});
-	    });
-
-	    
+	    });  
     }
 }
 

@@ -6,6 +6,8 @@ var router = require('express').Router()
 var wisatawanController = require('../controllers/wisatawanControllers');
 var produkController = require('../controllers/produkControllers');
 var homestayController = require('../controllers/homestayControllers');
+var transaksiController = require('../controllers/transaksiControllers');
+var historyController = require('../controllers/historyControllers');
 
 var APIRoutes = function () {
 
@@ -25,9 +27,9 @@ var APIRoutes = function () {
 
     // Router Homestay
     //router.get('/homestay',homestayController.getAllHomestay);
-    router.get('/homestay',homestayController.getPemanduHomestay);
-    router.get('/homestay/:homestay_id',homestayController.getOneHomestay);
+    router.get('/homestay',homestayController.getPemanduHomestay); //belum kelar
     router.post('/homestay/add',homestayController.addHomestay);
+    router.get('/homestay/:homestay_id',homestayController.getOneHomestay);   
     router.post('/homestay/update/:homestay_id',homestayController.updateHomestay);
     router.post('/homestay/delete/:homestay_id',homestayController.deleteHomestay);
     router.post('/homestay/uploadphoto/:homestay_id',homestayController.uploadPhoto);
@@ -41,6 +43,14 @@ var APIRoutes = function () {
     router.post('/produks/update/:id',produkController.updateProdukById);
     router.post('/produks/delete/:id',produkController.deleteProdukById);
 
+    // Router Transaksi
+    router.post('/transaksi/pesanHomestay/:homestay_id',transaksiController.pesanHomestay);
+    router.post('/transaksi/verify/:transaction_id',transaksiController.verifikasiTransaksi);
+    router.post('/transaksi/cancel/:transaction_id',transaksiController.cancelTransaksibyUser);
+
+     // Router Transaksi
+    router.get('/history',historyController.getAllUserHistoryTransactions);
+    router.get('/historyByCategory/:category',historyController.getUserHistoryTransactionsByCategory);
 
     return router;
 };

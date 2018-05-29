@@ -17,6 +17,10 @@ var token;
         "role": "user",
         "photo": ""
 }
+
+data user login :amostiberio@gmail.com dontbenoise13
+emielkautsar@gmail.com kautsaremiel
+
 */
 wisatawanController.getCurrentUserId = () => {
     return authController.getAuthId
