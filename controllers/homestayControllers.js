@@ -58,9 +58,9 @@ homestayController.getOneHomestay = (req, res) => {
 
 // Get All Homestay Satu Pemandu //router = api/homestay
 homestayController.getPemanduHomestay = (req, res) => {
-	var token = req.headers.authorization,
-     	decodedToken = shortcutFunction.decodeToken(token),   
-     	user_id = decodedToken.user_id 	
+	var token = req.headers.authorization,     
+        payload = shortcutFunction.authToken(token),        
+        user_id = payload.user_id 	
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     }else{
@@ -133,9 +133,9 @@ homestayController.addHomestay = (req, res) => {
     	provinsi = req.body.provinsi,
     	kabupaten = req.body.kabupaten,
     	kecamatan = req.body.kecamatan
-    var token = req.headers.authorization,
-     	decodedToken = shortcutFunction.decodeToken(token),   
-     	user_id = decodedToken.user_id 	
+    var token = req.headers.authorization,     
+        payload = shortcutFunction.authToken(token),        
+        user_id = payload.user_id  	
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     } else {	
@@ -208,9 +208,9 @@ homestayController.updateHomestay = (req, res) => {
     var	provinsi = req.body.provinsi,
     	kabupaten = req.body.kabupaten,
     	kecamatan = req.body.kecamatan
-    var token = req.headers.authorization,
-     	decodedToken = shortcutFunction.decodeToken(token),   
-     	user_id = decodedToken.user_id 	
+  	var token = req.headers.authorization,     
+        payload = shortcutFunction.authToken(token),        
+        user_id = payload.user_id  	
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     } else {	  
@@ -277,9 +277,9 @@ homestayController.updateHomestay = (req, res) => {
 // Add Homestay //route = api/homestay/delete/:homestay_id
 homestayController.deleteHomestay = (req, res) => {
     var homestay_id = req.params.homestay_id
-    var token = req.headers.authorization,
-     	decodedToken = shortcutFunction.decodeToken(token),   
-     	user_id = decodedToken.user_id 
+    var token = req.headers.authorization,     
+        payload = shortcutFunction.authToken(token),        
+        user_id = payload.user_id  
     var queryPemandu = 'SELECT * FROM pemandu WHERE user_id = ?'
 	var queryHomestay= 'SELECT * FROM homestay WHERE homestay_id = ?'
 	var queryDeleteHomestay = 'DELETE FROM homestay WHERE homestay_id = ?'
@@ -405,9 +405,9 @@ homestayController.uploadPhoto = async (req, res) => {
     	 res.status(400).json({ status:false, message: 'Data Incomplete' });
     } else { 
       var homestay_id = req.params.homestay_id
-      var token = req.headers.authorization
-      var decodedToken = shortcutFunction.decodeToken(token)   
-      var user_id = decodedToken.user_id
+      var token = req.headers.authorization,     
+	      payload = shortcutFunction.authToken(token),        
+	      user_id = payload.user_id 
       var queryPemandu = 'SELECT * FROM pemandu WHERE user_id = ?'
       var queryHomestay = 'SELECT * FROM homestay WHERE homestay_id = ?'
       var newNameUpload;

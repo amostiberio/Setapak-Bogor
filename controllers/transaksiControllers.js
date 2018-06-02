@@ -24,9 +24,9 @@ transaksiController.pesanHomestay = (req, res) => {
    		jumlah = req.body.jumlah
    		type = 'Homestay'
    	var transaction_status = '0' // belum di konfirmasi pemandu
-    var token = req.headers.authorization,
-     	decodedToken = shortcutFunction.decodeToken(token),   
-     	user_id = decodedToken.user_id 	
+    var token = req.headers.authorization,     
+        payload = shortcutFunction.authToken(token),        
+        user_id = payload.user_id   	
     var queryHomestay = 'SELECT * FROM homestay WHERE homestay_id = ?'
     var queryPemandu = 'SELECT * FROM pemandu WHERE user_id = ?' 
     var queryAddTransaksi = 'INSERT INTO transactions SET type = ?, pemandu_id = ? , user_id = ? , produk_id = ?, jumlah = ? ,transaction_date = ?, transaction_status = ?'
@@ -70,9 +70,9 @@ transaksiController.pesanHomestay = (req, res) => {
 // Verifkasi transaksi homestay  //route = api/transaksi/verifikasi/:transaction_id
 // Verifikasi ini dilakukan oleh pemandu
 transaksiController.verifikasiTransaksi = (req, res) => {
-	var token = req.headers.authorization,
-	    decodedToken = shortcutFunction.decodeToken(token),   
-	    user_id = decodedToken.user_id
+	var token = req.headers.authorization,     
+        payload = shortcutFunction.authToken(token),        
+        user_id = payload.user_id 
 	var transaction_id = req.params.transaction_id
 	var queryPemandu = "SELECT * FROM pemandu WHERE user_id = ?"		
 	var queryUpdateVerify = "UPDATE transactions SET transaction_status = ?"
@@ -111,9 +111,9 @@ transaksiController.verifikasiTransaksi = (req, res) => {
 // Cancel transaksi  //route = api/transaksi/cancel/:transaction_id
 // Cancel ini dilakukan oleh user
 transaksiController.cancelTransaksibyUser = (req, res) => {
-	var token = req.headers.authorization,
-	    decodedToken = shortcutFunction.decodeToken(token),   
-	    user_id = decodedToken.user_id
+	var token = req.headers.authorization,     
+        payload = shortcutFunction.authToken(token),        
+        user_id = payload.user_id 
 	var transaction_id = req.params.transaction_id
 	var queryTransaksi = "SELECT * FROM transactions WHERE transaction_id = ?"
 	var queryCancelTransaksi = "DELETE FROM transactions WHERE transaction_id = ?"

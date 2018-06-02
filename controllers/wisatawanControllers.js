@@ -145,16 +145,16 @@ wisatawanController.getUserProfile = (req, res) => {
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     }else{
-      var token = req.headers.authorization
-      var decodedToken = shortcutFunction.decodeToken(token)   
-      var user_id = decodedToken.user_id
+      var token = req.headers.authorization     
+      var payload = shortcutFunction.authToken(token)        
+      var user_id = payload.user_id         
       var query = 'SELECT * FROM user WHERE user_id = ?'
-      req.getConnection(function (err, conn) {
-          conn.query(query, user_id, function (err, rows) {
+          req.getConnection(function (err, conn) {
+            conn.query(query, user_id, function (err, rows) {
               res.json(rows)
+              })
           })
-      })
-    }
+        } 
 }
 
 // Update informasi Profile /route = api/user/editprofile
@@ -162,9 +162,9 @@ wisatawanController.updateProfileUserById = (req, res) => {
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     } else {
-        var token = req.headers.authorization
-        var decodedToken = shortcutFunction.decodeToken(token)   
-        var user_id = decodedToken.user_id      
+        var token = req.headers.authorization     
+        var payload = shortcutFunction.authToken(token)        
+        var user_id = payload.user_id    
        
         if(!req.body.email||!req.body.nama||!req.body.alamat||!req.body.no_hp) {
             res.status(400).json({status: false, message: 'Data Incomplete'});
@@ -195,9 +195,9 @@ wisatawanController.changePasswordUserById = (req, res) => {
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     } else {
-        var token = req.headers.authorization
-        var decodedToken = shortcutFunction.decodeToken(token)   
-        var user_id = decodedToken.user_id
+        var token = req.headers.authorization     
+        var payload = shortcutFunction.authToken(token)        
+        var user_id = payload.user_id  
         var queryCheckPassword = 'SELECT * FROM user WHERE user_id = ?'             
         req.getConnection(function(err,connection){
           connection.query(queryCheckPassword,[user_id],function(err,rows){              
@@ -250,9 +250,9 @@ wisatawanController.uploadPhoto = async (req, res) => {
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     } else {
-      var token = req.headers.authorization
-      var decodedToken = shortcutFunction.decodeToken(token)   
-      var user_id = decodedToken.user_id
+      var token = req.headers.authorization     
+      var payload = shortcutFunction.authToken(token)        
+      var user_id = payload.user_id  
       var newNameUpload;
       var direktori = './public/uploads/userphoto/';
 

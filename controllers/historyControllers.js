@@ -18,9 +18,9 @@ var token;
 */ 
 
 historyController.getAllUserHistoryTransactions = (req, res) => {
-	var token = req.headers.authorization,
-     	decodedToken = shortcutFunction.decodeToken(token),   
-     	user_id = decodedToken.user_id 	
+	var token = req.headers.authorization,     
+        payload = shortcutFunction.authToken(token),        
+        user_id = payload.user_id  	
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     }else{
@@ -39,9 +39,9 @@ historyController.getAllUserHistoryTransactions = (req, res) => {
 
 
 historyController.getUserHistoryTransactionsByCategory = (req, res) => {
-	var token = req.headers.authorization,
-     	decodedToken = shortcutFunction.decodeToken(token),   
-     	user_id = decodedToken.user_id
+	var token = req.headers.authorization,     
+        payload = shortcutFunction.authToken(token),        
+        user_id = payload.user_id 
     var category = req.params.category //HM PD JS
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});

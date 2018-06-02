@@ -1,12 +1,20 @@
 var jwt = require('jsonwebtoken');
+var secret = require('./../settings/jwt').secret
 
 var shortcutFunction = {}
 
-shortcutFunction.decodeToken = (token) => {
-    var decoded_token = jwt.decode(token)
-    return decoded_token
+
+shortcutFunction.authToken = (token) => {
+	var valid;
+    var payload = jwt.decode(token)
+    var header = payload.header	
+    valid = jwt.verify(token, secret, header);
+	  if (!valid){
+	  	res.status(400).json({status: false, message: 'Please Login'});
+	  }else{
+	  	return payload
+	  }
+
 }
-// let decoded = jwt.decode(req.headers.authorization.split(' ')[1]);
-// let penulis = decoded._id;
 
 module.exports = shortcutFunction
