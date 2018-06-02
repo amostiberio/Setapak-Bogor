@@ -79,7 +79,7 @@ homestayController.getPemanduHomestay = (req, res) => {
 				    	connection.query(querySelectHomestay,[pemandu_id],function(err,rows){ //get data Homestay 
 				    	  	if(err)
 				               console.log("Error Selecting : %s ", err);
-				            if(rows.length){
+				            if(rows.length){				            	
 				            	res.status(200).json({status: true, message: 'Select Homestay', data: rows});
 					         //    	var objs = []
 					         //    	for (var i = 0; i < rows.length; i++) {			

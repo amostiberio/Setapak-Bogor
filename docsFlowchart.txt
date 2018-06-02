@@ -1,0 +1,42 @@
+ - Transaksi Penjualan Produk Barang
+	Pilih barang  
+	Beli barang (jumlah barang)
+	summary
+	metode pembayaran
+	user bayar (24jam) (0 = user belum bayar)
+	upload bukti pembayaran
+	konfirmasi admin pembayaran (1= user sudah bayar + upload resi)
+	Sistem ngasih tau penjual ada transaksi barang
+	penjual upload resi
+	admin validasi resi (2 = Pemandu sudah kirim barang + upload resi)
+	user konfirmasi penerimaan barang (3 = User sudah menerima barang)
+	admin transfer ke pemandu (4 = Admin sudah transfer uang ke pemandu + transaksi selesai)
+
+
+ - Transaksi Penjualan Produk Jasa
+	Pilih jasa  
+	Pesan jasa (tipe slot , max 3 slot dari pemandu. (Slot diberikan informasi jam pemandu bisa memberikan jasa di deskripsi))
+	Summary
+	metode pembayaran
+	user bayar (24jam) ( status 0 = user belum bayar)
+	upload bukti pembayaran 
+	konfirmasi admin pembayaran (status 1= user sudah bayar + upload resi)
+	Sistem ngasih tau penjual ada transaksi jasa
+	user konfirmasi Jasa sudah dipakai (status 2 = User sudah menerima barang)
+	admin transfer ke pemandu (status 3 = Admin sudah transfer uang ke pemandu + transaksi selesai)
+
+ - Transaksi Penjualan Produk Homestay
+	Pilih homestay  
+	Pesan homestay (checkin + check out)
+	Summary
+	metode pembayaran
+	user bayar (24jam) (status 0 = user belum bayar)
+	upload bukti pembayaran 
+	konfirmasi admin pembayaran (status 1 = user sudah bayar + upload resi)
+	Sistem ngasih tau penjual ada transaksi homestay
+	user konfirmasi homestay sudah dipakai (status 2 = User sudah menerima barang)
+	admin transfer ke pemandu (status 3 = Admin sudah transfer uang ke pemandu + transaksi selesai)
+
+
+atribut picture sudah dimasukin ke Entitas sendiri yaitu data Pictures
+setiap ada input picture dimasukan ke situ dan cara mengenali nya dengan tipe produk (Homestay,Jasa,Barang,User,Artikel)

@@ -14,7 +14,8 @@ var token;
 	JS = Jasa
 	HM = Homestay
 	PD = Produk 
-*/
+
+*/ 
 
 historyController.getAllUserHistoryTransactions = (req, res) => {
 	var token = req.headers.authorization,
@@ -41,7 +42,7 @@ historyController.getUserHistoryTransactionsByCategory = (req, res) => {
 	var token = req.headers.authorization,
      	decodedToken = shortcutFunction.decodeToken(token),   
      	user_id = decodedToken.user_id
-    var category = req.params.category
+    var category = req.params.category //HM PD JS
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     }else{
