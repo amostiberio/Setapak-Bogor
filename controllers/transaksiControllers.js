@@ -106,7 +106,7 @@ transaksiController.verifikasiTransaksi = (req, res) => {
 			}
 		});
 	});
-} //
+}
 
 // Cancel transaksi  //route = api/transaksi/cancel/:transaction_id
 // Cancel ini dilakukan oleh user
