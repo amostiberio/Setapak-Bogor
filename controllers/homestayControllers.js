@@ -56,14 +56,13 @@ homestayController.getOneHomestay = (req, res) => {
 	    });
 }
 
-// Get All Homestay Satu Pemandu //router = api/homestay/:pemandu_id
+// Get All Homestay Satu Pemandu //router = api/homestay/pemandu/:pemandu_id
 homestayController.getPemanduHomestay = (req, res) => {		
    		var pemandu_id = req.params.pemandu_id    	
     	var querySelectPemandu  = 'SELECT * FROM pemandu WHERE pemandu_id = ?'
-    	var querySelectHomestay  = 'SELECT * FROM homestay WHERE pemandu_id = ?'
+    	var querySelectHomestay  = 'SELECT * FROM homestay WHERE pemandu_id = ? AND status_avail = ? '
     	var querySelectFasilitas = 'SELECT * FROM fasilitas WHERE fasilitas_id = ?';
-    	var querySelectAlamatCategory = 'SELECT * FROM alamatcategory WHERE alamatcategory_id = ?';
-	   	
+    	var querySelectAlamatCategory = 'SELECT * FROM alamatcategory WHERE alamatcategory_id = ?';	   	
 	    req.getConnection(function(err,connection){
 	    	connection.query(querySelectPemandu,[pemandu_id],function(err,rows){ //get pemandu id
 	    	  	if(err)
@@ -71,21 +70,60 @@ homestayController.getPemanduHomestay = (req, res) => {
 	            if(rows.length){
 	            	var data_pemandu = rows[0]	            	
 	            	var nama_company = data_pemandu.nama_company
+	            	var status_avail = 1
+	            	req.getConnection(function(err,connection){
+				    	connection.query(querySelectHomestay,[pemandu_id,status_avail],function(err,rows){ //get data Homestay 
+				    	  	if(err)
+				               console.log("Error Selecting : %s ", err);
+				            if(rows.length){	            	
+				            	res.status(200).json({status: true, message: 'Data Homestay untuk Pemandu',nama : nama_company, data: rows});					      
+				            }else{
+				            	res.status(401).json({status: false, message: 'Homestay dari Pemandu ini  tidak ada yang Available'});
+
+				            }
+				    	});
+				    });
+	            }
+	    	});
+	    });   
+}
+
+// Get All Homestayku sebagai Pemandu //router = api/pemandu/homestay/all
+homestayController.getHomestayKu = (req, res) => {		    	
+    	var querySelectPemandu  = 'SELECT * FROM pemandu WHERE user_id = ?'
+    	var querySelectHomestay  = 'SELECT * FROM homestay WHERE pemandu_id = ?'
+    	var querySelectFasilitas = 'SELECT * FROM fasilitas WHERE fasilitas_id = ?';
+    	var querySelectAlamatCategory = 'SELECT * FROM alamatcategory WHERE alamatcategory_id = ? AND status_avail = ?';
+
+	   	var token = req.headers.authorization,     
+        payload = shortcutFunction.authToken(token),        
+        user_id = payload.user_id  	
+	    if(!req.headers.authorization) {
+	        res.status(401).json({status: false, message: 'Please Login !'});
+	    }else{
+	    req.getConnection(function(err,connection){
+	    	connection.query(querySelectPemandu,[user_id],function(err,rows){ //get pemandu id
+	    	  	if(err)
+	               console.log("Error Selecting : %s ", err);
+	            if(rows.length){
+	            	var data_pemandu = rows[0]	            	
+	            	var nama_company = data_pemandu.nama_company
+	            	var pemandu_id = data_pemandu.pemandu_id
 	            	req.getConnection(function(err,connection){
 				    	connection.query(querySelectHomestay,[pemandu_id],function(err,rows){ //get data Homestay 
 				    	  	if(err)
 				               console.log("Error Selecting : %s ", err);
-				            if(rows.length){
-				            // var tanggal = new Date('rows[0].tanggal_startavail') with getMonth(), getFullYear(),  and getDate()
-				            // 		console.log(tanggal)	            	
+				            if(rows.length){	            	
 				            	res.status(200).json({status: true, message: 'Data Homestay untuk Pemandu',nama : nama_company, data: rows});					      
+				            }else{
+				            	res.status(401).json({status: false, message: 'Belum ada Homestay dari Pemandu ini '});
 				            }
 				    	});
 				    });
 	            }
 	    	});
 	    });  
-    
+	    } 
 }
 
 // Add Homestay //route = api/homestay/add
@@ -152,8 +190,7 @@ homestayController.addHomestay = (req, res) => {
 					          		});		                    	  
 			                }          
 		                });  
-		          		});
-	                
+		          		});	                
 	              }
 	           } else {
 	              res.status(400).json({status: false, message: 'Pemandu belum terdaftar, silahkan daftar menjadi pemandu terlebih dahulu'});
@@ -162,6 +199,7 @@ homestayController.addHomestay = (req, res) => {
 	    });
     }    
 }
+
 // Update Homestay //route = api/homestay/update
 homestayController.updateHomestay = (req, res) => {
 	var homestay_id = req.params.homestay_id

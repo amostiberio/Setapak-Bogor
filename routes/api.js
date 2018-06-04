@@ -26,28 +26,32 @@ var APIRoutes = function () {
     // router.post('/user/delete/:id',wisatawanControllers.deleteUserById);
     // router.post('/user/create',wisatawanControllers.createUser);
 
-    // Router Homestay
-      
+    // Router Homestay // 
+    //kurang //view category , sort  
     router.get('/homestay/:homestay_id',homestayController.getOneHomestay);
     router.post('/homestay/search',homestayController.searchHomestay);
-    router.get('/homestay/pemandu/:pemandu_id',homestayController.getPemanduHomestay);   
-    router.post('/homestay/pemandu/add',homestayController.addHomestay); 
-    router.post('/homestay/pemandu/update/:homestay_id',homestayController.updateHomestay);
-    router.post('/homestay/pemandu/delete/:homestay_id',homestayController.deleteHomestay);
-    router.post('/homestay/pemandu/uploadphoto/:homestay_id',homestayController.uploadPhoto);
-    
-
-    //view category , sort
-    //
+    router.get('/homestay/pemandu/:pemandu_id',homestayController.getPemanduHomestay); //view punya orang
+        //pemandu//
+    router.get('/pemandu/homestay/all',homestayController.getHomestayKu); //view punya sendiri sebagai pemandu
+    router.post('/pemandu/homestay/add',homestayController.addHomestay); 
+    router.post('/pemandu/homestay/update/:homestay_id',homestayController.updateHomestay);
+    router.post('/pemandu/homestay/delete/:homestay_id',homestayController.deleteHomestay);
+    router.post('/pemandu/homestay/uploadphoto/:homestay_id',homestayController.uploadPhoto);
 
     // Router Transaksi Homestay
-    router.post('/transaksiHomestay/pesanHomestay/:homestay_id',transaksiHomestayController.pesanHomestay);
-    router.post('/transaksiHomestay/verify/:transaction_id',transaksiHomestayController.verifikasiTransaksi);
-    router.post('/transaksiHomestay/cancel/:transaction_id',transaksiHomestayController.cancelTransaksibyUser);
+    router.post('/transaksiHomestay/user/pesanHomestay/:homestay_id',transaksiHomestayController.pesanHomestay);
+    router.get('/transaksiHomestay/pemandu/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSedangDipakai); //status 2
+    router.get('/transaksiHomestay/user/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSelesaiDipakai); //status 3
+    router.get('/transaksiHomestay/user/cancel/:transaction_id',transaksiHomestayController.cancelTransaksibyUser);
 
-     // Router Transaksi
+     // Router History
     router.get('/history',historyController.getAllUserHistoryTransactions);
     router.get('/historyByCategory/:category',historyController.getUserHistoryTransactionsByCategory);
+
+    // Router Upload
+
+    router.post('/user/upload/buktipembayaran/homestay/:homestay_id',uploadController.buktiPembayaranHomestay);
+
 
      // Router Produk
     router.get('/produks',produkController.getProduk);    
@@ -57,8 +61,8 @@ var APIRoutes = function () {
     router.post('/produks/delete/:id',produkController.deleteProdukById);
 
     // Router Testing function
-
     router.post('/testing',testingController.test);
+
     return router;
 };
 

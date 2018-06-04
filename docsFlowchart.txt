@@ -34,8 +34,8 @@
 	upload bukti pembayaran 
 	konfirmasi admin pembayaran (status 1 = user sudah bayar + upload  upload bukti pembayaran)
 	Sistem ngasih tau penjual ada transaksi homestay
-	pemandu konfirmasi homestay sedang dipakai (status 2 = jasa sedang dilakukan[actor :pemandu])
-	user konfirmasi homestay sudah dipakai (status 3 = User sudah menerima barang[ actor :user, userKonfirmasiHomestayEnd])
+	- pemandu konfirmasi homestay sedang dipakai (status 2 = jasa sedang dilakukan[actor :pemandu]) //kelar
+	- user konfirmasi homestay sudah dipakai (status 3 = User sudah pakai homestay[ actor :user, userKonfirmasiHomestayEnd]) //kelar
 	admin transfer ke pemandu (status 4 = Admin sudah transfer uang ke pemandu + transaksi selesai)
 
 
@@ -55,7 +55,6 @@ hapus tanggal startavail dan stop avail. ganti jadi status_avail tersedia atau t
 
 
 #jasa
-
 slot di hapus, diganti avail atau enggak
 nanya di transaksi
 sistemnya kayak gojek
