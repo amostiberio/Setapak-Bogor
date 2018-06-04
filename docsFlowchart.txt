@@ -5,25 +5,25 @@
 	metode pembayaran
 	user bayar (24jam) (0 = user belum bayar)
 	upload bukti pembayaran
-	konfirmasi admin pembayaran (1= user sudah bayar + upload resi)
+	konfirmasi admin pembayaran (1= user sudah bayar + upload bukti pembayaran)
 	Sistem ngasih tau penjual ada transaksi barang
 	penjual upload resi
 	admin validasi resi (2 = Pemandu sudah kirim barang + upload resi)
 	user konfirmasi penerimaan barang (3 = User sudah menerima barang)
 	admin transfer ke pemandu (4 = Admin sudah transfer uang ke pemandu + transaksi selesai)
 
-
- - Transaksi Penjualan Produk Jasa
+- Transaksi Penjualan Produk Jasa
 	Pilih jasa  
-	Pesan jasa (tipe slot , max 3 slot dari pemandu. (Slot diberikan informasi jam pemandu bisa memberikan jasa di deskripsi))
+	Pesan jasa (check di database transaksi sudah dibooking atau tidak (pakai status transaksi selesai atau tidak ada))
 	Summary
 	metode pembayaran
-	user bayar (24jam) ( status 0 = user belum bayar)
+	user bayar (24jam) (status 0 = user belum bayar[actor : user])
 	upload bukti pembayaran 
-	konfirmasi admin pembayaran (status 1= user sudah bayar + upload resi)
-	Sistem ngasih tau penjual ada transaksi jasa
-	user konfirmasi Jasa sudah dipakai (status 2 = User sudah menerima barang)
-	admin transfer ke pemandu (status 3 = Admin sudah transfer uang ke pemandu + transaksi selesai)
+	konfirmasi admin pembayaran (status 1 = user sudah bayar + upload  upload bukti pembayaran[actor :admin ])
+	Sistem ngasih tau penjual ada transaksi jasa 
+	pemandu konfirmasi jasa sedang dilakukan (status 2 = jasa sedang dilakukan[actor :pemandu])
+	user konfirmasi Jasa sudah dipakai (status 3 = User sudah selesai menikmati jasa actor: [user])
+	admin transfer ke pemandu (status 4 = Admin sudah transfer uang ke pemandu + transaksi selesai[ actor : admin])
 
  - Transaksi Penjualan Produk Homestay
 	Pilih homestay  
@@ -32,11 +32,32 @@
 	metode pembayaran
 	user bayar (24jam) (status 0 = user belum bayar)
 	upload bukti pembayaran 
-	konfirmasi admin pembayaran (status 1 = user sudah bayar + upload resi)
+	konfirmasi admin pembayaran (status 1 = user sudah bayar + upload  upload bukti pembayaran)
 	Sistem ngasih tau penjual ada transaksi homestay
-	user konfirmasi homestay sudah dipakai (status 2 = User sudah menerima barang)
-	admin transfer ke pemandu (status 3 = Admin sudah transfer uang ke pemandu + transaksi selesai)
+	pemandu konfirmasi homestay sedang dipakai (status 2 = jasa sedang dilakukan[actor :pemandu])
+	user konfirmasi homestay sudah dipakai (status 3 = User sudah menerima barang[ actor :user, userKonfirmasiHomestayEnd])
+	admin transfer ke pemandu (status 4 = Admin sudah transfer uang ke pemandu + transaksi selesai)
 
 
 atribut picture sudah dimasukin ke Entitas sendiri yaitu data Pictures
 setiap ada input picture dimasukan ke situ dan cara mengenali nya dengan tipe produk (Homestay,Jasa,Barang,User,Artikel)
+
+
+status homestay
+(status 0 = user belum bayar)
+(status 1 = user sudah bayar + upload resi)
+(status 2 = User sudah menerima barang)
+(status 3 = Admin sudah transfer uang ke pemandu + transaksi selesai)
+
+#current kerjaan
+transaksi homestay
+hapus tanggal startavail dan stop avail. ganti jadi status_avail tersedia atau tidak tersedia
+
+
+#jasa
+
+slot di hapus, diganti avail atau enggak
+nanya di transaksi
+sistemnya kayak gojek
+
+

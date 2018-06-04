@@ -56,67 +56,36 @@ homestayController.getOneHomestay = (req, res) => {
 	    });
 }
 
-// Get All Homestay Satu Pemandu //router = api/homestay
-homestayController.getPemanduHomestay = (req, res) => {
-	var token = req.headers.authorization,     
-        payload = shortcutFunction.authToken(token),        
-        user_id = payload.user_id 	
-    if(!req.headers.authorization) {
-        res.status(401).json({status: false, message: 'Please Login !'});
-    }else{
-    	var querySelectPemandu  = 'SELECT * FROM pemandu WHERE user_id = ?'
+// Get All Homestay Satu Pemandu //router = api/homestay/:pemandu_id
+homestayController.getPemanduHomestay = (req, res) => {		
+   		var pemandu_id = req.params.pemandu_id    	
+    	var querySelectPemandu  = 'SELECT * FROM pemandu WHERE pemandu_id = ?'
     	var querySelectHomestay  = 'SELECT * FROM homestay WHERE pemandu_id = ?'
     	var querySelectFasilitas = 'SELECT * FROM fasilitas WHERE fasilitas_id = ?';
     	var querySelectAlamatCategory = 'SELECT * FROM alamatcategory WHERE alamatcategory_id = ?';
-	    
+	   	
 	    req.getConnection(function(err,connection){
-	    	connection.query(querySelectPemandu,[user_id],function(err,rows){ //get pemandu id
+	    	connection.query(querySelectPemandu,[pemandu_id],function(err,rows){ //get pemandu id
 	    	  	if(err)
 	               console.log("Error Selecting : %s ", err);
 	            if(rows.length){
-	            	var pemandu_id = rows[0].pemandu_id;
+	            	var data_pemandu = rows[0]	            	
+	            	var nama_company = data_pemandu.nama_company
 	            	req.getConnection(function(err,connection){
 				    	connection.query(querySelectHomestay,[pemandu_id],function(err,rows){ //get data Homestay 
 				    	  	if(err)
 				               console.log("Error Selecting : %s ", err);
-				            if(rows.length){				            	
-				            	res.status(200).json({status: true, message: 'Select Homestay', data: rows});
-					         //    	var objs = []
-					         //    	for (var i = 0; i < rows.length; i++) {			
-					         //    			var fasilitas_id = rows[i].fasilitas_id,
-					         //    				alamatcategory_id = rows[i].alamatcategory_id				            						               		
-					        //        		req.getConnection(function(err,connection){
-				    					// 	connection.query(querySelectFasilitas,[rows[i].fasilitas_id],function(err,fasilitas){
-				    					// 			if(err)
-										   //             console.log("Error Selecting : %s ", err);
-										   //          if(rows.length){
-										   //          	objs.push({
-									    //                    Homestay: rows[i].homestay_id,
-									    //                    pemandu_id: rows[i].pemandu_id,
-									    //                    //fasilitas_id: rows[i].fasilitas_id,
-									    //                    fasilitas : fasilitas[i],
-									    //                    alamatcategory_id: rows[i].alamatcategory_id,
-									    //                    harga_perhari: rows[i].harga_perhari,
-									    //                    deskripsi: rows[i].deskripsi,
-									    //                    alamat: rows[i].alamat
-								     //               		})	  
-										   //          }  								
-				    								
-									    // 	});
-									    // });
-					                    
-					        //        }
-					        //        res.json(objs)
-								
-						
-					               
+				            if(rows.length){
+				            // var tanggal = new Date('rows[0].tanggal_startavail') with getMonth(), getFullYear(),  and getDate()
+				            // 		console.log(tanggal)	            	
+				            	res.status(200).json({status: true, message: 'Data Homestay untuk Pemandu',nama : nama_company, data: rows});					      
 				            }
 				    	});
 				    });
 	            }
 	    	});
 	    });  
-    }
+    
 }
 
 // Add Homestay //route = api/homestay/add

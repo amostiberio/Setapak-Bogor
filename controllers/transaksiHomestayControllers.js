@@ -1,9 +1,11 @@
-var transaksiController = {}
+var transaksiHomestayController = {}
 var secret = require('./settings/jwt').secret
 var shortcutFunction = require('./programs/shortcutFunction')
 var jwt = require('jsonwebtoken');
 var multer = require('multer');
 var path = require('path');
+var moment = require('moment');
+var moment_timezone = require('moment-timezone');
 var token;
 
 
@@ -17,50 +19,62 @@ var token;
 	Produk 
 */
 
-// Add Transaksi Homestay //route = api/transaksi/pesanHomestay/:homestay_id
-transaksiController.pesanHomestay = (req, res) => {
-	var today = new Date();
-   	var homestay_id = req.params.homestay_id,
-   		jumlah = req.body.jumlah
-   		type = 'Homestay'
-   	var transaction_status = '0' // belum di konfirmasi pemandu
-    var token = req.headers.authorization,     
+// Add Transaksi Homestay //route = api/transaksiHomestay/pesanHomestay/:homestay_id
+transaksiHomestayController.pesanHomestay = (req, res) => {
+	var token = req.headers.authorization,     
         payload = shortcutFunction.authToken(token),        
-        user_id = payload.user_id   	
+        user_id = payload.user_id 
+	var today = new Date();	
+   	var homestay_id = req.params.homestay_id,   		
+   		check_in = req.body.check_in,
+   		check_out = req.body.check_out,
+   		jumlah_hari = moment.duration(moment(check_out, "YYYY-MM-DD").diff(moment(check_in, "YYYY-MM-DD"))).asDays(),
+   		transaction_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss')  		
     var queryHomestay = 'SELECT * FROM homestay WHERE homestay_id = ?'
-    var queryPemandu = 'SELECT * FROM pemandu WHERE user_id = ?' 
-    var queryAddTransaksi = 'INSERT INTO transactions SET type = ?, pemandu_id = ? , user_id = ? , produk_id = ?, jumlah = ? ,transaction_date = ?, transaction_status = ?'
+    var queryPemandu = 'SELECT * FROM pemandu WHERE user_id = ?'
+    var queryCheckTransaksi = 'SELECT * FROM transaksi_homestay WHERE homestay_id = ? AND check_in between ? AND ? AND check_out between ? AND ?'
+    var queryAddTransaksi = 'INSERT INTO transaksi_homestay SET  pemandu_id = ? , user_id = ? , homestay_id = ?, check_in = ? , check_out = ?, jumlah_hari = ? ,transaction_date = ?'
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     }else if (!homestay_id){
     	res.status(401).json({status: false, message: 'Something missing (ID Homestay)!'});
-    }else if (jumlah == 0){
-    	res.status(401).json({status: false, message: 'Kuantitas tidak memenuhi syarat'});
+    }else if (jumlah_hari < 1){
+    	res.status(401).json({status: false, message: 'Minimal 1 hari pemesanan, jumlah tidak memenuhi syarat'});
     }else{
     	req.getConnection(function(err,connection){
 	        connection.query(queryHomestay,[homestay_id],function(err,rows){
 		        if(err) console.log("Error Selecting : %s ", err);	
 		        else{
 		        	var pemandu_id = rows[0].pemandu_id
-		        	var produk_id = homestay_id
+		        	var status_avail = rows[0].status_avail 
 		        	req.getConnection(function(err,connection){
 	        			connection.query(queryPemandu,[user_id],function(err,rows){  
 	        				if(err) console.log("Error Selecting : %s ", err); 
 	        				if(pemandu_id == rows[0].pemandu_id ){
 	        					res.status(401).json({status: false, message: 'Pemandu tidak bisa memesan produk sendiri'});
+	        				}else if(status_avail == 0){
+	        					res.status(401).json({status: false, message: 'Homestay sedang tidak tersedia'});
 	        				}else{
 	        					req.getConnection(function(err,connection){
-				       				connection.query(queryAddTransaksi,[type,pemandu_id,user_id,produk_id,jumlah,today,transaction_status],function(err,rows){
-					        	if(err) console.log("Error Selecting : %s ", err);	
-					       		else{					        	
-					        		res.status(200).json({success:true,message: 'Success Transaksi Homestay' });   
-					        	}	        
-						        });
-						    });
+				       				connection.query(queryCheckTransaksi,[homestay_id,check_in,check_out,check_in,check_out],function(err,rows){
+							        	if(err) console.log("Error Selecting : %s ", err);	
+							       		if(rows.length){
+							       			res.status(401).json({status: false, message: 'Homestay Sudah di Booking oleh wisatawan lain pada tanggal yang sama'});
+							       		}else{					        	
+							        		 req.getConnection(function(err,connection){
+							       				connection.query(queryAddTransaksi,[pemandu_id,user_id,homestay_id,check_in,check_out,jumlah_hari,transaction_date],function(err,rows){
+										        	if(err) console.log("Error Selecting : %s ", err);	
+										       		else{					        	
+										        		res.status(200).json({success:true,message: 'Success Transaksi Homestay' });   
+										        	}	        
+									        	});
+									    	});
+					        			}	        
+						        	});
+						    	});
 	        				}
 	        			});
-	    			});   
-		      
+	    			});  
 		        }	        
 	        });
 	    });    
@@ -69,7 +83,7 @@ transaksiController.pesanHomestay = (req, res) => {
 
 // Verifkasi transaksi homestay  //route = api/transaksi/verifikasi/:transaction_id
 // Verifikasi ini dilakukan oleh pemandu
-transaksiController.verifikasiTransaksi = (req, res) => {
+transaksiHomestayController.verifikasiTransaksi = (req, res) => {
 	var token = req.headers.authorization,     
         payload = shortcutFunction.authToken(token),        
         user_id = payload.user_id 
@@ -110,7 +124,7 @@ transaksiController.verifikasiTransaksi = (req, res) => {
 
 // Cancel transaksi  //route = api/transaksi/cancel/:transaction_id
 // Cancel ini dilakukan oleh user
-transaksiController.cancelTransaksibyUser = (req, res) => {
+transaksiHomestayController.cancelTransaksibyUser = (req, res) => {
 	var token = req.headers.authorization,     
         payload = shortcutFunction.authToken(token),        
         user_id = payload.user_id 
@@ -140,4 +154,4 @@ transaksiController.cancelTransaksibyUser = (req, res) => {
     
 
 
-module.exports = transaksiController
+module.exports = transaksiHomestayController
