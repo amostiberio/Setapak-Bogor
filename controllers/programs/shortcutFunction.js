@@ -8,17 +8,18 @@ shortcutFunction.authToken = (token) => {
 
 	var valid;
     var payload = jwt.decode(token)
-    var header = payload.header	
-    valid = jwt.verify(token, secret, header);
+    var bearer = token.split(" ");
+    var splittedToken = bearer[1];   
+    jwt.verify(splittedToken, secret, function(err,results){
+    		if (err){
+                console.log(err);
+                
 
-	  if (!valid){
-	  	res.status(400).json({status: false, message: 'Please Login'});
-	  }else{
-	  	return payload
-	  }
-
-	  
-
+            } else {
+                return payload
+                next();
+            }
+    });
 }
 
 module.exports = shortcutFunction

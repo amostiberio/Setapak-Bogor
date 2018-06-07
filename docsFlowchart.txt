@@ -26,16 +26,16 @@
 	admin transfer ke pemandu (status 4 = Admin sudah transfer uang ke pemandu + transaksi selesai[ actor : admin])
 
  - Transaksi Penjualan Produk Homestay
-	Pilih homestay  
-	Pesan homestay (checkin + check out)
+	- Pilih homestay  
+	- Pesan homestay (checkin + check out)
 	Summary
 	metode pembayaran
-	user bayar (24jam) (status 0 = user belum bayar)
-	upload bukti pembayaran 
-	konfirmasi admin pembayaran (status 1 = user sudah bayar + upload  upload bukti pembayaran)
+	user bayar (48jam) (status 0 = user belum bayar)
+	- upload bukti pembayaran // kelar by amos
+	konfirmasi admin pembayaran (status 1 = user sudah bayar + upload  upload bukti pembayaran) 
 	Sistem ngasih tau penjual ada transaksi homestay
-	- pemandu konfirmasi homestay sedang dipakai (status 2 = jasa sedang dilakukan[actor :pemandu]) //kelar
-	- user konfirmasi homestay sudah dipakai (status 3 = User sudah pakai homestay[ actor :user, userKonfirmasiHomestayEnd]) //kelar
+	- pemandu konfirmasi homestay sedang dipakai (status 2 = jasa sedang dilakukan[actor :pemandu]) //kelar by amos
+	- user konfirmasi homestay sudah dipakai (status 3 = User sudah pakai homestay[ actor :user, userKonfirmasiHomestayEnd]) //kelar by amos
 	admin transfer ke pemandu (status 4 = Admin sudah transfer uang ke pemandu + transaksi selesai)
 
 
@@ -50,8 +50,9 @@ status homestay
 (status 3 = Admin sudah transfer uang ke pemandu + transaksi selesai)
 
 #current kerjaan
-transaksi homestay
-hapus tanggal startavail dan stop avail. ganti jadi status_avail tersedia atau tidak tersedia
+transaksi homestay , hampir selesai
+hapus tanggal startavail dan stop avail. ganti jadi status_avail tersedia atau tidak tersedia #DONE#
+uplaod multiple pictures
 
 
 #jasa

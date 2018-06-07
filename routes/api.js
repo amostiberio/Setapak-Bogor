@@ -9,6 +9,8 @@ var homestayController = require('../controllers/homestayControllers');
 var transaksiHomestayController = require('../controllers/transaksiHomestayControllers');
 var historyController = require('../controllers/historyControllers');
 var testingController = require('../controllers/testingControllers');
+var uploadController = require('../controllers/uploadControllers');
+var notifikasiController = require('../controllers/notifikasiControllers');
 
 var APIRoutes = function () {
 
@@ -21,7 +23,7 @@ var APIRoutes = function () {
     router.post('/user/changepassword',wisatawanController.changePasswordUserById);
     router.post('/user/register',wisatawanController.registerUser);
     router.post('/user/login',wisatawanController.loginUser);
-    router.post('/user/uploadphoto',wisatawanController.uploadPhoto);
+    //router.post('/user/uploadphoto',wisatawanController.uploadPhoto);
     // router.get('/users', wisatawanControllers.getUsers);
     // router.post('/user/delete/:id',wisatawanControllers.deleteUserById);
     // router.post('/user/create',wisatawanControllers.createUser);
@@ -50,10 +52,15 @@ var APIRoutes = function () {
 
     // Router Upload
 
-    router.post('/user/upload/buktipembayaran/homestay/:homestay_id',uploadController.buktiPembayaranHomestay);
+    router.post('/user/upload/buktipembayaran/homestay/:transaction_id',uploadController.buktiPembayaranHomestay);
+    router.post('/user/upload/userphoto',uploadController.userPhoto);
+    router.post('/pemandu/upload/homestay/:homestay_id',uploadController.homestayMultiplePhoto);
 
+    //Router Notifikasi
+    router.get('/notifkasi/get',notifikasiController.getNotfikasi);
+    router.get('/notifkasi/:notifikasi_id',notifikasiController.getNotfikasi);
 
-     // Router Produk
+     // router Produk
     router.get('/produks',produkController.getProduk);    
     router.get('/produks/:id', produkController.getProdukById);
     router.post('/produks/create/:id',produkController.createProduk);
