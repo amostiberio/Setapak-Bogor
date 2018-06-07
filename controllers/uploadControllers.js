@@ -41,7 +41,6 @@ uploadController.buktiPembayaranHomestay = async (req, res) => {
             return res.status(401).send({message: 'invalid_token'});
           }else{
           var user_id = decoded.user_id
-
             var transaction_id = req.params.transaction_id
               // var queryUser = 'SELECT * FROM user WHERE user_id = ?'
               var queryTransaksiHomestay = 'SELECT * FROM transaksi_homestay WHERE transaction_id = ?'

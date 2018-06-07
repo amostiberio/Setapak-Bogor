@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 02, 2018 at 04:20 AM
+-- Generation Time: Jun 07, 2018 at 11:16 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.4
 
@@ -111,6 +111,16 @@ INSERT INTO `barang` (`barang_id`, `pemandu_id`, `nama_barang`, `harga`, `kuanti
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `blacklist`
+--
+
+CREATE TABLE `blacklist` (
+  `token` varchar(1000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fasilitas`
 --
 
@@ -151,20 +161,19 @@ CREATE TABLE `homestay` (
   `alamatcategory_id` int(20) NOT NULL,
   `nama_homestay` varchar(30) NOT NULL,
   `harga_perhari` int(50) NOT NULL,
-  `tanggal_startavail` date NOT NULL,
-  `tanggal_stopavail` date NOT NULL,
   `deskripsi` text NOT NULL,
-  `alamat` varchar(50) NOT NULL
+  `alamat` varchar(50) NOT NULL,
+  `status_avail` varchar(13) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `homestay`
 --
 
-INSERT INTO `homestay` (`homestay_id`, `pemandu_id`, `fasilitas_id`, `alamatcategory_id`, `nama_homestay`, `harga_perhari`, `tanggal_startavail`, `tanggal_stopavail`, `deskripsi`, `alamat`) VALUES
-(1, 1, 9, 17, 'Keray', 20000, '0000-00-00', '0000-00-00', 'Homestay keluar Amos', 'Jl raya dramaga'),
-(2, 1, 10, 17, 'Keraz', 30000, '0000-00-00', '0000-00-00', 'Homestay keluar Amos', 'Jl raya dramaga'),
-(3, 2, 11, 17, 'Homestay ku', 20000, '0000-00-00', '0000-00-00', 'Homestay keluar Emiel', 'Jl raya dramaga');
+INSERT INTO `homestay` (`homestay_id`, `pemandu_id`, `fasilitas_id`, `alamatcategory_id`, `nama_homestay`, `harga_perhari`, `deskripsi`, `alamat`, `status_avail`) VALUES
+(1, 1, 9, 17, 'Keray', 20000, 'Homestay keluar Amos', 'Jl raya dramaga', '1'),
+(2, 1, 10, 17, 'Keraz', 30000, 'Homestay keluar Amos', 'Jl raya dramaga', '0'),
+(3, 2, 11, 17, 'Homestay ku', 20000, 'Homestay keluar Emiel', 'Jl raya dramaga', '0');
 
 -- --------------------------------------------------------
 
@@ -220,8 +229,30 @@ CREATE TABLE `pictures` (
   `picture_id` int(13) NOT NULL,
   `produk_id` int(13) NOT NULL,
   `user_id` int(13) NOT NULL,
-  `tipe_produk` varchar(30) NOT NULL,
+  `kode_tipe` varchar(35) NOT NULL,
   `directory` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `pictures`
+--
+
+INSERT INTO `pictures` (`picture_id`, `produk_id`, `user_id`, `kode_tipe`, `directory`) VALUES
+(3, 3, 24, 'BuktiPembayaranHomestay', './public/uploads/buktipembayaran/homestayBuktiPembayaranHomestay-3.png');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `review_produk`
+--
+
+CREATE TABLE `review_produk` (
+  `review_id` int(13) NOT NULL,
+  `user_id` int(13) NOT NULL,
+  `produk_id` int(13) NOT NULL,
+  `tipe_produk` int(13) NOT NULL,
+  `isi_review` text NOT NULL,
+  `jumlah_star` int(13) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -257,8 +288,8 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`transaction_id`, `pemandu_id`, `user_id`, `produk_id`, `type`, `jumlah`, `transaction_date`, `transaction_status`) VALUES
-(1, 2, 22, '3', '', 1, '2018-05-28 17:19:29', 1),
-(4, 1, 24, '1', 'Homestay', 1, '2018-05-29 16:44:35', 0);
+(1, 2, 22, '3', '', 1, '2018-05-28 17:19:29', 3),
+(4, 1, 24, '1', 'Homestay', 1, '2018-05-29 16:44:35', 3);
 
 -- --------------------------------------------------------
 
@@ -293,15 +324,18 @@ CREATE TABLE `transaksi_homestay` (
   `check_out` datetime NOT NULL,
   `jumlah_hari` int(12) NOT NULL,
   `transaction_date` datetime NOT NULL,
-  `transaction_status` int(11) NOT NULL
+  `transaction_status` int(11) NOT NULL,
+  `notifikasi_status` int(13) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `transaksi_homestay`
 --
 
-INSERT INTO `transaksi_homestay` (`transaction_id`, `pemandu_id`, `user_id`, `homestay_id`, `check_in`, `check_out`, `jumlah_hari`, `transaction_date`, `transaction_status`) VALUES
-(0, 0, 0, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0);
+INSERT INTO `transaksi_homestay` (`transaction_id`, `pemandu_id`, `user_id`, `homestay_id`, `check_in`, `check_out`, `jumlah_hari`, `transaction_date`, `transaction_status`, `notifikasi_status`) VALUES
+(1, 1, 24, 1, '2018-06-03 13:00:00', '2018-06-04 12:00:00', 1, '2018-06-02 17:13:39', 2, 0),
+(2, 1, 24, 1, '2018-06-01 13:00:00', '2018-06-03 12:00:00', 2, '2018-06-04 16:01:05', 1, 0),
+(3, 1, 24, 1, '2018-06-10 13:00:00', '2018-06-12 12:00:00', 2, '2018-06-04 16:15:43', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -344,8 +378,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `email`, `password`, `nama`, `alamat`, `no_hp`, `role`, `photo`) VALUES
 (3, 'admin1@gmail.com', 'adminsetapakbogor', 'Amos Tiberio Sungguraja', 'jl swadaya ix rt 09/01 no 17 jaticempaka pondokgede bekasi 17411', '081289063136', 'admin', ''),
 (22, 'amostiberio@gmail.com', '83a291a32137f869ed9a209d065b6d95', 'Amos Tiberio Sungguraja', 'jl swadaya ix rt 09/01 no 17 jaticempaka pondokgede bekasi 17411', '081289063136', 'user', './public/uploads/userphoto/userPhoto-22.png'),
-(23, 'amostiberiobeatboxer@gmail.com', '83a291a32137f869ed9a209d065b6d95', 'Amos Tiberio Sungguraja', 'jl swadaya ix rt 09/01 no 17 jaticempaka pondokgede bekasi 17411', '081289063136', 'user', ''),
-(24, 'emielkautsar@gmail.com', 'dd1b91becdab78b694efa2f762539156', 'Emiel Kautsar', 'Bogor', '081289063136', 'user', '');
+(24, 'emielkautsar@gmail.com', 'dd1b91becdab78b694efa2f762539156', 'Emiel Kautsar', 'Bogor', '081289063136', 'user', './public/uploads/userphoto/UserPhoto-24-magical_sky_touch_by_qauz-dcbyr4z.jpg.png');
 
 -- --------------------------------------------------------
 
@@ -404,6 +437,12 @@ ALTER TABLE `pictures`
   ADD PRIMARY KEY (`picture_id`);
 
 --
+-- Indexes for table `review_produk`
+--
+ALTER TABLE `review_produk`
+  ADD PRIMARY KEY (`review_id`);
+
+--
 -- Indexes for table `transactionhistory`
 --
 ALTER TABLE `transactionhistory`
@@ -419,6 +458,12 @@ ALTER TABLE `transactions`
 -- Indexes for table `transaksi_barang`
 --
 ALTER TABLE `transaksi_barang`
+  ADD PRIMARY KEY (`transaction_id`);
+
+--
+-- Indexes for table `transaksi_homestay`
+--
+ALTER TABLE `transaksi_homestay`
   ADD PRIMARY KEY (`transaction_id`);
 
 --
@@ -477,7 +522,13 @@ ALTER TABLE `pemandu`
 -- AUTO_INCREMENT for table `pictures`
 --
 ALTER TABLE `pictures`
-  MODIFY `picture_id` int(13) NOT NULL AUTO_INCREMENT;
+  MODIFY `picture_id` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `review_produk`
+--
+ALTER TABLE `review_produk`
+  MODIFY `review_id` int(13) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `transactions`
@@ -490,6 +541,12 @@ ALTER TABLE `transactions`
 --
 ALTER TABLE `transaksi_barang`
   MODIFY `transaction_id` int(13) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `transaksi_homestay`
+--
+ALTER TABLE `transaksi_homestay`
+  MODIFY `transaction_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `transaksi_jasa`

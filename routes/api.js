@@ -10,7 +10,9 @@ var transaksiHomestayController = require('../controllers/transaksiHomestayContr
 var historyController = require('../controllers/historyControllers');
 var testingController = require('../controllers/testingControllers');
 var uploadController = require('../controllers/uploadControllers');
-var notifikasiController = require('../controllers/notifikasiControllers');
+var emailController = require('../controllers/emailControllers');
+
+//var notifikasiController = require('../controllers/notifikasiControllers');
 
 var APIRoutes = function () {
 
@@ -41,10 +43,14 @@ var APIRoutes = function () {
     router.post('/pemandu/homestay/uploadphoto/:homestay_id',homestayController.uploadPhoto);
 
     // Router Transaksi Homestay
+
+   // router.get('/transaksiHomestay/user/historyTransaksiku/:transaction_status',transaksiHomestayController.historyTransaksibyStatus);
     router.post('/transaksiHomestay/user/pesanHomestay/:homestay_id',transaksiHomestayController.pesanHomestay);
     router.get('/transaksiHomestay/pemandu/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSedangDipakai); //status 2
     router.get('/transaksiHomestay/user/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSelesaiDipakai); //status 3
     router.get('/transaksiHomestay/user/cancel/:transaction_id',transaksiHomestayController.cancelTransaksibyUser);
+    router.get('/transaksiHomestay/user/historytransaksiku',transaksiHomestayController.historyku);
+    router.get('/transaksiHomestay/user/historytransaksiku/:status',transaksiHomestayController.historyTransaksibyStatus);
 
      // Router History
     router.get('/history',historyController.getAllUserHistoryTransactions);
@@ -52,13 +58,17 @@ var APIRoutes = function () {
 
     // Router Upload
 
-    router.post('/user/upload/buktipembayaran/homestay/:transaction_id',uploadController.buktiPembayaranHomestay);
+    router.post('/user/upload/buktipembayarbyStatusbyStatusan/homestay/:transaction_id',uploadController.buktiPembayaranHomestay);
     router.post('/user/upload/userphoto',uploadController.userPhoto);
     router.post('/pemandu/upload/homestay/:homestay_id',uploadController.homestayMultiplePhoto);
 
+
+    // Email Controller
+    router.post('/forgetpassword',emailController.forgetPassword);
+    
     //Router Notifikasi
-    router.get('/notifkasi/get',notifikasiController.getNotfikasi);
-    router.get('/notifkasi/:notifikasi_id',notifikasiController.getNotfikasi);
+    //router.get('/notifkasi/get',notifikasiController.getNotfikasi);
+    //router.get('/notifkasi/:notifikasi_id',notifikasiController.getNotfikasi);
 
      // router Produk
     router.get('/produks',produkController.getProduk);    

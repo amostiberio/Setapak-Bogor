@@ -21,6 +21,60 @@ var token;
 	(status 4 = Admin sudah transfer uang ke pemandu + transaksi selesai)
 
 */
+// Get Semua History Transaksi Homestay //route = api/transaksiHomestay/user/historyTransaksi
+transaksiHomestayController.historyku = (req, res) => {
+    if(!req.headers.authorization) {
+        res.status(401).json({status: false, message: 'Please Login !'});
+    }else{
+    	var token = req.headers.authorization    
+		//JWT VERIFY     
+	        jwt.verify(token, secret, function(err, decoded) {
+	        	if(err) {
+	            return res.status(401).send({message: 'invalid_token'});
+	        	}else{
+	        	var user_id = decoded.user_id
+	        	var querySelectTransactions = 'SELECT * FROM transaksi_homestay WHERE user_id = ?'	    
+				    req.getConnection(function(err,connection){
+				    	connection.query(querySelectTransactions,[user_id],function(err,rows){ //get pemandu id
+				    	  	if(err)
+				               console.log("Error Selecting : %s ", err);
+				            if(rows.length){
+				            	res.status(200).json({status: true, message: 'Sukses Ambil Transaksi User', data: rows});	            
+				            }
+				    	});
+				    }); 
+	        	}
+	        }); 
+    }
+}
+
+// Get Semua History Transaksi Homestay berdasarkan status //route = api/transaksiHomestay/user/historyTransaksiku/:transaction_status
+transaksiHomestayController.historyTransaksibyStatus = (req, res) => {
+    if(!req.headers.authorization) {
+        res.status(401).json({status: false, message: 'Please Login !'});
+    }else{
+    	var transaction_status = req.params.status
+    	var token = req.headers.authorization    
+		//JWT VERIFY     
+	        jwt.verify(token, secret, function(err, decoded) {
+	        	if(err) {
+	            return res.status(401).send({message: 'invalid_token'});
+	        	}else{
+	        	var user_id = decoded.user_id
+	        	var querySelectTransactions = 'SELECT * FROM transaksi_homestay WHERE user_id = ? AND transaction_status = ?'	    
+				    req.getConnection(function(err,connection){
+				    	connection.query(querySelectTransactions,[user_id,transaction_status],function(err,rows){ //get pemandu id
+				    	  	if(err)
+				               console.log("Error Selecting : %s ", err);
+				            if(rows.length){
+				            	res.status(200).json({status: true, message: 'Sukses Ambil Transaksi User', data: rows});	            
+				            }
+				    	});
+				    }); 
+	        	}
+	        }); 
+    }
+}
 
 // Add Transaksi Homestay //route = api/transaksiHomestay/pesanHomestay/:homestay_id
 transaksiHomestayController.pesanHomestay = (req, res) => {
@@ -221,7 +275,6 @@ transaksiHomestayController.cancelTransaksibyUser = (req, res) => {
 						});
 			        	}
 			        });
-				
 			}			
 		});
 	});

@@ -6,6 +6,7 @@ var shortcutFunction = {}
 
 shortcutFunction.authToken = (token) => {
 
+	
 	var valid;
     var payload = jwt.decode(token)
     var bearer = token.split(" ");
@@ -13,7 +14,7 @@ shortcutFunction.authToken = (token) => {
     jwt.verify(splittedToken, secret, function(err,results){
     		if (err){
                 console.log(err);
-                
+
 
             } else {
                 return payload

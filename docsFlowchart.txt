@@ -28,8 +28,8 @@
  - Transaksi Penjualan Produk Homestay
 	- Pilih homestay  
 	- Pesan homestay (checkin + check out)
-	Summary
-	metode pembayaran
+	Summary (frontend)
+	metode pembayaran (frontend)
 	user bayar (48jam) (status 0 = user belum bayar)
 	- upload bukti pembayaran // kelar by amos
 	konfirmasi admin pembayaran (status 1 = user sudah bayar + upload  upload bukti pembayaran) 
@@ -51,8 +51,7 @@ status homestay
 
 #current kerjaan
 transaksi homestay , hampir selesai
-hapus tanggal startavail dan stop avail. ganti jadi status_avail tersedia atau tidak tersedia #DONE#
-uplaod multiple pictures
+uplaod multiple pictures //tugas emiel
 
 
 #jasa
