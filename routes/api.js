@@ -4,7 +4,6 @@ var router = require('express').Router()
 
 // var authController = require('../controllers/authControllers');
 var wisatawanController = require('../controllers/wisatawanControllers');
-var produkController = require('../controllers/produkControllers');
 var homestayController = require('../controllers/homestayControllers');
 var jasaController = require('../controllers/jasaControllers');
 var barangController = require('../controllers/barangControllers');
@@ -13,7 +12,6 @@ var transaksiHomestayController = require('../controllers/transaksiHomestayContr
 var transaksiJasaController = require('../controllers/transaksiJasaControllers');
 var transaksiBarangController = require('../controllers/transaksiBarangControllers');
 
-var historyController = require('../controllers/historyControllers');
 var testingController = require('../controllers/testingControllers');
 var uploadController = require('../controllers/uploadControllers');
 var emailController = require('../controllers/emailControllers');
@@ -79,10 +77,7 @@ var APIRoutes = function () {
     router.get('/transaksiBarang/user/historytransaksiku',transaksiBarangController.historyku);
     router.get('/transaksiJasa/user/historytransaksiku/:status',transaksiJasaController.historyTransaksibyStatus);
 
-     // Router History
-    router.get('/history',historyController.getAllUserHistoryTransactions);
-    router.get('/historyByCategory/:category',historyController.getUserHistoryTransactionsByCategory);
-
+    
     // Router Upload
     router.post('/user/upload/buktipembayaran/barang/:transaction_id',uploadController.buktiPembayaranBarang);
     router.post('/user/upload/buktipembayaran/homestay/:transaction_id',uploadController.buktiPembayaranHomestay);
@@ -98,12 +93,6 @@ var APIRoutes = function () {
     //router.get('/notifkasi/get',notifikasiController.getNotfikasi);
     //router.get('/notifkasi/:notifikasi_id',notifikasiController.getNotfikasi);
 
-     // router Produk
-    router.get('/produks',produkController.getProduk);    
-    router.get('/produks/:id', produkController.getProdukById);
-    router.post('/produks/create/:id',produkController.createProduk);
-    router.post('/produks/update/:id',produkController.updateProdukById);
-    router.post('/produks/delete/:id',produkController.deleteProdukById);
 
     // Router Testing function
     router.post('/testing',testingController.test);
