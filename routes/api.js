@@ -39,7 +39,8 @@ var APIRoutes = function () {
     router.get('/homestay/:homestay_id',homestayController.getOneHomestay);
     router.post('/homestay/search',homestayController.searchHomestay);
     router.get('/homestay/pemandu/:pemandu_id',homestayController.getPemanduHomestay); //view punya orang
-        //pemandu//
+        
+    //pemandu//
     router.get('/pemandu/homestay/all',homestayController.getHomestayKu); //view punya sendiri sebagai pemandu
     router.post('/pemandu/homestay/add',homestayController.addHomestay); 
     router.post('/pemandu/homestay/update/:homestay_id',homestayController.updateHomestay);
