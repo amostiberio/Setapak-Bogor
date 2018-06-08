@@ -4,13 +4,13 @@
 	summary(frontend)
 	metode pembayaran (frontend)
 	user bayar (24jam) (0 = user belum bayar)
-	upload bukti pembayaran (1 = user sudah bayar +upload bukti pembayaran)
+	- upload bukti pembayaran (1 = user sudah bayar +upload bukti pembayaran)
 	konfirmasi admin pembayaran (2= pembayaran valid)
 	Sistem ngasih tau penjual ada transaksi barang
-	penjual upload resi
-	admin validasi resi (3 = Pemandu sudah kirim barang + upload resi)
-	- user konfirmasi penerimaan barang (4 = User sudah menerima barang)
-	admin transfer ke pemandu (5 = Admin sudah transfer uang ke pemandu + transaksi selesai)
+	penjual upload resi (3 = Pemandu sudah kirim barang + upload resi)
+	admin validasi resi (4 = Resi Valid)
+	- user konfirmasi penerimaan barang (5 = User sudah menerima barang)
+	admin transfer ke pemandu (6 = Admin sudah transfer uang ke pemandu + transaksi selesai)
 
 - Transaksi Penjualan Produk Jasa
 	- Pilih , View jasa  
@@ -38,7 +38,7 @@
 	- user konfirmasi homestay sudah dipakai (status 4 = User sudah pakai homestay[ actor :user, userKonfirmasiHomestayEnd]) //kelar by amos
 	admin transfer ke pemandu (status 5 = Admin sudah transfer uang ke pemandu + transaksi selesai)
 
-note : tanda '-' artinya sudah dikerjain
+note : tanda '-' artinya sudah dikerjain amos
 atribut picture sudah dimasukin ke Entitas sendiri yaitu data Pictures
 setiap ada input picture dimasukan ke situ dan cara mengenali nya dengan tipe produk (Homestay,Jasa,Barang,User,Artikel)
 
@@ -49,9 +49,10 @@ status Barang
 (status 0 = user belum bayar) [setelah transaksi ditambah]
 (status 1 = user sudah bayar + upload resi) [Actor : user , uploadbuktipembayaran]
 (status 2 = pembayaran valid) [Actor : Admin , validasiPembayaran]
-(status 3 = Pemandu sudah kirim barang + upload resi) [Actor : Pemandu, konfirmasiPemakaian]
-(status 4 = User sudah menerima barang) [Actor : user, konfirmasiPemakaianKelar]
-(status 3 = Admin sudah transfer uang ke pemandu + transaksi selesai) [Actor : admin, dibayar]
+(status 3 = Pemandu sudah upload resi) [Actor : Pemandu, konfirmasiPemakaian]
+(status 4 = Resi Valid [Actor : Admin, validasiResi]
+(status 5 = User sudah menerima barang) [Actor : user, konfirmasiPemakaianKelar]
+(status 6 = Admin sudah transfer uang ke pemandu + transaksi selesai) [Actor : admin, dibayar]
 
 status Jasa
 (status 0 = user belum bayar) [setelah transaksi ditambah]

@@ -22,7 +22,7 @@ var token;
 	(status 3 = Admin sudah transfer uang ke pemandu + transaksi selesai) [Actor : admin, dibayar]
 
 */
-// Get Semua History Transaksi jasa //route = api/transaksijasa/user/historyTransaksi
+// Get Semua History Transaksi jasa //route = api/transaksibarang/user/historyTransaksiku
 transaksiBarangController.historyku = (req, res) => {
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
@@ -34,7 +34,7 @@ transaksiBarangController.historyku = (req, res) => {
 	            return res.status(401).send({message: 'invalid_token'});
 	        	}else{
 	        	var user_id = decoded.user_id
-	        	var querySelectTransactions = 'SELECT * FROM transaksi_jasa WHERE user_id = ?'	    
+	        	var querySelectTransactions = 'SELECT * FROM transaksi_barang WHERE user_id = ?'	    
 				    req.getConnection(function(err,connection){
 				    	connection.query(querySelectTransactions,[user_id],function(err,rows){ //get pemandu id
 				    	  	if(err)
@@ -42,7 +42,7 @@ transaksiBarangController.historyku = (req, res) => {
 				            if(rows.length){
 				            	res.status(200).json({status: true, message: 'Sukses Ambil Transaksi User', data: rows});	            
 				            }else{
-				            	res.status(200).json({status: false, message: 'Kamu belum mempunyai transaksi jasa'});
+				            	res.status(200).json({status: false, message: 'Kamu belum mempunyai transaksi Barang'});
 				            }
 				    	});
 				    }); 
@@ -59,7 +59,7 @@ transaksiBarangController.historyTransaksibyStatus = (req, res) => {
         res.status(401).json({status: false, message: 'Something missing (status)!'});
     }else{
 		var transaction_status = req.params.status
-		var noteStatus = shortcutFunction.statusJasaUser(transaction_status);		
+		var noteStatus = shortcutFunction.statusBarangTransaksiUser(transaction_status);		
     	var token = req.headers.authorization    
 		//JWT VERIFY     
 	        jwt.verify(token, secret, function(err, decoded) {
@@ -67,7 +67,7 @@ transaksiBarangController.historyTransaksibyStatus = (req, res) => {
 	            return res.status(401).send({message: 'invalid_token'});
 	        	}else{
 	        	var user_id = decoded.user_id
-	        	var querySelectTransactions = 'SELECT * FROM transaksi_jasa WHERE user_id = ? AND transaction_status = ?'	    
+	        	var querySelectTransactions = 'SELECT * FROM transaksi_barang WHERE user_id = ? AND transaction_status = ?'	    
 				    req.getConnection(function(err,connection){
 				    	connection.query(querySelectTransactions,[user_id,transaction_status],function(err,rows){ //get pemandu id
 				    	  	if(err)
@@ -75,7 +75,7 @@ transaksiBarangController.historyTransaksibyStatus = (req, res) => {
 				            if(rows.length){
 				            	res.status(200).json({status: true, message: 'Sukses Ambil Transaksi User',noteStatus, data: rows});	            
 				            }else{
-				            	res.status(200).json({status: false, message: 'Tidak ada transaksi dengan status ',noteStatus});
+				            	res.status(200).json({status: false, message: 'Tidak ada transaksi anda dengan status ',noteStatus});
 				            }
 				    	});
 				    }); 
@@ -162,55 +162,7 @@ transaksiBarangController.pesanBarang = (req, res) => {
     }
 }
 
-// Konfirmasi transaksi Jasa sedang dipakai oleh pemandu
-// route = api/transaksiJasa/pemandu/konfirmasi/:transaction_id
-// Konfirmasi ini dilakukan oleh pemandu
-transaksiBarangController.konfirmasiTransaksiSedangDipakai = (req, res) => {	
-	var transaction_id = req.params.transaction_id
-	var queryPemandu = "SELECT * FROM pemandu WHERE user_id = ?"		
-	var queryTransaksi = "SELECT * FROM transaksi_jasa WHERE transaction_id = ?"
-	var queryUpdateStatusKonfirmasi = "UPDATE transaksi_jasa SET transaction_status = ? WHERE transaction_id = ?"
-	req.getConnection(function(err,connection){
-		connection.query(queryTransaksi,[transaction_id],function(err,rows){
-			if(err) console.log("Error Selecting : %s ", err);
-			if(!req.headers.authorization) {
-        		res.status(401).json({status: false, message: 'Please Login !'});
-    		}else if (rows[0].transaction_status < 1){
-				res.status(400).json({status:400,success:false,message:'Status transaksi : Wisatawan belum melakukan pembayaran dan upload bukti pembayaran'});
-			}else if(rows[0].transaction_status == 2){
-				res.status(400).json({status:400,success:false,message:'Status transaksi : Sudah dikonfirmasi jasa sedang dipakai wisatawan'});
-			}else{
-				var token = req.headers.authorization    
-				//JWT VERIFY     
-			        jwt.verify(token, secret, function(err, decoded) {
-			        	if(err) {
-			            return res.status(401).send({message: 'invalid_token'});
-			        	}else{
-			        	var user_id = decoded.user_id
-			        	let pemandu_idTransaksi = rows[0].pemandu_id
-							req.getConnection(function(err,connection){
-								connection.query(queryPemandu,[user_id],function(err,rows){
-									let pemandu_id = rows[0].pemandu_id
-									console.log(pemandu_id,pemandu_idTransaksi)
-									if(pemandu_id != pemandu_idTransaksi){
-										res.status(403).json({status:403,success:false,message:'Forbidden Otorisasi'});
-									}else{
-										req.getConnection(function(err,connection){
-											connection.query(queryUpdateStatusKonfirmasi,[2,transaction_id],function(err,rows){
-												if(err) console.log("Error Selecting : %s ", err);				
-												res.json({status:200,success:true,message:'Konfirmasi Jasa sedang dipakai Success'});					
-											});
-										});
-									}
-								});
-							});	
-			        	}
-			        });
-					
-			}
-		});
-	});
-}
+
 
 // Konfirmasi transaksi Barang selesai dipakai oleh wisatawan
 // route = api/transaksiBarang/user/konfirmasi/:transaction_id
@@ -225,10 +177,10 @@ transaksiBarangController.konfirmasiTransaksiBarangSampai = (req, res) => {
 			if(err) console.log("Error Selecting : %s ", err);
 			if(!req.headers.authorization) {
         		res.status(401).json({status: false, message: 'Please Login !'});
-    		}else if (rows[0].transaction_status < 3){
+    		}else if (rows[0].transaction_status < 4){
 				console.log(rows[0].transaction_status)
 				res.status(400).json({status:400,success:false,message:'Status transaksi : Penjual belum konfirmasi pengiriman barang'});
-			}else if(rows[0].transaction_status == 4){
+			}else if(rows[0].transaction_status == 5){
 				res.status(400).json({status:400,success:false,message:'Status transaksi : Sudah dikonfirmasi barang sampai oleh User'});
 			}else{		
 				var token = req.headers.authorization
@@ -243,7 +195,7 @@ transaksiBarangController.konfirmasiTransaksiBarangSampai = (req, res) => {
 								res.status(403).json({status:403,success:false,message:'Forbidden Otorisasi'});
 							}else{
 								req.getConnection(function(err,connection){
-									connection.query(queryUpdateStatusKonfirmasi,[4,transaction_id],function(err,rows){
+									connection.query(queryUpdateStatusKonfirmasi,[5,transaction_id],function(err,rows){
 										if(err) console.log("Error Selecting : %s ", err);				
 										res.json({status:200,success:true,message:'Konfirmasi Barang Sampai oleh User Success'});					
 									});
@@ -256,12 +208,12 @@ transaksiBarangController.konfirmasiTransaksiBarangSampai = (req, res) => {
 	});
 }
 
-// Cancel transaksi  //route = api/transaksijasa/cancel/:transaction_id
+// Cancel transaksi  //route = api/transaksibarang/cancel/:transaction_id
 // Cancel ini dilakukan oleh user
 transaksiBarangController.cancelTransaksibyUser = (req, res) => {
 	var transaction_id = req.params.transaction_id
-	var queryTransaksi = "SELECT * FROM transaksi_jasa WHERE transaction_id = ?"
-	var queryCancelTransaksi = "DELETE FROM transaksi_jasa WHERE transaction_id = ?"
+	var queryTransaksi = "SELECT * FROM transaksi_barang WHERE transaction_id = ?"
+	var queryCancelTransaksi = "DELETE FROM transaksi_barang WHERE transaction_id = ?"
 	req.getConnection(function(err,connection){
 		connection.query(queryTransaksi,[transaction_id],function(err,rows){
 			if(err) console.log("Error Selecting : %s ", err);
@@ -274,26 +226,26 @@ transaksiBarangController.cancelTransaksibyUser = (req, res) => {
 			}else{
 				var token = req.headers.authorization    
 				//JWT VERIFY     
-			        jwt.verify(token, secret, function(err, decoded) {
-			        	if(err) {
-			           	 return res.status(401).send({auth :false,message: 'invalid_token'});
-			        	}else{
-						var user_id = decoded.user_id
-							if(user_id != rows[0].user_id){
-								res.status(403).json({status:403,success:false,message:'Forbidden Otorisasi'});
-							}else{
-								req.getConnection(function(err,connection){
-									connection.query(queryCancelTransaksi,[transaction_id],function(err,rows){
-										if(err) console.log("Error Selecting : %s ", err);
-										else{
-											res.status(200).json({status:200,message:"Transaksi telah sukses dicancel"});
-										}
-									});
+				jwt.verify(token, secret, function(err, decoded) {
+					if(err) {
+						return res.status(401).send({auth :false,message: 'invalid_token'});
+					}else{
+					var user_id = decoded.user_id
+						if(user_id != rows[0].user_id){
+							res.status(403).json({status:403,success:false,message:'Forbidden Otorisasi'});
+						}else{
+							req.getConnection(function(err,connection){
+								connection.query(queryCancelTransaksi,[transaction_id],function(err,rows){
+									if(err) console.log("Error Selecting : %s ", err);
+									else{
+										res.status(200).json({status:200,message:"Transaksi telah sukses dicancel"});
+									}
 								});
-							}
-							
-			        	}
-			        });
+							});
+						}
+						
+					}
+				});
 			}			
 		});
 	});

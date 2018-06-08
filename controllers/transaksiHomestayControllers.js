@@ -59,7 +59,7 @@ transaksiHomestayController.historyTransaksibyStatus = (req, res) => {
         res.status(401).json({status: false, message: 'Something missing (status)!'});
     }else{
 		var transaction_status = req.params.status
-		var noteStatus = shortcutFunction.statusHomestayUser(transaction_status);		
+		var noteStatus = shortcutFunction.statusHomestayTransaksiUser(transaction_status);		
     	var token = req.headers.authorization    
 		//JWT VERIFY     
 	        jwt.verify(token, secret, function(err, decoded) {
@@ -75,7 +75,7 @@ transaksiHomestayController.historyTransaksibyStatus = (req, res) => {
 				            if(rows.length){
 				            	res.status(200).json({status: true, message: 'Sukses Ambil Transaksi User',noteStatus, data: rows});	            
 				            }else{
-				            	res.status(200).json({status: false, message: 'Tidak ada transaksi dengan status ',noteStatus});
+				            	res.status(200).json({status: false, message: 'Tidak ada transaksi anda dengan status ',noteStatus});
 				            }
 				    	});
 				    }); 

@@ -75,12 +75,16 @@ var APIRoutes = function () {
     // Router Transaksi Barang
     router.post('/transaksiBarang/user/pesanBarang/:barang_id',transaksiBarangController.pesanBarang);
     router.get('/transaksiBarang/user/konfirmasi/:transaction_id',transaksiBarangController.konfirmasiTransaksiBarangSampai); //jadi status 3
+    router.get('/transaksiBarang/user/cancel/:transaction_id',transaksiBarangController.cancelTransaksibyUser);
+    router.get('/transaksiBarang/user/historytransaksiku',transaksiBarangController.historyku);
+    router.get('/transaksiJasa/user/historytransaksiku/:status',transaksiJasaController.historyTransaksibyStatus);
 
      // Router History
     router.get('/history',historyController.getAllUserHistoryTransactions);
     router.get('/historyByCategory/:category',historyController.getUserHistoryTransactionsByCategory);
 
     // Router Upload
+    router.post('/user/upload/buktipembayaran/barang/:transaction_id',uploadController.buktiPembayaranBarang);
     router.post('/user/upload/buktipembayaran/homestay/:transaction_id',uploadController.buktiPembayaranHomestay);
     router.post('/user/upload/buktipembayaran/jasa/:transaction_id',uploadController.buktiPembayaranJasa);
     router.post('/user/upload/userphoto',uploadController.userPhoto);

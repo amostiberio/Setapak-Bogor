@@ -14,7 +14,7 @@ var token;
 	0 = Belum Di konfirmasi Pemandu
 	1 =	Konfirmasi
 	
-	Kode Tipe
+	Kode Tipe:
 	HomestayPhoto
 	JasaPhoto
 	BarangPhoto
@@ -304,6 +304,154 @@ uploadController.buktiPembayaranJasa = async (req, res) => {
                                               });   
                                             }else{
                                               res.status(200).json({status: true , message: 'Success Upload Photo Bukti Pembayaran Jasa' });   
+                                            }
+                                        });
+                                      });
+                                    }
+                                  });
+                                } 
+                        });
+                      }); 
+                        }            
+                    }else{
+                      res.status(401).json({status:401,success:false,message:'Transaksi Tidak ditemukan'});
+                    }
+              });
+            }); 
+        }
+      });
+  }
+}
+
+//Route : api/user/upload/buktipembayaran/Barang/:transaction_id
+uploadController.buktiPembayaranBarang = async (req, res) => {		        
+  if(!req.headers.authorization) {
+      res.status(401).json({status: false, message: 'Please Login !'});
+  } else if(!req.params.transaction_id){
+     res.status(400).json({status: false, message: 'Data Incomplete'});
+  } else {  
+      var token = req.headers.authorization
+      //Validation JWT          
+      jwt.verify(token, secret, function(err, decoded) {
+        if(err) {
+          return res.status(401).send({message: 'invalid_token'});
+        }else{
+        var user_id = decoded.user_id
+          var transaction_id = req.params.transaction_id
+            // var queryUser = 'SELECT * FROM user WHERE user_id = ?'
+            var queryTransaksiBarang = 'SELECT * FROM transaksi_barang WHERE transaction_id = ?'
+            var queryCheckUpload= 'SELECT * FROM pictures WHERE produk_id = ? AND user_id = ? AND kode_tipe = ?'
+            // kode tipe buktiPembayaranHomestay
+            var kode_tipe = 'BuktiPembayaranBarang'
+
+            var newNameUpload;
+            var direktori = './public/uploads/buktipembayaran/barang'
+
+            //Destination storage
+            var storage = multer.diskStorage({      
+              destination: direktori,
+              filename: function (req, file, callback) {
+                newNameUpload = file.fieldname + '-' + transaction_id + ".png"
+                callback(null, newNameUpload);
+              }
+            });
+
+            // multer buat fungsi upload
+            var upload = multer({ 
+                storage : storage,
+                fileFilter: function (req, file, callback) {
+                  var ext = path.extname(file.originalname).toLowerCase();
+                  if(ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
+                      return callback(new Error('Only images are allowed'))
+                  }
+                  callback(null, true)
+                },
+                limits: {          
+                  fileSize: 5 * 1024 * 1024 // mendefinisikan file size yang bisa diupload max 5 MB
+                } 
+            }).single('BuktiPembayaranBarang');
+
+            //upload sesuai dengan pemandu_id      
+            req.getConnection(function(err,connection){
+              connection.query(queryTransaksiBarang,[transaction_id],function(err,rows){ //get data Homestay 
+                  if(err)
+                       console.log("Error Selecting : %s ", err);
+                    if(rows.length){
+                        var transaction_status = rows[0].transaction_status
+                        var user_idTransaksi = rows[0].user_id
+                        if(user_idTransaksi != user_id){
+                          res.status(403).json({status:403,success:false,message:'Forbidden Otorisasi'});
+                        }else{
+                          req.getConnection(function(err,connection){
+                            connection.query(queryCheckUpload,[transaction_id,user_id,kode_tipe],function(err,rows){
+                                if(err)
+                                console.log("Error Selecting : %s ", err);  
+                                if(rows.length){
+                                  //data Upload sudah pernah di upload
+                                  //upload function
+                                    upload(req, res, function(err) {
+                                      if(err) {
+                                        if (err.code == 'LIMIT_FILE_SIZE') {
+                                          res.status(400).json({status: false, message: 'File berukuran melebihi yang diizinkan.', err: err});
+                                        } else {
+                                          res.status(500).json({status: false, message: 'File gagal diunggah.', err: err});
+                                        }
+                                      } else if (req.file == null || req.file == 0) {
+                                        res.status(400).json({status: false, message: 'File kosong, silahkan pilih file kembali'});
+                                      } else {
+                                        var direktoriPhoto = direktori + newNameUpload
+                                        var queryUpdatePicturesDirectory = 'UPDATE pictures SET directory = ? WHERE produk_id = ?';
+                                        req.getConnection(function(err,connection){
+                                          connection.query(queryUpdatePicturesDirectory,[direktoriPhoto,transaction_id],function(err,results){
+                                              if(err)
+                                                console.log("Error Selecting : %s ", err);
+                                              else if(results.length){
+                                                res.status(404).json({ message: 'Picture ID not Found' });
+                                              }else if(transaction_status == 0){
+                                                var queryUpdateStatusKonfirmasi = "UPDATE transaksi_barang SET transaction_status = ? WHERE transaction_id = ?"
+                                                req.getConnection(function(err,connection){
+                                                  connection.query(queryUpdateStatusKonfirmasi,[1,transaction_id],function(err,rows){
+                                                    if(err) console.log("Error Selecting : %s ", err);				
+                                                    res.status(200).json({status: true , message: 'Sukses Update Photo Bukti Pembayaran Barang' });					
+                                                  });
+                                                });   
+                                              }else{
+                                                res.status(200).json({status: true , message: 'Success Update Photo Bukti Pembayaran Barang' });   
+                                              }
+                                          });
+                                        });
+                                      }
+                                    });
+                                }else{//data Upload belum pernah di upload
+                                  //upload function
+                                  upload(req, res, function(err) {
+                                    if(err) {
+                                      if (err.code == 'LIMIT_FILE_SIZE') {
+                                        res.status(400).json({status: false, message: 'File berukuran melebihi yang diizinkan.', err: err});
+                                      } else {
+                                        res.status(500).json({status: false, message: 'File gagal diunggah.', err: err});
+                                      }
+                                    } else if (req.file == null || req.file == 0) {
+                                      res.status(400).json({status: false, message: 'File kosong, silahkan pilih file kembali'});
+                                    } else {
+                                      var direktoriPhoto = direktori + newNameUpload
+                                      var queryInsertPicturesDirectory = 'INSERT INTO pictures SET produk_id = ?,user_id = ?, kode_tipe = ?, directory = ?';
+                                      req.getConnection(function(err,connection){
+                                        connection.query(queryInsertPicturesDirectory,[transaction_id,user_id,kode_tipe,direktoriPhoto],function(err,results){
+                                            if(err)
+                                              console.log("Error Selecting : %s ", err);
+                                            else if(results.length){
+                                              res.status(404).json({ message: 'Picture ID not Found' });
+                                            }else if(transaction_status == 0){
+                                              var queryUpdateStatusKonfirmasi = "UPDATE transaksi_barang SET transaction_status = ? WHERE transaction_id = ?"
+                                              req.getConnection(function(err,connection){
+                                                connection.query(queryUpdateStatusKonfirmasi,[1,transaction_id],function(err,rows){
+                                                  if(err) console.log("Error Selecting : %s ", err);				
+                                                  res.status(200).json({status: true , message: 'Sukses Upload Photo Bukti Pembayaran Barang' });					
+                                                });
+                                              });   
+                                            }else{
+                                              res.status(200).json({status: true , message: 'Success Upload Photo Bukti Pembayaran Barang' });   
                                             }
                                         });
                                       });

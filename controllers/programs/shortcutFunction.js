@@ -23,33 +23,41 @@ shortcutFunction.authToken = (token) => {
     });
 }
 
-shortcutFunction.statusHomestayUser = (status) => {
+shortcutFunction.statusHomestayTransaksiUser = (status) => {
 
-    if(status == 0){
-        return 'Belum Transfer'
-    }else  if(status == 1){ 
-        return 'Menunggu Konfirmasi Admin'
-    }else  if(status == 2){
-        return 'Homestay sedang dipakai'
+    if(status == 0 || status == 1 || status == 2){
+        return 'Status Pembayaran'
     }else  if(status == 3){
-        return 'Homestay sudah dipakai'
+        return 'Jasa sedang berjalan'
     }else  if(status == 4){
+        return 'Jasa sudah dipakai'
+    }else  if(status == 5){
         return 'Transaksi telah selesai'
     }
 }
 
-shortcutFunction.statusJasaUser = (status) => {
+shortcutFunction.statusJasaTransaksiUser = (status) => {
 
-    if(status == 0){
-        return 'Belum Transfer'
-    }else  if(status == 1){ 
-        return 'Menunggu Konfirmasi Admin'
-    }else  if(status == 2){
-        return 'Jasa sedang dipakai'
+    if(status == 0 || status == 1 || status == 2){
+        return 'Status Pembayaran'
     }else  if(status == 3){
-        return 'Jasa sudah dipakai'
+        return 'Jasa sedang berjalan'
     }else  if(status == 4){
+        return 'Jasa sudah dipakai'
+    }else  if(status == 5){
         return 'Transaksi telah selesai'
+    }
+}
+shortcutFunction.statusBarangTransaksiUser = (status) => {
+
+    if(status == 0 || status == 1 || status == 2){
+        return 'Status Pembayaran'
+    }else  if(status == 3 || status == 4){
+        return 'Status Pemesanan'
+    }else  if(status == 4){
+        return 'Status Konfirmasi Penerimaan'
+    }else  if(status == 4){
+        return 'Transaksi Selesai'
     }
 }
 module.exports = shortcutFunction
