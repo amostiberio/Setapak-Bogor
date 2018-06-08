@@ -1,53 +1,73 @@
  - Transaksi Penjualan Produk Barang
-	Pilih barang  
-	Beli barang (jumlah barang)
-	summary
-	metode pembayaran
+	- Pilih, View barang  
+	- Beli barang (jumlah barang) (gram pake math.ceil)
+	summary(frontend)
+	metode pembayaran (frontend)
 	user bayar (24jam) (0 = user belum bayar)
-	upload bukti pembayaran
-	konfirmasi admin pembayaran (1= user sudah bayar + upload bukti pembayaran)
+	upload bukti pembayaran (1 = user sudah bayar +upload bukti pembayaran)
+	konfirmasi admin pembayaran (2= pembayaran valid)
 	Sistem ngasih tau penjual ada transaksi barang
 	penjual upload resi
-	admin validasi resi (2 = Pemandu sudah kirim barang + upload resi)
-	user konfirmasi penerimaan barang (3 = User sudah menerima barang)
-	admin transfer ke pemandu (4 = Admin sudah transfer uang ke pemandu + transaksi selesai)
+	admin validasi resi (3 = Pemandu sudah kirim barang + upload resi)
+	- user konfirmasi penerimaan barang (4 = User sudah menerima barang)
+	admin transfer ke pemandu (5 = Admin sudah transfer uang ke pemandu + transaksi selesai)
 
 - Transaksi Penjualan Produk Jasa
-	Pilih jasa  
-	Pesan jasa (check di database transaksi sudah dibooking atau tidak (pakai status transaksi selesai atau tidak ada))
-	Summary
-	metode pembayaran
+	- Pilih , View jasa  
+	- Pesan jasa (check di database transaksi sudah dibooking atau tidak (pakai status transaksi selesai atau tidak ada))
+	Summary (frontend)
+	metode pembayaran (frontend)
 	user bayar (24jam) (status 0 = user belum bayar[actor : user])
-	upload bukti pembayaran 
-	konfirmasi admin pembayaran (status 1 = user sudah bayar + upload  upload bukti pembayaran[actor :admin ])
+	- upload bukti pembayaran  (1 = user sudah bayar +upload bukti pembayaran)
+	konfirmasi admin pembayaran (status 2 = pembayaran valid[actor :admin ])
 	Sistem ngasih tau penjual ada transaksi jasa 
-	pemandu konfirmasi jasa sedang dilakukan (status 2 = jasa sedang dilakukan[actor :pemandu])
-	user konfirmasi Jasa sudah dipakai (status 3 = User sudah selesai menikmati jasa actor: [user])
-	admin transfer ke pemandu (status 4 = Admin sudah transfer uang ke pemandu + transaksi selesai[ actor : admin])
+	- pemandu konfirmasi jasa sedang dilakukan (status 3 = jasa sedang dilakukan[actor :pemandu])
+	- user konfirmasi Jasa sudah dipakai (status 4 = User sudah selesai menikmati jasa actor: [user])
+	admin transfer ke pemandu (status 5 = Admin sudah transfer uang ke pemandu + transaksi selesai[ actor : admin])
 
  - Transaksi Penjualan Produk Homestay
-	- Pilih homestay  
+	- Pilih, View homestay  
 	- Pesan homestay (checkin + check out)
 	Summary (frontend)
 	metode pembayaran (frontend)
 	user bayar (48jam) (status 0 = user belum bayar)
-	- upload bukti pembayaran // kelar by amos
-	konfirmasi admin pembayaran (status 1 = user sudah bayar + upload  upload bukti pembayaran) 
+	- upload bukti pembayaran  (1 = user sudah bayar +upload bukti pembayaran)
+	konfirmasi admin pembayaran (status 2 = pembayaran valid) 
 	Sistem ngasih tau penjual ada transaksi homestay
-	- pemandu konfirmasi homestay sedang dipakai (status 2 = jasa sedang dilakukan[actor :pemandu]) //kelar by amos
-	- user konfirmasi homestay sudah dipakai (status 3 = User sudah pakai homestay[ actor :user, userKonfirmasiHomestayEnd]) //kelar by amos
-	admin transfer ke pemandu (status 4 = Admin sudah transfer uang ke pemandu + transaksi selesai)
+	- pemandu konfirmasi homestay sedang dipakai (status 3 = jasa sedang dilakukan[actor :pemandu]) //kelar by amos
+	- user konfirmasi homestay sudah dipakai (status 4 = User sudah pakai homestay[ actor :user, userKonfirmasiHomestayEnd]) //kelar by amos
+	admin transfer ke pemandu (status 5 = Admin sudah transfer uang ke pemandu + transaksi selesai)
 
-
+note : tanda '-' artinya sudah dikerjain
 atribut picture sudah dimasukin ke Entitas sendiri yaitu data Pictures
 setiap ada input picture dimasukan ke situ dan cara mengenali nya dengan tipe produk (Homestay,Jasa,Barang,User,Artikel)
 
 
+## STATUS NUMBER FOR TRANSACTION_STATUS di TABLE transaksi ##
+
+status Barang
+(status 0 = user belum bayar) [setelah transaksi ditambah]
+(status 1 = user sudah bayar + upload resi) [Actor : user , uploadbuktipembayaran]
+(status 2 = pembayaran valid) [Actor : Admin , validasiPembayaran]
+(status 3 = Pemandu sudah kirim barang + upload resi) [Actor : Pemandu, konfirmasiPemakaian]
+(status 4 = User sudah menerima barang) [Actor : user, konfirmasiPemakaianKelar]
+(status 3 = Admin sudah transfer uang ke pemandu + transaksi selesai) [Actor : admin, dibayar]
+
+status Jasa
+(status 0 = user belum bayar) [setelah transaksi ditambah]
+(status 1 = user sudah bayar + upload resi) [Actor : user , uploadbuktipembayaran]
+(status 2 = pembayaran valid) [Actor : Admin , validasiPembayaran]
+(status 3 = jasa sedang dilakukan) [Actor : Pemandu, konfirmasiPemakaian]
+(status 4 = User sudah selesai menikmati jasa) [Actor : user, konfirmasiPemakaianKelar]
+(status 5 = Admin sudah transfer uang ke pemandu + transaksi selesai) [Actor : admin, dibayar]
+
 status homestay
-(status 0 = user belum bayar)
-(status 1 = user sudah bayar + upload resi)
-(status 2 = User sudah menerima barang)
-(status 3 = Admin sudah transfer uang ke pemandu + transaksi selesai)
+(status 0 = user belum bayar) [setelah transaksi ditambah]
+(status 1 = user sudah bayar + upload resi)  [Actor : user , uploadbuktipembayaran]
+(status 2 = pembayaran valid) [Actor : Admin , validasiPembayaran]
+(status 3 = Homestay sedang dipakai) [Actor : Pemandu, konfirmasiPemakaian]
+(status 4 = User sudah pakai homestay) [Actor : user, konfirmasiPemakaianKelar]
+(status 5 = Admin sudah transfer uang ke pemandu + transaksi selesai) [Actor : admin, dibayar]
 
 #current kerjaan
 transaksi homestay , hampir selesai

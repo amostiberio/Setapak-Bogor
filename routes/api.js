@@ -6,7 +6,13 @@ var router = require('express').Router()
 var wisatawanController = require('../controllers/wisatawanControllers');
 var produkController = require('../controllers/produkControllers');
 var homestayController = require('../controllers/homestayControllers');
+var jasaController = require('../controllers/jasaControllers');
+var barangController = require('../controllers/barangControllers');
+
 var transaksiHomestayController = require('../controllers/transaksiHomestayControllers');
+var transaksiJasaController = require('../controllers/transaksiJasaControllers');
+var transaksiBarangController = require('../controllers/transaksiBarangControllers');
+
 var historyController = require('../controllers/historyControllers');
 var testingController = require('../controllers/testingControllers');
 var uploadController = require('../controllers/uploadControllers');
@@ -42,23 +48,41 @@ var APIRoutes = function () {
     router.post('/pemandu/homestay/delete/:homestay_id',homestayController.deleteHomestay);
     router.post('/pemandu/homestay/uploadphoto/:homestay_id',homestayController.uploadPhoto);
 
-    // Router Transaksi Homestay
+    //Router Jasa
+    router.get('/jasa/:jasa_id',jasaController.getOneJasa);
+    router.get('/jasa/pemandu/:pemandu_id',jasaController.getPemanduJasa);
 
-   // router.get('/transaksiHomestay/user/historyTransaksiku/:transaction_status',transaksiHomestayController.historyTransaksibyStatus);
+    //Router Barang
+    router.get('/barang/:barang_id',barangController.getOneBarang);
+    router.get('/barang/pemandu/:pemandu_id',barangController.getPemanduBarang);
+
+    // Router Transaksi Homestay
+    // router.get('/transaksiHomestay/user/historyTransaksiku/:transaction_status',transaksiHomestayController.historyTransaksibyStatus);
     router.post('/transaksiHomestay/user/pesanHomestay/:homestay_id',transaksiHomestayController.pesanHomestay);
-    router.get('/transaksiHomestay/pemandu/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSedangDipakai); //status 2
-    router.get('/transaksiHomestay/user/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSelesaiDipakai); //status 3
+    router.get('/transaksiHomestay/pemandu/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSedangDipakai); //jadi status 2
+    router.get('/transaksiHomestay/user/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSelesaiDipakai); //jadi status 3
     router.get('/transaksiHomestay/user/cancel/:transaction_id',transaksiHomestayController.cancelTransaksibyUser);
     router.get('/transaksiHomestay/user/historytransaksiku',transaksiHomestayController.historyku);
     router.get('/transaksiHomestay/user/historytransaksiku/:status',transaksiHomestayController.historyTransaksibyStatus);
+
+    // Router Transaksi Jasa
+    router.post('/transaksiJasa/user/pesanJasa/:jasa_id',transaksiJasaController.pesanJasa);
+    router.get('/transaksiJasa/user/konfirmasi/:transaction_id',transaksiJasaController.konfirmasiTransaksiSelesaiDipakai); //jadi status 3
+    router.get('/transaksiJasa/user/cancel/:transaction_id',transaksiJasaController.cancelTransaksibyUser);
+    router.get('/transaksiJasa/user/historytransaksiku',transaksiJasaController.historyku);
+    router.get('/transaksiJasa/user/historytransaksiku/:status',transaksiJasaController.historyTransaksibyStatus);
+
+    // Router Transaksi Barang
+    router.post('/transaksiBarang/user/pesanBarang/:barang_id',transaksiBarangController.pesanBarang);
+    router.get('/transaksiBarang/user/konfirmasi/:transaction_id',transaksiBarangController.konfirmasiTransaksiBarangSampai); //jadi status 3
 
      // Router History
     router.get('/history',historyController.getAllUserHistoryTransactions);
     router.get('/historyByCategory/:category',historyController.getUserHistoryTransactionsByCategory);
 
     // Router Upload
-
-    router.post('/user/upload/buktipembayarbyStatusbyStatusan/homestay/:transaction_id',uploadController.buktiPembayaranHomestay);
+    router.post('/user/upload/buktipembayaran/homestay/:transaction_id',uploadController.buktiPembayaranHomestay);
+    router.post('/user/upload/buktipembayaran/jasa/:transaction_id',uploadController.buktiPembayaranJasa);
     router.post('/user/upload/userphoto',uploadController.userPhoto);
     router.post('/pemandu/upload/homestay/:homestay_id',uploadController.homestayMultiplePhoto);
 

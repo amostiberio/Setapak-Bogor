@@ -23,6 +23,35 @@ shortcutFunction.authToken = (token) => {
     });
 }
 
+shortcutFunction.statusHomestayUser = (status) => {
+
+    if(status == 0){
+        return 'Belum Transfer'
+    }else  if(status == 1){ 
+        return 'Menunggu Konfirmasi Admin'
+    }else  if(status == 2){
+        return 'Homestay sedang dipakai'
+    }else  if(status == 3){
+        return 'Homestay sudah dipakai'
+    }else  if(status == 4){
+        return 'Transaksi telah selesai'
+    }
+}
+
+shortcutFunction.statusJasaUser = (status) => {
+
+    if(status == 0){
+        return 'Belum Transfer'
+    }else  if(status == 1){ 
+        return 'Menunggu Konfirmasi Admin'
+    }else  if(status == 2){
+        return 'Jasa sedang dipakai'
+    }else  if(status == 3){
+        return 'Jasa sudah dipakai'
+    }else  if(status == 4){
+        return 'Transaksi telah selesai'
+    }
+}
 module.exports = shortcutFunction
 
 // jwt terbagi 3 = header.data.secret_key
