@@ -35,7 +35,7 @@ var APIRoutes = function () {
     // router.post('/user/create',wisatawanControllers.createUser);
 
     // Router Homestay // 
-    //kurang //view category , sort  
+    //kurang  category , sort  
     router.get('/homestay/:homestay_id',homestayController.getOneHomestay);
     router.post('/homestay/search',homestayController.searchHomestay);
     router.get('/homestay/pemandu/:pemandu_id',homestayController.getPemanduHomestay); //view punya orang
