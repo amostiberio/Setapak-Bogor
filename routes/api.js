@@ -15,7 +15,7 @@ var transaksiBarangController = require('../controllers/transaksiBarangControlle
 var testingController = require('../controllers/testingControllers');
 var uploadController = require('../controllers/uploadControllers');
 var emailController = require('../controllers/emailControllers');
-
+var alamatController = require ('../controllers/alamatControllers')
 //var notifikasiController = require('../controllers/notifikasiControllers');
 
 var APIRoutes = function () {
@@ -85,6 +85,12 @@ var APIRoutes = function () {
     router.post('/user/upload/buktipembayaran/jasa/:transaction_id',uploadController.buktiPembayaranJasa);
     router.post('/user/upload/userphoto',uploadController.userPhoto);
     router.post('/pemandu/upload/homestay/:homestay_id',uploadController.homestayMultiplePhoto);
+
+
+    //Alamat 
+    router.get('/alamat/provinsi',alamatController.getProvinsi);
+    router.get('/alamat/kabupaten',alamatController.getKabupaten);
+    router.get('/alamat/kecamatan',alamatController.getKecamatan);
 
 
     // Email Controller
