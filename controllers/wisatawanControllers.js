@@ -52,9 +52,9 @@ wisatawanController.registerUser = (req, res) => {
     var email = req.body.email,
         nama = req.body.nama,
         alamat = req.body.alamat,
-        no_hp = req.body.no_hp,
+        nohp = req.body.nohp,
         password = req.body.password,
-        confirm_password = req.body.confirm_password,
+        confirmpassword = req.body.confirmpassword,
         role = 'user' //otomatis memiliki role user.
     var queryCreateUser = 'INSERT INTO user SET email = ?, nama = ?, alamat = ?, no_hp = ? , password = ?, role = ?';
     var queryCheckEmail = 'SELECT * FROM user WHERE email = ?'
@@ -62,26 +62,22 @@ wisatawanController.registerUser = (req, res) => {
         connection.query(queryCheckEmail,[email],function(err,rows){
            if(err)
                console.log("Error Selecting : %s ", err);
-           if(!rows.length){
-              if(!req.body.email||!req.body.nama||!req.body.alamat||!req.body.no_hp||!req.body.password||!req.body.confirm_password) {
-                  res.status(400).json({status: false, message: 'Data Incomplete'});
-              }else if(req.body.password.length < 8){
+           if(!rows.length){           
+            if(req.body.email=="" || req.body.nama=="" || req.body.alamat=="" || req.body.nohp=="" || req.body.password=="" || req.body.confirmpassword==""){
+                res.json({status:204,data:"",message:"Data Incomplete"});
+            }else if(req.body.password.length < 8){
                   res.status(400).json({status: false, message: 'Password Must be at least 8 Character'});
-              } else if (req.body.password != req.body.confirm_password) {
+              } else if (req.body.password != req.body.confirmpassword) {
                   return res.status(400).json({status: false, message: "Password Didnt Match"})
               } else {
                 req.getConnection(function(err,connection){
                     //hashing password
-                    generated_hash = require('crypto')
-                    .createHash('md5')
-                    .update(req.body.password+'setapakbogor', 'utf8')
-                    .digest('hex');
+                    generated_hash = require('crypto').createHash('md5').update(req.body.password+'setapakbogor', 'utf8').digest('hex');
                     password = generated_hash;
-
-                    connection.query(queryCreateUser,[email,nama,alamat,no_hp,password,role],function(err,results){
+                    connection.query(queryCreateUser,[email,nama,alamat,nohp,password,role],function(err,results){
                     if(err)
                         console.log("Error Selecting : %s ", err);
-                    else { //menandakan kalau username tidak ada yang sama
+                    else { 
                           if(err)
                             console.log("Error Selecting : %s ", err);
                           else{
@@ -135,7 +131,6 @@ wisatawanController.loginUser = (req, res) => {
                     }
                 }
             });
-            // connection.release();
         }
     });
 }

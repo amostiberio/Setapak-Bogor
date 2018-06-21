@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 08, 2018 at 04:51 PM
+-- Generation Time: Jun 15, 2018 at 03:35 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.4
 
@@ -1290,6 +1290,7 @@ CREATE TABLE `transaksi_homestay` (
   `check_out` datetime NOT NULL,
   `jumlah_hari` int(12) NOT NULL,
   `transaction_date` datetime NOT NULL,
+  `endtransaction_date` datetime NOT NULL,
   `transaction_status` int(11) NOT NULL,
   `notifikasi_status` int(13) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -1298,10 +1299,10 @@ CREATE TABLE `transaksi_homestay` (
 -- Dumping data for table `transaksi_homestay`
 --
 
-INSERT INTO `transaksi_homestay` (`transaction_id`, `pemandu_id`, `user_id`, `homestay_id`, `check_in`, `check_out`, `jumlah_hari`, `transaction_date`, `transaction_status`, `notifikasi_status`) VALUES
-(1, 1, 24, 1, '2018-06-03 13:00:00', '2018-06-04 12:00:00', 1, '2018-06-02 17:13:39', 3, 0),
-(2, 1, 24, 1, '2018-06-01 13:00:00', '2018-06-03 12:00:00', 2, '2018-06-04 16:01:05', 1, 0),
-(3, 1, 24, 1, '2018-06-10 13:00:00', '2018-06-12 12:00:00', 2, '2018-06-04 16:15:43', 0, 0);
+INSERT INTO `transaksi_homestay` (`transaction_id`, `pemandu_id`, `user_id`, `homestay_id`, `check_in`, `check_out`, `jumlah_hari`, `transaction_date`, `endtransaction_date`, `transaction_status`, `notifikasi_status`) VALUES
+(1, 1, 24, 1, '2018-06-03 13:00:00', '2018-06-04 12:00:00', 1, '2018-06-02 17:13:39', '0000-00-00 00:00:00', 3, 0),
+(2, 1, 24, 1, '2018-06-01 13:00:00', '2018-06-03 12:00:00', 2, '2018-06-04 16:01:05', '0000-00-00 00:00:00', 1, 0),
+(3, 1, 24, 1, '2018-06-10 13:00:00', '2018-06-12 12:00:00', 2, '2018-06-04 16:15:43', '0000-00-00 00:00:00', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1537,7 +1538,7 @@ ALTER TABLE `transaksi_homestay`
 -- AUTO_INCREMENT for table `transaksi_jasa`
 --
 ALTER TABLE `transaksi_jasa`
-  MODIFY `transaction_id` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `transaction_id` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`
