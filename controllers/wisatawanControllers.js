@@ -66,9 +66,9 @@ wisatawanController.registerUser = (req, res) => {
             if(req.body.email=="" || req.body.nama=="" || req.body.alamat=="" || req.body.nohp=="" || req.body.password=="" || req.body.confirmpassword==""){
                 res.json({status:204,data:"",message:"Data Incomplete"});
             }else if(req.body.password.length < 8){
-                  res.status(400).json({status: false, message: 'Password Must be at least 8 Character'});
+                  res.status(200).json({status: false, message: 'Password Must be at least 8 Character'});
               } else if (req.body.password != req.body.confirmpassword) {
-                  return res.status(400).json({status: false, message: "Password Didnt Match"})
+                  return res.status(200).json({status: false, message: "Password Didn't Match"})
               } else {
                 req.getConnection(function(err,connection){
                     //hashing password
@@ -76,27 +76,26 @@ wisatawanController.registerUser = (req, res) => {
                     password = generated_hash;
                     connection.query(queryCreateUser,[email,nama,alamat,nohp,password,role],function(err,results){
                     if(err)
-                        console.log("Error Selecting : %s ", err);
+                        res.json({status:408,data:"",message:"Gagal Daftar User",token:""});                        
                     else { 
                           if(err)
                             console.log("Error Selecting : %s ", err);
                           else{
-                            res.status(200).json({ status: true ,message: 'Success Register User' });                  
+                            res.status(200).json({ status: true ,message: 'Sukses Mendaftarkan User. Silahkan Login' });                  
                           } 
                     }          
                   });  
                 });
               }
            } else {
-              res.status(400).json({status: false, message: 'User Already Existed. Please Login'});
+              res.status(200).json({status: false, message: 'Email Sudah Terdaftar. Silahkan Login'});
            }
         });
     });
 }
 
 // Login User //route = api/user/login
-wisatawanController.loginUser = (req, res) => {
-    var appData = {};
+wisatawanController.loginUser = (req, res) => {    
     var email = req.body.email;
     var password = req.body.password;
     req.getConnection(function(err, connection) {
@@ -109,20 +108,14 @@ wisatawanController.loginUser = (req, res) => {
                     res.status(500).json({status: false, message: "Internal Server Error"})
                 } else {
                    //hashing password
-                    generated_hash = require('crypto')
-                    .createHash('md5')
-                    .update(req.body.password+'setapakbogor', 'utf8')
-                    .digest('hex');
+                    generated_hash = require('crypto').createHash('md5').update(req.body.password+'setapakbogor', 'utf8').digest('hex');
                     password = generated_hash;
-
                     if (rows.length > 0) {
                         if (rows[0].password == password) {
                             let token = jwt.sign(rows[0], secret, {
                                     expiresIn: 10 * 60 * 60 //3 jam
                                 });
-                            appData.error = 0;
-                            appData["token"] = token;
-                            res.status(200).json({status: true, message: 'Login Sukses',appData});                              
+                            res.status(200).json({status: true, message: 'Login Sukses', data: rows[0],token: token});                              
                         } else {                            
                             res.status(400).json({status: false, message: 'Email and Password does not match'});
                         }

@@ -71,7 +71,6 @@ status homestay
 (status 5 = Admin sudah transfer uang ke pemandu + transaksi selesai) [Actor : admin, dibayar]
 
 #current kerjaan
-transaksi homestay , hampir selesai
 uplaod multiple pictures //tugas emiel
 
 
@@ -81,3 +80,7 @@ nanya di transaksi
 sistemnya kayak gojek
 
 
+
+
+#current kerjaan
+ionic : login dan simpan ke storage
