@@ -1,4 +1,4 @@
-var transaksiHomestayController = {}
+var transaksiJasaController = {}
 var secret = require('./settings/jwt').secret
 var shortcutFunction = require('./programs/shortcutFunction')
 var jwt = require('jsonwebtoken');
@@ -13,17 +13,17 @@ var token;
 	0 = Belum Di konfirmasi Pemandu
 	1 =	Konfirmasi
 	
-	status homestay
+	status Jasa
 	(status 0 = user belum bayar) [setelah transaksi ditambah]
-	(status 1 = user sudah bayar + upload resi)  [Actor : user , uploadbuktipembayaran]
+	(status 1 = user sudah bayar + upload resi) [Actor : user , uploadbuktipembayaran]
 	(status 2 = pembayaran valid) [Actor : Admin , validasiPembayaran]
-	(status 3 = Homestay sedang dipakai) [Actor : Pemandu, konfirmasiPemakaian]
-	(status 4 = User sudah pakai homestay) [Actor : user, konfirmasiPemakaianKelar]
+	(status 3 = jasa sedang dilakukan) [Actor : Pemandu, konfirmasiPemakaian]
+	(status 4 = User sudah selesai menikmati jasa) [Actor : user, konfirmasiPemakaianKelar]
 	(status 5 = Admin sudah transfer uang ke pemandu + transaksi selesai) [Actor : admin, dibayar]
 
 */
-// Get Semua History Transaksi Homestay //route = api/transaksiHomestay/user/historyTransaksi
-transaksiHomestayController.historyku = (req, res) => {
+// Get Semua History Transaksi jasa //route = api/transaksijasa/user/historyTransaksi
+transaksiJasaController.historyku = (req, res) => {
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     }else{
@@ -34,7 +34,7 @@ transaksiHomestayController.historyku = (req, res) => {
 	            return res.status(401).send({message: 'invalid_token'});
 	        	}else{
 	        	var user_id = decoded.user_id
-	        	var querySelectTransactions = 'SELECT * FROM transaksi_homestay WHERE user_id = ?'	    
+	        	var querySelectTransactions = 'SELECT * FROM transaksi_jasa WHERE user_id = ?'	    
 				    req.getConnection(function(err,connection){
 				    	connection.query(querySelectTransactions,[user_id],function(err,rows){ //get pemandu id
 				    	  	if(err)
@@ -42,7 +42,7 @@ transaksiHomestayController.historyku = (req, res) => {
 				            if(rows.length){
 				            	res.status(200).json({status: true, message: 'Sukses Ambil Transaksi User', data: rows});	            
 				            }else{
-				            	res.status(200).json({status: false, message: 'Kamu belum mempunyai transaksi homestay'});
+				            	res.status(200).json({status: false, message: 'Kamu belum mempunyai transaksi jasa'});
 				            }
 				    	});
 				    }); 
@@ -51,15 +51,15 @@ transaksiHomestayController.historyku = (req, res) => {
     }
 }
 
-// Get Semua History Transaksi Homestay berdasarkan status //route = api/transaksiHomestay/user/historyTransaksiku/:transaction_status
-transaksiHomestayController.historyTransaksibyStatus = (req, res) => {
+// Get Semua History Transaksi jasa berdasarkan status //route = api/transaksijasa/user/historyTransaksiku/:transaction_status
+transaksiJasaController.historyTransaksibyStatus = (req, res) => {
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     }else if(!req.params.status) {
         res.status(401).json({status: false, message: 'Something missing (status)!'});
     }else{
 		var transaction_status = req.params.status
-		var noteStatus = shortcutFunction.statusHomestayTransaksiUser(transaction_status);		
+		var noteStatus = shortcutFunction.statusJasaTransaksiUser(transaction_status);		
     	var token = req.headers.authorization    
 		//JWT VERIFY     
 	        jwt.verify(token, secret, function(err, decoded) {
@@ -67,7 +67,7 @@ transaksiHomestayController.historyTransaksibyStatus = (req, res) => {
 	            return res.status(401).send({message: 'invalid_token'});
 	        	}else{
 	        	var user_id = decoded.user_id
-	        	var querySelectTransactions = 'SELECT * FROM transaksi_homestay WHERE user_id = ? AND transaction_status = ?'	    
+	        	var querySelectTransactions = 'SELECT * FROM transaksi_jasa WHERE user_id = ? AND transaction_status = ?'	    
 				    req.getConnection(function(err,connection){
 				    	connection.query(querySelectTransactions,[user_id,transaction_status],function(err,rows){ //get pemandu id
 				    	  	if(err)
@@ -84,24 +84,23 @@ transaksiHomestayController.historyTransaksibyStatus = (req, res) => {
     }
 }
 
-// Add Transaksi Homestay //route = api/transaksiHomestay/pesanHomestay/:homestay_id
-transaksiHomestayController.pesanHomestay = (req, res) => {
-	var homestay_id = req.params.homestay_id,   		
-   		check_in = req.body.check_in,
-   		check_out = req.body.check_out,
-   		jumlah_hari = moment.duration(moment(check_out, "YYYY-MM-DD").diff(moment(check_in, "YYYY-MM-DD"))).asDays(),
-   		transaction_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss')  	
+// Add Transaksi jasa //route = api/transaksijasa/pesanjasa/:jasa_id
+transaksiJasaController.pesanJasa = (req, res) => {
+	var jasa_id = req.params.jasa_id,   		
+   		tanggal_booking = req.body.tanggal_booking,  		
+		transaction_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss'),
+		diffHari = moment.duration(moment(tanggal_booking, "YYYY-MM-DD").diff(moment(transaction_date, "YYYY-MM-DD"))).asDays()   
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
-    }else if (!homestay_id){
-    	res.status(401).json({status: false, message: 'Something missing (ID Homestay)!'});
-    }else if (jumlah_hari < 1){
-    	res.status(401).json({status: false, message: 'Minimal 1 hari pemesanan, jumlah tidak memenuhi syarat'});
+    }else if (!jasa_id){
+    	res.status(401).json({status: false, message: 'Something missing (ID Jasa)!'});
+    }else if (diffHari < 1){
+    	res.status(401).json({status: false, message: 'Pemesanan minimal dilakukan sehari sebelum tanggal booking'});
     }else{
-    var queryHomestay = 'SELECT * FROM homestay WHERE homestay_id = ?'
+    var queryJasa = 'SELECT * FROM jasa WHERE jasa_id = ?'
     var queryPemandu = 'SELECT * FROM pemandu WHERE user_id = ?'
-    var queryCheckTransaksi = 'SELECT * FROM transaksi_homestay WHERE homestay_id = ? AND check_in between ? AND ? AND check_out between ? AND ?'
-    var queryAddTransaksi = 'INSERT INTO transaksi_homestay SET  pemandu_id = ? , user_id = ? , homestay_id = ?, check_in = ? , check_out = ?, jumlah_hari = ? ,transaction_date = ?' 
+    var queryCheckTransaksi = 'SELECT * FROM transaksi_jasa WHERE jasa_id = ? AND tanggal_booking = ? AND transaction_status < ?'
+    var queryAddTransaksi = 'INSERT INTO transaksi_jasa SET  pemandu_id = ? , user_id = ? , jasa_id = ?, tanggal_booking = ?,transaction_date = ?' 
     	var token = req.headers.authorization          
         jwt.verify(token, secret, function(err, decoded) {
         	if(err) {
@@ -109,7 +108,7 @@ transaksiHomestayController.pesanHomestay = (req, res) => {
         	}else{
         	var user_id = decoded.user_id
     		req.getConnection(function(err,connection){
-	        connection.query(queryHomestay,[homestay_id],function(err,rows){
+	        connection.query(queryJasa,[jasa_id],function(err,rows){
 		        if(err) console.log("Error Selecting : %s ", err);	
 		        else{
 		        	var pemandu_id = rows[0].pemandu_id
@@ -118,21 +117,21 @@ transaksiHomestayController.pesanHomestay = (req, res) => {
 	        			connection.query(queryPemandu,[user_id],function(err,rows){  
 	        				if(err) console.log("Error Selecting : %s ", err); 
 	        				if(pemandu_id == rows[0].pemandu_id ){
-	        					res.status(401).json({status: false, message: 'Pemandu tidak bisa memesan produk sendiri'});
+	        					res.status(401).json({status: false, message: 'Pemandu tidak bisa memesan Jasa sendiri'});
 	        				}else if(status_avail == 0){
-	        					res.status(401).json({status: false, message: 'Homestay sedang tidak tersedia'});
+	        					res.status(401).json({status: false, message: 'Jasa sedang tidak tersedia'});
 	        				}else{
 	        					req.getConnection(function(err,connection){
-				       				connection.query(queryCheckTransaksi,[homestay_id,check_in,check_out,check_in,check_out],function(err,rows){
+				       				connection.query(queryCheckTransaksi,[jasa_id,tanggal_booking,4],function(err,rows){
 							        	if(err) console.log("Error Selecting : %s ", err);	
 							       		if(rows.length){
-							       			res.status(401).json({status: false, message: 'Homestay Sudah di Booking oleh wisatawan lain pada tanggal yang sama'});
+							       			res.status(401).json({status: false, message: 'Jasa Sudah di Booking oleh wisatawan lain pada tanggal yang sama'});
 							       		}else{					        	
 							        		 req.getConnection(function(err,connection){
-							       				connection.query(queryAddTransaksi,[pemandu_id,user_id,homestay_id,check_in,check_out,jumlah_hari,transaction_date],function(err,rows){
+							       				connection.query(queryAddTransaksi,[pemandu_id,user_id,jasa_id,tanggal_booking,transaction_date],function(err,rows){
 										        	if(err) console.log("Error Selecting : %s ", err);	
 										       		else{					        	
-										        		res.status(200).json({success:true,message: 'Success Transaksi Homestay' });   
+										        		res.status(200).json({success:true,message: 'Success Transaksi Jasa' });   
 										        	}	        
 									        	});
 									    	});
@@ -150,14 +149,14 @@ transaksiHomestayController.pesanHomestay = (req, res) => {
     }
 }
 
-// Konfirmasi transaksi homestay sedang dipakai oleh pemandu
-// route = api/transaksiHomestay/pemandu/konfirmasi/:transaction_id
+// Konfirmasi transaksi Jasa sedang dipakai oleh pemandu
+// route = api/transaksiJasa/pemandu/konfirmasi/:transaction_id
 // Konfirmasi ini dilakukan oleh pemandu
-transaksiHomestayController.konfirmasiTransaksiSedangDipakai = (req, res) => {	
+transaksiJasaController.konfirmasiTransaksiSedangDipakai = (req, res) => {	
 	var transaction_id = req.params.transaction_id
 	var queryPemandu = "SELECT * FROM pemandu WHERE user_id = ?"		
-	var queryTransaksi = "SELECT * FROM transaksi_homestay WHERE transaction_id = ?"
-	var queryUpdateStatusKonfirmasi = "UPDATE transaksi_homestay SET transaction_status = ? WHERE transaction_id = ?"
+	var queryTransaksi = "SELECT * FROM transaksi_jasa WHERE transaction_id = ?"
+	var queryUpdateStatusKonfirmasi = "UPDATE transaksi_jasa SET transaction_status = ? WHERE transaction_id = ?"
 	req.getConnection(function(err,connection){
 		connection.query(queryTransaksi,[transaction_id],function(err,rows){
 			if(err) console.log("Error Selecting : %s ", err);
@@ -166,7 +165,7 @@ transaksiHomestayController.konfirmasiTransaksiSedangDipakai = (req, res) => {
     		}else if (rows[0].transaction_status < 2){
 				res.status(400).json({status:400,success:false,message:'Status transaksi : Wisatawan belum melakukan pembayaran dan upload bukti pembayaran'});
 			}else if(rows[0].transaction_status == 3){
-				res.status(400).json({status:400,success:false,message:'Status transaksi : Sudah dikonfirmasi homestay sedang dipakai wisatawan'});
+				res.status(400).json({status:400,success:false,message:'Status transaksi : Sudah dikonfirmasi jasa sedang dipakai wisatawan'});
 			}else{
 				var token = req.headers.authorization    
 				//JWT VERIFY     
@@ -186,7 +185,7 @@ transaksiHomestayController.konfirmasiTransaksiSedangDipakai = (req, res) => {
 										req.getConnection(function(err,connection){
 											connection.query(queryUpdateStatusKonfirmasi,[3,transaction_id],function(err,rows){
 												if(err) console.log("Error Selecting : %s ", err);				
-												res.json({status:200,success:true,message:'Konfirmasi Homestay sedang dipakai Success'});					
+												res.json({status:200,success:true,message:'Konfirmasi Jasa sedang dipakai Success'});					
 											});
 										});
 									}
@@ -200,39 +199,40 @@ transaksiHomestayController.konfirmasiTransaksiSedangDipakai = (req, res) => {
 	});
 }
 
-// Konfirmasi transaksi homestay selesai dipakai oleh wisatawan
-// route = api/transaksiHomestay/user/konfirmasi/:transaction_id
+// Konfirmasi transaksi Jasa selesai dipakai oleh wisatawan
+// route = api/transaksiJasa/user/konfirmasi/:transaction_id
 // Konfirmasi ini dilakukan oleh wisatawan
-transaksiHomestayController.konfirmasiTransaksiSelesaiDipakai = (req, res) => {
-	var transaction_id = req.params.transaction_id
+transaksiJasaController.konfirmasiTransaksiSelesaiDipakai = (req, res) => {	
+	var transaction_id = req.params.transaction_id	
 	var queryUser = "SELECT * FROM user WHERE user_id = ?"			
-	var queryTransaksi = "SELECT * FROM transaksi_homestay WHERE transaction_id = ?"
-	var queryUpdateStatusKonfirmasi = "UPDATE transaksi_homestay SET transaction_status = ? WHERE transaction_id = ?"
+	var queryTransaksi = "SELECT * FROM transaksi_jasa WHERE transaction_id = ?"
+	var queryUpdateStatusKonfirmasi = "UPDATE transaksi_jasa SET transaction_status = ? WHERE transaction_id = ?"
 	req.getConnection(function(err,connection){
 		connection.query(queryTransaksi,[transaction_id],function(err,rows){
 			if(err) console.log("Error Selecting : %s ", err);
 			if(!req.headers.authorization) {
         		res.status(401).json({status: false, message: 'Please Login !'});
     		}else if (rows[0].transaction_status < 3){
+				console.log(rows[0].transaction_status)
 				res.status(400).json({status:400,success:false,message:'Status transaksi : Belum dikonfirmasi pemakaian oleh pemandu'});
 			}else if(rows[0].transaction_status == 4){
 				res.status(400).json({status:400,success:false,message:'Status transaksi : Sudah dikonfirmasi pemakaian selesai oleh User'});
 			}else{		
-				var token = req.headers.authorization    
+				var token = req.headers.authorization
 				//JWT VERIFY     
 			        jwt.verify(token, secret, function(err, decoded) {
 			        	if(err) {
 			            return res.status(401).send({message: 'invalid_token'});
 			        	}else{
 			        	var user_id = decoded.user_id
-			        	let user_idTransaksi = rows[0].user_id
+						let user_idTransaksi = rows[0].user_id
 							if(user_id != user_idTransaksi){
 								res.status(403).json({status:403,success:false,message:'Forbidden Otorisasi'});
 							}else{
 								req.getConnection(function(err,connection){
 									connection.query(queryUpdateStatusKonfirmasi,[4,transaction_id],function(err,rows){
 										if(err) console.log("Error Selecting : %s ", err);				
-										res.json({status:200,success:true,message:'Konfirmasi Pemakaian Homestay oleh User Success'});					
+										res.json({status:200,success:true,message:'Konfirmasi Pemakaian Jasa oleh User Success'});					
 									});
 								});
 							}	
@@ -244,13 +244,12 @@ transaksiHomestayController.konfirmasiTransaksiSelesaiDipakai = (req, res) => {
 	});
 }
 
-// Cancel transaksi  //route = api/transaksi/cancel/:transaction_id
+// Cancel transaksi  //route = api/transaksijasa/cancel/:transaction_id
 // Cancel ini dilakukan oleh user
-transaksiHomestayController.cancelTransaksibyUser = (req, res) => {
-	
+transaksiJasaController.cancelTransaksibyUser = (req, res) => {
 	var transaction_id = req.params.transaction_id
-	var queryTransaksi = "SELECT * FROM transaksi_homestay WHERE transaction_id = ?"
-	var queryCancelTransaksi = "DELETE FROM transaksi_homestay WHERE transaction_id = ?"
+	var queryTransaksi = "SELECT * FROM transaksi_jasa WHERE transaction_id = ?"
+	var queryCancelTransaksi = "DELETE FROM transaksi_jasa WHERE transaction_id = ?"
 	req.getConnection(function(err,connection){
 		connection.query(queryTransaksi,[transaction_id],function(err,rows){
 			if(err) console.log("Error Selecting : %s ", err);
@@ -265,9 +264,9 @@ transaksiHomestayController.cancelTransaksibyUser = (req, res) => {
 				//JWT VERIFY     
 			        jwt.verify(token, secret, function(err, decoded) {
 			        	if(err) {
-			            return res.status(401).send({auth :false,message: 'invalid_token'});
+			           	 return res.status(401).send({auth :false,message: 'invalid_token'});
 			        	}else{
-							var user_id = decoded.user_id
+						var user_id = decoded.user_id
 							if(user_id != rows[0].user_id){
 								res.status(403).json({status:403,success:false,message:'Forbidden Otorisasi'});
 							}else{
@@ -280,6 +279,7 @@ transaksiHomestayController.cancelTransaksibyUser = (req, res) => {
 									});
 								});
 							}
+							
 			        	}
 			        });
 			}			
@@ -289,4 +289,4 @@ transaksiHomestayController.cancelTransaksibyUser = (req, res) => {
     
 
 
-module.exports = transaksiHomestayController
+module.exports = transaksiJasaController
