@@ -64,11 +64,11 @@ wisatawanController.registerUser = (req, res) => {
                console.log("Error Selecting : %s ", err);
            if(!rows.length){           
             if(req.body.email=="" || req.body.nama=="" || req.body.alamat=="" || req.body.nohp=="" || req.body.password=="" || req.body.confirmpassword==""){
-                res.json({status:204,data:"",message:"Data Incomplete"});
+                res.json({status:204, success: false, message: 'Password Must be at least 8 Character'});
             }else if(req.body.password.length < 8){
-                  res.status(200).json({status: false, message: 'Password Must be at least 8 Character'});
+                  res.json({ status:200, success: false, message: 'Password Must be at least 8 Character'});
               } else if (req.body.password != req.body.confirmpassword) {
-                  return res.status(200).json({status: false, message: "Password Didn't Match"})
+                  return res.json({status:200, success: false, message: "Password Didn't Match"})
               } else {
                 req.getConnection(function(err,connection){
                     //hashing password
@@ -76,19 +76,19 @@ wisatawanController.registerUser = (req, res) => {
                     password = generated_hash;
                     connection.query(queryCreateUser,[email,nama,alamat,nohp,password,role],function(err,results){
                     if(err)
-                        res.json({status:408,data:"",message:"Gagal Daftar User",token:""});                        
+                        res.json({status: 408,success: false, message: 'Gagal Daftar User'});                      
                     else { 
                           if(err)
                             console.log("Error Selecting : %s ", err);
                           else{
-                            res.status(200).json({ status: true ,message: 'Sukses Mendaftarkan User. Silahkan Login' });                  
+                            res.json({ status:200, success: true ,message: 'Sukses Mendaftarkan User. Silahkan Login' });                  
                           } 
                     }          
                   });  
                 });
               }
            } else {
-              res.status(200).json({status: false, message: 'Email Sudah Terdaftar. Silahkan Login'});
+              res.json({status:200,success: false, message: 'Email Sudah Terdaftar. Silahkan Login'});
            }
         });
     });
@@ -100,12 +100,12 @@ wisatawanController.loginUser = (req, res) => {
     var password = req.body.password;
     req.getConnection(function(err, connection) {
         if (err) {           
-            res.status(500).json({status: false, message: "Internal Server Error"})
+            res.json({status: 500, success: false, message: "Internal Server Error"})
         } else {
             var queryLoginUser = 'SELECT * FROM user WHERE email = ?'
             connection.query(queryLoginUser, [email], function(err, rows) {                 
                 if (err) {
-                    res.status(500).json({status: false, message: "Internal Server Error"})
+                    res.json({status: 500,success: false, message: "Internal Server Error"})
                 } else {
                    //hashing password
                     generated_hash = require('crypto').createHash('md5').update(req.body.password+'setapakbogor', 'utf8').digest('hex');
@@ -113,14 +113,14 @@ wisatawanController.loginUser = (req, res) => {
                     if (rows.length > 0) {
                         if (rows[0].password == password) {
                             let token = jwt.sign(rows[0], secret, {
-                                    expiresIn: 10 * 60 * 60 //3 jam
+                                    //expiresIn: 10 * 60 * 60 //3 jam sementara no expires
                                 });
-                            res.status(200).json({status: true, message: 'Login Sukses', data: rows[0],token: token});                              
+                            res.json({status: 200, success: true, message: 'Login Sukses', data: rows[0],token: token});                              
                         } else {                            
-                            res.status(400).json({status: false, message: 'Email and Password does not match'});
+                            res.json({status: 400 ,success: false, message: 'Email and Password does not match'});
                         }
                     } else {                        
-                        res.status(400).json({status: false, message: 'Email does not exists!'});
+                        res.json({status: 400 , success: false, message: 'Email does not exists!'});
                     }
                 }
             });
