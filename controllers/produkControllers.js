@@ -16,7 +16,7 @@ produkController.createProduk = (req, res) => {
 	var pemandu_id = req.params.id; //sememtara , nanti ambil dari current id
     var harga = req.body.harga,
         keterangan = req.body.keterangan,
-        date_post= new Date();
+        date_post = new Date();
         //buat nanti picture ada di backendPH
         //var ImageSaver 	= require('image-saver-nodejs/lib');
 		//var imageSaver 	= new ImageSaver();
