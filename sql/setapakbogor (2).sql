@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 15, 2018 at 03:35 AM
+-- Generation Time: Jun 22, 2018 at 05:33 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.4
 
@@ -1351,7 +1351,11 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `email`, `password`, `nama`, `alamat`, `no_hp`, `role`, `photo`) VALUES
 (3, 'admin1@gmail.com', 'adminsetapakbogor', 'Amos Tiberio Sungguraja', 'jl swadaya ix rt 09/01 no 17 jaticempaka pondokgede bekasi 17411', '081289063136', 'admin', ''),
 (22, 'amostiberio@gmail.com', '83a291a32137f869ed9a209d065b6d95', 'Amos Tiberio Sungguraja', 'jl swadaya ix rt 09/01 no 17 jaticempaka pondokgede bekasi 17411', '081289063136', 'user', './public/uploads/userphoto/userPhoto-22.png'),
-(24, 'emielkautsar@gmail.com', 'dd1b91becdab78b694efa2f762539156', 'Emiel Kautsar', 'Bogor', '081289063136', 'user', './public/uploads/userphoto/UserPhoto-24-magical_sky_touch_by_qauz-dcbyr4z.jpg.png');
+(24, 'emielkautsar@gmail.com', 'dd1b91becdab78b694efa2f762539156', 'Emiel Kautsar', 'Bogor', '081289063136', 'user', './public/uploads/userphoto/UserPhoto-24-magical_sky_touch_by_qauz-dcbyr4z.jpg.png'),
+(25, 'amosamos@gmail.com', 'd84a9fce4d2a4d4d89a6b494dd5a6ad3', 'Amos Tiberio', 'Jl swadaya ix', '0812896263136', 'user', ''),
+(26, 'amoscoba@gmail.com', 'yutub13e', 'amoscoba', 'jalancoba', '081289063136', 'user', ''),
+(27, 'amoscobaa@gmail.com', 'c22897ba43f7cfafa5a6c7fb93c95e2e', 'amoscoba', 'jalancoba', '081289063136', 'user', ''),
+(28, 'amoscobaaa@gmail.com', 'c22897ba43f7cfafa5a6c7fb93c95e2e', 'amoscoba', 'asdasd', '081289063136', 'user', '');
 
 -- --------------------------------------------------------
 
@@ -1544,7 +1548,7 @@ ALTER TABLE `transaksi_jasa`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `user_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
