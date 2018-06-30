@@ -472,16 +472,11 @@ uploadController.buktiPembayaranBarang = async (req, res) => {
 }
 //api/user/upload/userphoto
 uploadController.userPhoto = async (req, res) => {        
-    if(!req.headers.authorization) {
-        res.status(401).json({status: false, message: 'Please Login !'});
-    } else {
-        var token = req.headers.authorization
-        //Validation JWT          
-        jwt.verify(token, secret, function(err, decoded) {
-          if(err) {
-            return res.status(401).send({message: 'invalid_token'});
+          
+          if(!req.body.user_id){
+             res.json({status: 400, message: 'User id gak ada',});
           }else{
-          var user_id = decoded.user_id
+            var user_id = req.body.user_id
           var newNameUpload;
           var direktori = './public/uploads/userphoto/';
 
@@ -531,16 +526,14 @@ uploadController.userPhoto = async (req, res) => {
                       res.status(404).json({ message: 'User ID not Found' });
                     }
                     else{
-                      res.status(200).json({status: true , message: 'Success Update Photo User' });   
+                      res.status(200).json({status: true , message: 'Success Update Photo User',picture : direktoriPhoto});   
                     }
                 });
               });
             }
           });
-        }
-        });
-      
-    }
+          }
+          
 }
 
 //api/user/upload/userphoto

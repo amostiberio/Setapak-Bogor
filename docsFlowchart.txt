@@ -83,9 +83,13 @@ sistemnya kayak gojek
 
 
 #current kerjaan
-ionic : login dan simpan ke storage
 
+ionic :
+
+upload foto belum kelar
 
 https://majora.rapidplex.com:2083/cpsess2482158361/viewer/home/setapakb/setapakbogorapi/public/uploads/userphoto/UserPhoto-24-magical_sky_touch_by_qauz-dcbyr4z.jpg.png
 
 https://majora.rapidplex.com:2083/cpsess2482158361/viewer/home/setapakb/setapakbogorapi/public/uploads/userphoto/userPhoto-22.png
+
+

@@ -203,13 +203,13 @@ wisatawanController.changePasswordUserById = (req, res) => {
               var oldPasswordInput = require('crypto').createHash('md5').update(req.body.old_password +'setapakbogor', 'utf8').digest('hex');
             
               if(!req.body.old_password||!req.body.new_password||!req.body.confirm_password) {
-                res.status(400).json({status: false, message: 'Data Incomplete'});
+                res.json({status: 400, message: 'Data Incomplete'});
               } else if(checkOldPassword != oldPasswordInput){
-                res.status(400).json({status: false, message: 'Input Old Password Incorrect'});
+                res.json({status: 400, message: 'Input Old Password Incorrect'});
               } else if(req.body.new_password.length < 8){
-                res.status(400).json({status: false, message: 'Password Must be at least 8 Character'});
+                res.json({status: 400, message: 'Password Must be at least 8 Character'});
               } else if (req.body.new_password != req.body.confirm_password) {
-                res.status(400).json({status: false, message: "New Password Didn't Match"})
+                res.json({status: 400, message: "New Password Didn't Match"})
               } else {
                 var old_password = req.body.old_password,
                     new_password = req.body.new_password,
@@ -226,10 +226,20 @@ wisatawanController.changePasswordUserById = (req, res) => {
                       if(err)
                         console.log("Error Selecting : %s ", err);
                       else if(results.length){
-                        res.status(404).json({ message: 'User ID not Found' });
+                        res.json({ status:404, message: 'User ID not Found' });
                       }
                       else{
-                        res.status(200).json({status: true , message: 'Success Change password User' });   
+                        var queryUser = 'SELECT * FROM user WHERE user_id = ?'
+                        req.getConnection(function(err,connection){
+                          connection.query(queryUser,[user_id],function(err,rows){
+                               if (err) {
+                                   res.json({status: 400,success: false, message: "Internal Server Error"})
+                               } else {
+                                  res.json({status: 200 , message: 'Success Change password User',data: rows[0],token: token  });   
+                               }
+                         });
+                        });  
+                        
                       }
                   });
                 });
