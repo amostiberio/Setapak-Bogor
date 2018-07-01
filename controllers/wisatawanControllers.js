@@ -155,97 +155,118 @@ wisatawanController.getUserProfile = (req, res) => {
 
 // Update informasi Profile /route = api/user/updateprofile
 wisatawanController.updateProfileUserById = (req, res) => {        
-              
-              if(!req.body.email||!req.body.nama||!req.body.alamat||!req.body.no_hp||!req.body.user_id) {
-                  res.status(400).json({status: false, message: 'Data Incomplete'});
-              } else {
-                var email = req.body.email,
-                    nama = req.body.nama,
-                    alamat = req.body.alamat,
-                    no_hp = req.body.no_hp,
-                    user_id = req.body.user_id
-                    token = req.body.token
-                var queryUpdateUserById = 'UPDATE user SET nama = ? , alamat = ? ,email = ?, no_hp = ? WHERE user_id = ?';
-                req.getConnection(function(err,connection){
-                  connection.query(queryUpdateUserById,[nama,alamat,email,no_hp,user_id],function(err,results){
-                      if(err)
-                        console.log("Error Selecting : %s ", err);
-                      else if(results.length){
-                        res.status(404).json({ message: 'User ID not Found' });
+           if(!req.body.token) {
+                  res.status(401).json({status: false, message: 'Please Login !'});
+              }else{
+                  var token = req.body.token    
+                //JWT VERIFY     
+                    jwt.verify(token, secret, function(err, decoded) {
+                      if(err) {
+                        return res.status(401).send({message: 'invalid_token'});
+                      }else{
+                      var user_id = decoded.user_id
+                       if(!req.body.email||!req.body.nama||!req.body.alamat||!req.body.no_hp||!req.body.user_id) {
+                            res.status(400).json({status: false, message: 'Data Incomplete'});
+                        } else {
+                          var email = req.body.email,
+                              nama = req.body.nama,
+                              alamat = req.body.alamat,
+                              no_hp = req.body.no_hp,                    
+                              token = req.body.token
+                          var queryUpdateUserById = 'UPDATE user SET nama = ? , alamat = ? ,email = ?, no_hp = ? WHERE user_id = ?';
+                          req.getConnection(function(err,connection){
+                            connection.query(queryUpdateUserById,[nama,alamat,email,no_hp,user_id],function(err,results){
+                                if(err)
+                                  console.log("Error Selecting : %s ", err);
+                                else if(results.length){
+                                  res.status(404).json({ message: 'User ID not Found' });
+                                }
+                                else{
+                                  var queryUser = 'SELECT * FROM user WHERE user_id = ?'
+                                  req.getConnection(function(err,connection){
+                                    connection.query(queryUser,[user_id],function(err,rows){
+                                         if (err) {
+                                             res.json({status: 400,success: false, message: "Internal Server Error"})
+                                         } else {
+                                             res.json({status: 200 , success: true, message: 'Success Update User',data: rows[0],token: token });  
+                                         }
+                                   });
+                                  });  
+                                }
+                            });
+                        });
+                        }
                       }
-                      else{
-                        var queryUser = 'SELECT * FROM user WHERE user_id = ?'
-                        req.getConnection(function(err,connection){
-                          connection.query(queryUser,[user_id],function(err,rows){
-                               if (err) {
-                                   res.json({status: 400,success: false, message: "Internal Server Error"})
-                               } else {
-                                   res.json({status: 200 , success: true, message: 'Success Update User',data: rows[0],token: token });  
-                               }
-                         });
-                        });  
-                         
-                      }
-                  });
-              });
-              }
-                 
+                    }); 
+              }          
 }
 
 // Update Password informasi Profile /route = api/user/changepassword
 wisatawanController.changePasswordUserById = (req, res) => {
+ if(!req.body.token) {
+                  res.status(401).json({status: false, message: 'Please Login !'});
+              }else{
+                  var token = req.body.token    
+                //JWT VERIFY     
+                    jwt.verify(token, secret, function(err, decoded) {
+                      if(err) {
+                        return res.status(401).send({message: 'invalid_token'});
+                      }else{
+                        var user_id = decoded.user_id
+                         var queryCheckPassword = 'SELECT * FROM user WHERE user_id = ?'             
+                          req.getConnection(function(err,connection){
+                            connection.query(queryCheckPassword,[user_id],function(err,rows){              
+                              var checkOldPassword = rows[0].password;
+                              var oldPasswordInput = require('crypto').createHash('md5').update(req.body.old_password +'setapakbogor', 'utf8').digest('hex');
+                            
+                              if(!req.body.old_password||!req.body.new_password||!req.body.confirm_password) {
+                                res.json({status: 400, message: 'Data Incomplete'});
+                              } else if(checkOldPassword != oldPasswordInput){
+                                res.json({status: 400, message: 'Input Old Password Incorrect'});
+                              } else if(req.body.new_password.length < 8){
+                                res.json({status: 400, message: 'Password Must be at least 8 Character'});
+                              } else if (req.body.new_password != req.body.confirm_password) {
+                                res.json({status: 400, message: "New Password Didn't Match"})
+                              } else {
+                                var old_password = req.body.old_password,
+                                    new_password = req.body.new_password,
+                                    confirm_password = req.body.confirm_password
 
-          var user_id = req.body.user_id
-          var queryCheckPassword = 'SELECT * FROM user WHERE user_id = ?'             
-          req.getConnection(function(err,connection){
-            connection.query(queryCheckPassword,[user_id],function(err,rows){              
-              var checkOldPassword = rows[0].password;
-              var oldPasswordInput = require('crypto').createHash('md5').update(req.body.old_password +'setapakbogor', 'utf8').digest('hex');
-            
-              if(!req.body.old_password||!req.body.new_password||!req.body.confirm_password) {
-                res.json({status: 400, message: 'Data Incomplete'});
-              } else if(checkOldPassword != oldPasswordInput){
-                res.json({status: 400, message: 'Input Old Password Incorrect'});
-              } else if(req.body.new_password.length < 8){
-                res.json({status: 400, message: 'Password Must be at least 8 Character'});
-              } else if (req.body.new_password != req.body.confirm_password) {
-                res.json({status: 400, message: "New Password Didn't Match"})
-              } else {
-                var old_password = req.body.old_password,
-                    new_password = req.body.new_password,
-                    confirm_password = req.body.confirm_password
-
-                var newPasswordHash = require('crypto')
-                .createHash('md5')
-                .update(req.body.new_password +'setapakbogor', 'utf8')
-                .digest('hex');
-                              
-                var queryChangePasswordUserById = 'UPDATE user SET password = ? WHERE user_id = ?';
-                req.getConnection(function(err,connection){
-                  connection.query(queryChangePasswordUserById,[newPasswordHash,user_id],function(err,results){
-                      if(err)
-                        console.log("Error Selecting : %s ", err);
-                      else if(results.length){
-                        res.json({ status:404, message: 'User ID not Found' });
+                                var newPasswordHash = require('crypto')
+                                .createHash('md5')
+                                .update(req.body.new_password +'setapakbogor', 'utf8')
+                                .digest('hex');
+                                              
+                                var queryChangePasswordUserById = 'UPDATE user SET password = ? WHERE user_id = ?';
+                                req.getConnection(function(err,connection){
+                                  connection.query(queryChangePasswordUserById,[newPasswordHash,user_id],function(err,results){
+                                      if(err)
+                                        console.log("Error Selecting : %s ", err);
+                                      else if(results.length){
+                                        res.json({ status:404, message: 'User ID not Found' });
+                                      }
+                                      else{
+                                        var queryUser = 'SELECT * FROM user WHERE user_id = ?'
+                                        req.getConnection(function(err,connection){
+                                          connection.query(queryUser,[user_id],function(err,rows){
+                                               if (err) {
+                                                   res.json({status: 400,success: false, message: "Internal Server Error"})
+                                               } else {
+                                                  res.json({status: 200 , message: 'Success Change password User',data: rows[0],token: token  });   
+                                               }
+                                         });
+                                        });  
+                                        
+                                      }
+                                  });
+                                });
+                              }
+                          });
+                        });   
                       }
-                      else{
-                        var queryUser = 'SELECT * FROM user WHERE user_id = ?'
-                        req.getConnection(function(err,connection){
-                          connection.query(queryUser,[user_id],function(err,rows){
-                               if (err) {
-                                   res.json({status: 400,success: false, message: "Internal Server Error"})
-                               } else {
-                                  res.json({status: 200 , message: 'Success Change password User',data: rows[0],token: token  });   
-                               }
-                         });
-                        });  
-                        
-                      }
-                  });
-                });
-              }
-          });
-        });   
+                    }); 
+              }                              
+}         
 } 
         
 
