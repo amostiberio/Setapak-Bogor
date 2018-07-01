@@ -60,7 +60,7 @@ var session = require('express-session');
 // }))
 
 // Default Api Awal
-app.use('/api', api())
+app.use('/api', api());
 app.use('/public',express.static(path.join(__dirname, 'public')));
 
 // app.use('/', index)
