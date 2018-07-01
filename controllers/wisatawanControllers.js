@@ -267,13 +267,5 @@ wisatawanController.changePasswordUserById = (req, res) => {
                     }); 
               }                              
 }         
- 
-        
-
-
-
-
-    
-
 
 module.exports = wisatawanController;

@@ -334,69 +334,52 @@ homestayController.deleteHomestay = (req, res) => {
     }    
 }
 
+//route = api/homestay/search
 homestayController.searchHomestay = (req, res) =>{
  var provinsi = req.body.provinsi,
 	 kabupaten = req.body.kabupaten,
 	 kecamatan = req.body.kecamatan
- var batasAtas = 500000,
-     batasBawah = 0
- var nama_homestay = req.body.nama_homestay,
-     harga_perhari_bawah= req.body.harga_perhari_bawah,
-     harga_perhari_atas= req.body.harga_perhari_atas
+ var batasAtas = req.body.upper,
+     batasBawah = req.body.lower
  var querySelectHomestay = 'SELECT * FROM homestay'
  var querySelectAlamatCategory = 'SELECT alamatcategory_id FROM alamatcategory WHERE provinsi = ? AND kabupaten = ? AND kecamatan = ?'
  var querySelectHomestayAlamat = 'SELECT * FROM homestay WHERE alamatcategory_id = ?'
  var querySearchHomestayAlamatPrice = 'SELECT * FROM homestay WHERE alamatcategory_id = ? AND harga_perhari BETWEEN ? AND ?'
  //var querySelectHomestayKeyword = 'SELECT * FROM homestay WHERE nama_homestay LIKE ?'
- 
- 	if(!provinsi || !kabupaten || !kecamatan ||!harga_perhari_atas ||!harga_perhari_bawah ){
- 		req.getConnection(function(err,connection){
-			connection.query(querySelectHomestay,function(err,results){
-				if(err){
-					console.log("Error Selecting : %s ", err);
-				}else if(!results){
-					res.status(404).json({ message: 'Homestay ID not Found' });
-				}else{
-					res.status(200).json({status:200,message:'Get data success',results});	
-				}				
-				
-			});
-		});
- 	}else if(provinsi||kabupaten||kecamatan){
+ 	 if(provinsi||kabupaten||kecamatan){
  		req.getConnection(function(err,connection){
 			connection.query(querySelectAlamatCategory,[provinsi,kabupaten,kecamatan],function(err,results){
 				if(err){
 					console.log("Error Selecting : %s ", err);
 				}else if(!results){
-					res.status(404).json({ message: 'Alamat Category not Found' });
+					res.json({status:404, message: 'Alamat Category not Found' });
 				}else{
-					var alamatcategory_id = results[0].alamatcategory_id
-					if(harga_perhari_bawah != batasBawah || harga_perhari_atas != batasAtas){
-						req.getConnection(function(err,connection){
-							connection.query(querySearchHomestayAlamatPrice,[alamatcategory_id,harga_perhari_bawah,harga_perhari_atas],function(err,results){
-								if(err){
-									console.log("Error Selecting : %s ", err);
-								}else if(!results){
-									res.status(404).json({ message: 'Homestay Not Found' });
-								}else{
-									res.status(200).json({status:200,message:'Get data success',results});	
-								}				
-								
-							});
+					var alamatcategory_id = results[0].alamatcategory_id					
+					req.getConnection(function(err,connection){
+						connection.query(querySearchHomestayAlamatPrice,[alamatcategory_id,batasBawah,batasAtas],function(err,results){
+							if(err){
+								console.log("Error Selecting : %s ", err);
+							}else if(!results){
+								res.json({status:404, message: 'Homestay Not Found' });
+							}else{
+								res.json({status:200,message:'Get data success',data: results});	
+							}				
+							
 						});
-					}else{
-						req.getConnection(function(err,connection){
-							connection.query(querySelectHomestayAlamat,[alamatcategory_id],function(err,results){
-								if(err){
-									console.log("Error Selecting : %s ", err);
-								}else if(!results){
-									res.status(404).json({ message: 'Homestay Not Found' });
-								}else{
-									res.status(200).json({status:200,message:'Get data success',results});	
-								}		
-							});
-						});
-					}
+					});
+						
+				}
+			});
+		});
+ 	}else{
+ 		req.getConnection(function(err,connection){
+			connection.query(querySelectHomestay,function(err,results){
+				if(err){
+					console.log("Error Selecting : %s ", err);
+				}else if(!results){
+					res.json({status:404,message: 'Theres no Homestay Found' });
+				}else{
+					res.json({status:200,message:'Get data success',data : results});	
 				}				
 				
 			});

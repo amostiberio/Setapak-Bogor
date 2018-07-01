@@ -87,6 +87,10 @@ sistemnya kayak gojek
 ionic :
 
 upload foto belum kelar
+kelarin transaksi homestay sampai selesai order
+belum kelar search homestay
+
+advanced ionic 2 component
 
 https://majora.rapidplex.com:2083/cpsess2482158361/viewer/home/setapakb/setapakbogorapi/public/uploads/userphoto/UserPhoto-24-magical_sky_touch_by_qauz-dcbyr4z.jpg.png
 
