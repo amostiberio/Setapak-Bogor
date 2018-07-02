@@ -479,7 +479,7 @@ uploadController.userPhoto = async (req, res) => {
             var user_id = req.body.user_id
           var newNameUpload;
           var direktori = './public/uploads/userphoto/';
-
+          var savedbdirektori = './public/uploads/userphoto/';
           //Destination storage
           var storage = multer.diskStorage({      
             destination: direktori,
@@ -516,7 +516,7 @@ uploadController.userPhoto = async (req, res) => {
             } else if (req.file == null || req.file == 0) {
               res.status(400).json({status: false, message: 'File kosong, silahkan pilih file kembali'});
             } else {
-              var direktoriPhoto = direktori + newNameUpload
+              var direktoriPhoto = savedbdirektori + newNameUpload
               var queryUpdateUserPhoto = 'UPDATE user SET photo = ? WHERE user_id = ?';
               req.getConnection(function(err,connection){
                 connection.query(queryUpdateUserPhoto,[direktoriPhoto,user_id],function(err,results){
@@ -533,7 +533,6 @@ uploadController.userPhoto = async (req, res) => {
             }
           });
           }
-          
 }
 
 //api/user/upload/userphoto

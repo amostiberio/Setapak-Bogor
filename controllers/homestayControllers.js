@@ -329,10 +329,10 @@ homestayController.deleteHomestay = (req, res) => {
 			    	});
                 }	
     		});
-    	});
-    		
+    	});   		
     }    
 }
+
 
 //route = api/homestay/search
 homestayController.searchHomestay = (req, res) =>{
@@ -343,8 +343,8 @@ homestayController.searchHomestay = (req, res) =>{
      batasBawah = req.body.lower
  var querySelectHomestay = 'SELECT * FROM homestay'
  var querySelectAlamatCategory = 'SELECT alamatcategory_id FROM alamatcategory WHERE provinsi = ? AND kabupaten = ? AND kecamatan = ?'
- var querySelectHomestayAlamat = 'SELECT * FROM homestay WHERE alamatcategory_id = ?'
- var querySearchHomestayAlamatPrice = 'SELECT * FROM homestay WHERE alamatcategory_id = ? AND harga_perhari BETWEEN ? AND ?'
+ var querySelectHomestayAlamat = 'SELECT * FROM homestay WHERE alamatcategory_id = ? AND status_avail = ?'
+ var querySearchHomestayAlamatPrice = 'SELECT * FROM homestay WHERE status_avail = ? AND alamatcategory_id = ? AND harga_perhari BETWEEN ? AND ?'
  //var querySelectHomestayKeyword = 'SELECT * FROM homestay WHERE nama_homestay LIKE ?'
  	 if(provinsi||kabupaten||kecamatan){
  		req.getConnection(function(err,connection){
@@ -356,13 +356,13 @@ homestayController.searchHomestay = (req, res) =>{
 				}else{
 					var alamatcategory_id = results[0].alamatcategory_id					
 					req.getConnection(function(err,connection){
-						connection.query(querySearchHomestayAlamatPrice,[alamatcategory_id,batasBawah,batasAtas],function(err,results){
+						connection.query(querySearchHomestayAlamatPrice,[1,alamatcategory_id,batasBawah,batasAtas],function(err,results){
 							if(err){
 								console.log("Error Selecting : %s ", err);
-							}else if(!results){
-								res.json({status:404, message: 'Homestay Not Found' });
+							}else if(results.length){
+								res.json({status:200,message:'Get data success', data: results});								
 							}else{
-								res.json({status:200,message:'Get data success',data: results});	
+								res.json({status:404, message: 'Theres No Homestay Available' });
 							}				
 							
 						});
@@ -376,11 +376,11 @@ homestayController.searchHomestay = (req, res) =>{
 			connection.query(querySelectHomestay,function(err,results){
 				if(err){
 					console.log("Error Selecting : %s ", err);
-				}else if(!results){
-					res.json({status:404,message: 'Theres no Homestay Found' });
+				}else if(results.length){
+					res.json({status:200,message:'Get data success', data: results});								
 				}else{
-					res.json({status:200,message:'Get data success',data : results});	
-				}				
+					res.json({status:404, message: 'Theres No Homestay Available' });
+				}					
 				
 			});
 		});
