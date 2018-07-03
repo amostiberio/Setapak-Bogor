@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.0
+-- version 4.7.7
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 22, 2018 at 05:33 AM
--- Server version: 10.1.31-MariaDB
--- PHP Version: 7.2.4
+-- Host: localhost:3306
+-- Generation Time: Jul 03, 2018 at 12:29 PM
+-- Server version: 5.6.39-log
+-- PHP Version: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `setapakbogor`
+-- Database: `setapakb_setapakbogor`
 --
 
 -- --------------------------------------------------------
@@ -121,6 +121,33 @@ CREATE TABLE `blacklist` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `event`
+--
+
+CREATE TABLE `event` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text NOT NULL,
+  `tanggal` date NOT NULL,
+  `view` int(20) DEFAULT NULL,
+  `user` varchar(100) NOT NULL,
+  `picture` varchar(150) DEFAULT NULL,
+  `slug` text NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `event`
+--
+
+INSERT INTO `event` (`id`, `title`, `description`, `tanggal`, `view`, `user`, `picture`, `slug`, `created_at`, `updated_at`) VALUES
+(1, 'Artikel Basket', '<p>Kepadatan lalu lintas Kota Bogor merupakan problem yang muncul karena berbagai sebab yang sangat kompleks.</p>\r\n\r\n<p>Tak hanya karena keberadaan angkot, Dinas Perhubungan Kota Bogor mencatat sedikitnya ada tujuh hal yang menjadi isu transportasi Kota Bogor.</p>\r\n\r\n<p>Diantaranya memang perihal angkot, terutama pola trayek angkutan umum. Sekarang ini, hampir seluruh trayek angkot menyentuh pusat kegiatan utama kota yang terletak pada putaran Kebun Raya Bogor.</p>\r\n\r\n<p>Selain itu, penyebab lainnya adalah ketimpangan antara pertumbuhan jumlah kendaraan dengan pertumbuhan lebar dan panjang jalan.</p>\r\n\r\n<p>Jumlah kendaraan di Kota Bogor tumbuh sekitar 4% per tahun, sedangkan lebar dan panjang jalan hanya bertambah 0,01%.</p>', '2018-03-27', NULL, 'Admin', NULL, 'artikel-basket', '2018-03-27 12:00:20', '2018-03-27 12:00:20'),
+(2, 'Event Bogor', '<p>Jiwa Islami Hasilkan Akhlaq Madani</p>\r\n\r\n<p>FATIH 2018 adalah acara yang bertujuan untuk membuat pelajar-pelajar Indonesia, terutama Bogor, untuk lebih mengenal dan lebih dekat dengan Islam.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Mengundang para muslim/ah berpartisipasi dalam lomba-lomba islami untuk siswa/i tingkat SMP/SEDERAJAT</p>', '2018-03-27', NULL, 'Admin', NULL, 'fatih-festival-of-talented-islamic-youth', '2018-03-27 12:10:04', '2018-03-27 12:38:08');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fasilitas`
 --
 
@@ -163,17 +190,18 @@ CREATE TABLE `homestay` (
   `harga_perhari` int(50) NOT NULL,
   `deskripsi` text NOT NULL,
   `alamat` varchar(50) NOT NULL,
-  `status_avail` varchar(13) NOT NULL
+  `status_avail` varchar(13) NOT NULL,
+  `mainphoto` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `homestay`
 --
 
-INSERT INTO `homestay` (`homestay_id`, `pemandu_id`, `fasilitas_id`, `alamatcategory_id`, `nama_homestay`, `harga_perhari`, `deskripsi`, `alamat`, `status_avail`) VALUES
-(1, 1, 9, 17, 'Keray', 20000, 'Homestay keluar Amos', 'Jl raya dramaga', '1'),
-(2, 1, 10, 17, 'Keraz', 30000, 'Homestay keluar Amos', 'Jl raya dramaga', '0'),
-(3, 2, 11, 17, 'Homestay ku', 20000, 'Homestay keluar Emiel', 'Jl raya dramaga', '0');
+INSERT INTO `homestay` (`homestay_id`, `pemandu_id`, `fasilitas_id`, `alamatcategory_id`, `nama_homestay`, `harga_perhari`, `deskripsi`, `alamat`, `status_avail`, `mainphoto`) VALUES
+(1, 1, 9, 17, 'Rumah Studio Kirana', 150000, 'Homestay diberikan oleh pemandu Amos', 'Jl raya dramaga', '1', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(2, 1, 10, 17, 'Rumah Tradisional Bogor', 150000, 'Homestay diberikan oleh pemandu Amos', 'Jl raya dramaga', '1', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(3, 2, 11, 17, 'Homestay Dramaga', 150000, 'Homestay diberikan oleh pemandu Emiel', 'Jl raya dramaga', '1', '/public/uploads/homestayphoto/homestayPhoto-1.jpg');
 
 -- --------------------------------------------------------
 
@@ -202,6 +230,18 @@ INSERT INTO `jasa` (`jasa_id`, `pemandu_id`, `alamatcategory_id`, `nama_jasa`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `password_resets`
+--
+
+CREATE TABLE `password_resets` (
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `pemandu`
 --
 
@@ -213,16 +253,19 @@ CREATE TABLE `pemandu` (
   `alamat` varchar(100) NOT NULL,
   `deskripsi` text NOT NULL,
   `pemandu_status` varchar(20) NOT NULL,
-  `pemandu_verifikasi` varchar(20) NOT NULL
+  `pemandu_verifikasi` varchar(20) NOT NULL,
+  `photo` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `pemandu`
 --
 
-INSERT INTO `pemandu` (`pemandu_id`, `user_id`, `alamatcategory_id`, `nama_company`, `alamat`, `deskripsi`, `pemandu_status`, `pemandu_verifikasi`) VALUES
-(1, 22, 17, 'Dramaga Tour', 'Jl. Dramaga', 'Tour Guide di Dramaga', '1', '1'),
-(2, 24, 17, 'Emiel Company', 'Jl raya dramaga', 'Tour Guide di Dramaga', '1', '1');
+INSERT INTO `pemandu` (`pemandu_id`, `user_id`, `alamatcategory_id`, `nama_company`, `alamat`, `deskripsi`, `pemandu_status`, `pemandu_verifikasi`, `photo`, `created_at`, `updated_at`) VALUES
+(1, 22, 17, 'Dramaga Tour', 'Jl. Dramaga', 'Tour Guide di Dramaga', '1', '1', './public/uploads/userphoto/userPhoto-22.png', '2018-07-03 05:28:43', '0000-00-00 00:00:00'),
+(2, 24, 17, 'Emiel Company', 'Jl raya dramaga', 'Tour Guide di Dramaga', '1', '1', './public/uploads/userphoto/UserPhoto-24-house.png', '2018-07-03 05:28:43', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -245,7 +288,19 @@ CREATE TABLE `pictures` (
 INSERT INTO `pictures` (`picture_id`, `produk_id`, `user_id`, `kode_tipe`, `directory`) VALUES
 (6, 2, 24, 'BuktiPembayaranHomestay', './public/uploads/buktipembayaran/homestayBuktiPembayaranHomestay-2.png'),
 (7, 1, 22, 'BuktiPembayaranJasa', './public/uploads/buktipembayaran/jasaBuktiPembayaranJasa-1.png'),
-(8, 1, 24, 'BuktiPembayaranBarang', './public/uploads/buktipembayaran/barangBuktiPembayaranBarang-1.png');
+(8, 1, 24, 'BuktiPembayaranBarang', './public/uploads/buktipembayaran/barangBuktiPembayaranBarang-1.png'),
+(9, 1, 24, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(10, 1, 24, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(11, 1, 24, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(12, 1, 24, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(13, 2, 24, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(14, 2, 24, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(15, 2, 24, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(16, 2, 24, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(17, 3, 22, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(18, 3, 22, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(19, 3, 22, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(20, 3, 22, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg');
 
 -- --------------------------------------------------------
 
@@ -1350,12 +1405,37 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`user_id`, `email`, `password`, `nama`, `alamat`, `no_hp`, `role`, `photo`) VALUES
 (3, 'admin1@gmail.com', 'adminsetapakbogor', 'Amos Tiberio Sungguraja', 'jl swadaya ix rt 09/01 no 17 jaticempaka pondokgede bekasi 17411', '081289063136', 'admin', ''),
-(22, 'amostiberio@gmail.com', '83a291a32137f869ed9a209d065b6d95', 'Amos Tiberio Sungguraja', 'jl swadaya ix rt 09/01 no 17 jaticempaka pondokgede bekasi 17411', '081289063136', 'user', './public/uploads/userphoto/userPhoto-22.png'),
-(24, 'emielkautsar@gmail.com', 'dd1b91becdab78b694efa2f762539156', 'Emiel Kautsar', 'Bogor', '081289063136', 'user', './public/uploads/userphoto/UserPhoto-24-magical_sky_touch_by_qauz-dcbyr4z.jpg.png'),
-(25, 'amosamos@gmail.com', 'd84a9fce4d2a4d4d89a6b494dd5a6ad3', 'Amos Tiberio', 'Jl swadaya ix', '0812896263136', 'user', ''),
-(26, 'amoscoba@gmail.com', 'yutub13e', 'amoscoba', 'jalancoba', '081289063136', 'user', ''),
-(27, 'amoscobaa@gmail.com', 'c22897ba43f7cfafa5a6c7fb93c95e2e', 'amoscoba', 'jalancoba', '081289063136', 'user', ''),
-(28, 'amoscobaaa@gmail.com', 'c22897ba43f7cfafa5a6c7fb93c95e2e', 'amoscoba', 'asdasd', '081289063136', 'user', '');
+(22, 'amostiberio@gmail.com', '83a291a32137f869ed9a209d065b6d95', 'Amos Tiberio S', 'Jl Swadaya ix rt 09/01 no 17 jaticempaka pondokgede bekasi 17411', '081289063136', 'user', './public/uploads/userphoto/userPhoto-22.png'),
+(24, 'emielkautsar@gmail.com', 'dd1b91becdab78b694efa2f762539156', 'Emiele Kautsaar', 'Bogor', '081289063136', 'user', './public/uploads/userphoto/UserPhoto-24-house.png'),
+(25, 'amostiberio123@gmail.com', '975e8f9b8f8e1dcc293aa15b33857533', 'Amos Tiberio', 'Asd Jlana swadaya', '081289063136', 'user', ''),
+(26, 'marisya@gmail.com', '48a558d9e2fd839f7084c38ab0872666', 'Marisya', 'Bogor', '081289063636', 'user', ''),
+(27, 'amoscoba@gmail.com', '975e8f9b8f8e1dcc293aa15b33857533', 'AmosCoba', 'jakarta', '081289063136', 'user', ''),
+(29, 'amostiberiocoba@gmail.com', '975e8f9b8f8e1dcc293aa15b33857533', 'Amos Tiberio Coba', 'asdasd', '081289063136', 'user', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `picture` varchar(225) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `picture`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'admin', 'admin@gmail.com', '$2y$10$hCDCwlRA8b5EOuBoEWgmjO4wtfavzdeuzi27hWSt83NFxo32vL9mK', '', 'Admin', 'FvRz557sBP3tkaNG5j0BTQypdb0LyvmFSiSh1jVeyqZRH7lNfmumqqNl7KkH', '2018-03-10 11:03:42', '2018-03-10 11:03:42');
 
 -- --------------------------------------------------------
 
@@ -1384,6 +1464,12 @@ ALTER TABLE `barang`
   ADD PRIMARY KEY (`barang_id`);
 
 --
+-- Indexes for table `event`
+--
+ALTER TABLE `event`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `fasilitas`
 --
 ALTER TABLE `fasilitas`
@@ -1400,6 +1486,12 @@ ALTER TABLE `homestay`
 --
 ALTER TABLE `jasa`
   ADD PRIMARY KEY (`jasa_id`);
+
+--
+-- Indexes for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD KEY `password_resets_email_index` (`email`);
 
 --
 -- Indexes for table `pemandu`
@@ -1463,6 +1555,13 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`user_id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1477,6 +1576,12 @@ ALTER TABLE `alamatcategory`
 --
 ALTER TABLE `barang`
   MODIFY `barang_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `event`
+--
+ALTER TABLE `event`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `fasilitas`
@@ -1506,7 +1611,7 @@ ALTER TABLE `pemandu`
 -- AUTO_INCREMENT for table `pictures`
 --
 ALTER TABLE `pictures`
-  MODIFY `picture_id` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `picture_id` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `review_produk`
@@ -1548,7 +1653,13 @@ ALTER TABLE `transaksi_jasa`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `user_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -480,4 +480,52 @@ homestayController.uploadPhoto = async (req, res) => {
 	    });	
     }
 }
+
+
+
+// Get data Fasilitas dari alamat category//router = api/homestay/fasilitas/:fasilitas_id
+homestayController.getDataFasilitas= (req, res) => {	   		  
+	var fasilitas_id = req.params.fasilitas_id
+	var querySelectFasilitasHomestay = 'SELECT * FROM fasilitas WHERE fasilitas_id = ?'    	  	
+	req.getConnection(function(err,connection){
+		connection.query(querySelectFasilitasHomestay,[fasilitas_id],function(err,rows){ //get pemandu id
+			if(err)
+			   console.log("Error Selecting : %s ", err);
+			if(rows.length){	            	
+				res.json({status: 200, message: 'Sukses', data: rows});
+			}else {                        
+	            res.json({status: 400, message: 'Fasilitas does not exists!'});
+	        }
+		});
+	});   
+}
+
+// Get data Fasilitas dari alamat category//router = api/homestay/pemandu/:pemandu_id
+homestayController.getDataPemanduHomestay= (req, res) => {	   		  
+	var pemandu_id = req.params.pemandu_id
+	var querySelectDataPemandu = 'SELECT * FROM pemandu WHERE pemandu_id = ?'
+	var querySelectDataUser= 'SELECT * FROM user WHERE user_id = ?'   	  	
+	req.getConnection(function(err,connection){
+		connection.query(querySelectDataPemandu,[pemandu_id],function(err,rows){ //get pemandu id
+			if(err)
+			   console.log("Error Selecting : %s ", err);
+			if(rows.length){
+				var user_id = rows[0].user_id	            	
+				req.getConnection(function(err,connection){
+					connection.query(querySelectDataUser,[user_id],function(err,rows){ //get pemandu id
+						if(err)
+						   console.log("Error Selecting : %s ", err);
+						if(rows.length){	            	
+							res.json({status: 200, message: 'Sukses', data: rows});
+						}
+					});
+				}); 
+			}else {                        
+	            res.json({status: 400, message: 'Pemandu does not exists!'});
+	        }
+		});
+	});   
+}
+
+
 module.exports = homestayController;

@@ -268,4 +268,32 @@ wisatawanController.changePasswordUserById = (req, res) => {
               }                              
 }         
 
+// Get profile data Pemandu y//router = api/user/profilepemandu/:pemandu_id
+wisatawanController.getDataPemandu= (req, res) => {          
+  var pemandu_id = req.params.pemandu_id
+  var querySelectDataPemandu = 'SELECT * FROM pemandu WHERE pemandu_id = ?'
+  var querySelectDataUser= 'SELECT * FROM user WHERE user_id = ?'         
+  req.getConnection(function(err,connection){
+    connection.query(querySelectDataPemandu,[pemandu_id],function(err,rows){ //get pemandu id
+      if(err)
+         console.log("Error Selecting : %s ", err);
+      if(rows.length){
+        res.json({status: 200, message: 'Sukses', data: rows});
+        // var user_id = rows[0].user_id               
+        // req.getConnection(function(err,connection){
+        //   connection.query(querySelectDataUser,[user_id],function(err,rows){ //get pemandu id
+        //     if(err)
+        //        console.log("Error Selecting : %s ", err);
+        //     if(rows.length){                
+        //       res.json({status: 200, message: 'Sukses', data: rows});
+        //     }
+        //   });
+        // }); 
+      }else {                        
+              res.json({status: 400, message: 'Pemandu does not exists!'});
+      }
+    });
+  });   
+}
+
 module.exports = wisatawanController;

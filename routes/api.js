@@ -15,7 +15,9 @@ var transaksiBarangController = require('../controllers/transaksiBarangControlle
 var testingController = require('../controllers/testingControllers');
 var uploadController = require('../controllers/uploadControllers');
 var emailController = require('../controllers/emailControllers');
-var alamatController = require ('../controllers/alamatControllers')
+var alamatController = require ('../controllers/alamatControllers');
+var pictureController = require ('../controllers/picturesControllers');
+
 //var notifikasiController = require('../controllers/notifikasiControllers');
 
 var APIRoutes = function () {
@@ -29,6 +31,8 @@ var APIRoutes = function () {
     router.post('/user/changepassword',wisatawanController.changePasswordUserById);
     router.post('/user/register',wisatawanController.registerUser);
     router.post('/user/login',wisatawanController.loginUser);
+    router.get('/user/profilepemandu/:pemandu_id',wisatawanController.getDataPemandu);
+
     //router.post('/user/uploadphoto',wisatawanController.uploadPhoto);
     // router.get('/users', wisatawanControllers.getUsers);
     // router.post('/user/delete/:id',wisatawanControllers.deleteUserById);
@@ -39,7 +43,8 @@ var APIRoutes = function () {
     router.get('/homestay/:homestay_id',homestayController.getOneHomestay);
     router.post('/homestay/search',homestayController.searchHomestay);
     router.get('/homestay/pemandu/:pemandu_id',homestayController.getPemanduHomestay); //view punya orang
-        
+    router.get('/homestay/fasilitas/:fasilitas_id',homestayController.getDataFasilitas);
+
     //pemandu//
     router.get('/pemandu/homestay/all',homestayController.getHomestayKu); //view punya sendiri sebagai pemandu
     router.post('/pemandu/homestay/add',homestayController.addHomestay); 
@@ -91,7 +96,10 @@ var APIRoutes = function () {
     router.get('/alamat/provinsi',alamatController.getProvinsi);
     router.get('/alamat/kabupaten',alamatController.getKabupaten);
     router.get('/alamat/kecamatan',alamatController.getKecamatan);
+    router.get('/alamat/category/:idalamat',alamatController.getDetailCategory);
 
+    //Picture 
+    router.get('/picture/homestay/:idhomestay',pictureController.getHomestayPictures);
 
     // Email Controller
     router.post('/forgetpassword',emailController.forgetPassword);

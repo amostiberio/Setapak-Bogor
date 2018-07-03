@@ -6,7 +6,7 @@ var multer = require('multer');
 var path = require('path');
 var token;
 
-// Get All Barang Satu Pemandu //router = api/alamat/provinsi
+// //router = api/alamat/provinsi
 alamatController.getProvinsi = (req, res) => {		
 		var querySelectProvinsi  = 'SELECT DISTINCT provinsi FROM alamatcategory ' 
 		  	  	
@@ -23,7 +23,7 @@ alamatController.getProvinsi = (req, res) => {
 
 
 
-// Get All Barang Satu Pemandu //router = api/alamat/kabupaten
+// //router = api/alamat/kabupaten
 alamatController.getKabupaten = (req, res) => {		
 	var querySelectProvinsi  = 'SELECT DISTINCT kabupaten from alamatcategory'    	  	
 	req.getConnection(function(err,connection){
@@ -37,15 +37,30 @@ alamatController.getKabupaten = (req, res) => {
 	});   
 }
 
-// Get All Barang Satu Pemandu //router = api/alamat/kecamatan
+// //router = api/alamat/kecamatan
 alamatController.getKecamatan= (req, res) => {	   		   	
 	var querySelectProvinsi  = 'SELECT alamatcategory_id,kecamatan FROM alamatcategory'    	  	
 	req.getConnection(function(err,connection){
 		connection.query(querySelectProvinsi,function(err,rows){ //get pemandu id
-			  if(err)
+			if(err)
 			   console.log("Error Selecting : %s ", err);
 			if(rows.length){	            	
 				res.json({status: 200, message: 'Data Barang untuk Pemandu', data: rows});
+			}
+		});
+	});   
+}
+
+// Get nama data dari alamat category//router = api/alamat/category/:idalamat
+alamatController.getDetailCategory= (req, res) => {	   		  
+	var idalamatcategory = req.params.idalamat
+	var querySelectProvinsi  = 'SELECT * FROM alamatcategory WHERE alamatcategory_id = ?'    	  	
+	req.getConnection(function(err,connection){
+		connection.query(querySelectProvinsi,[idalamatcategory],function(err,rows){ //get pemandu id
+			if(err)
+			   console.log("Error Selecting : %s ", err);
+			if(rows.length){	            	
+				res.json({status: 200, message: 'Sukses', data: rows});
 			}
 		});
 	});   
