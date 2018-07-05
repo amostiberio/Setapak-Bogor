@@ -41,7 +41,7 @@ homestayController.getOneHomestay = (req, res) => {
 											               console.log("Error Selecting : %s ", err);
 											            if(alamatCategory.length){
 											             	var dataAlamatCategory = alamatCategory[0]
-											             	res.status(200).json({status: true, message: 'Select Homestay', dataHomestay, dataPemandu, dataFasilitas, dataAlamatCategory});					         
+											             	res.json({status: 200, message: 'Select Homestay', datahomestay: dataHomestay, dataPemandu: dataPemandu, dataFasilitas: dataFasilitas, dataAlamatCategory: dataAlamatCategory});					         
 											            }
 											    	});
 											    });						         

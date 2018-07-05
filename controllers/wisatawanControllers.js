@@ -203,7 +203,7 @@ wisatawanController.updateProfileUserById = (req, res) => {
 
 // Update Password informasi Profile /route = api/user/changepassword
 wisatawanController.changePasswordUserById = (req, res) => {
- if(!req.body.token) {
+              if(!req.body.token) {
                   res.status(401).json({status: false, message: 'Please Login !'});
               }else{
                   var token = req.body.token    

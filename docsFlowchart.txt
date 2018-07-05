@@ -81,6 +81,8 @@ nanya di transaksi
 sistemnya kayak gojek
 
 
+#homestay
+book review pay
 
 
 #current kerjaan
@@ -88,8 +90,11 @@ sistemnya kayak gojek
 ionic :
 
 upload foto belum kelar
-kelarin transaksi homestay sampai selesai order
-belum kelar search homestay (sudah, tapi result bikin infinitescroll)
+kelarin transaksi homestay sampai selesai order (sudah)
+kelarin transaksi barang
+kelarin transaksi jasa
+
+kelarin mybooking (ini isinya history aja)
 
 buat realtime app cm ionic
 

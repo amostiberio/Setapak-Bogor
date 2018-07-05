@@ -84,28 +84,28 @@ transaksiHomestayController.historyTransaksibyStatus = (req, res) => {
     }
 }
 
-// Add Transaksi Homestay //route = api/transaksiHomestay/pesanHomestay/:homestay_id
+// Add Transaksi Homestay //route = api/transaksiHomestay/user/pesanHomestay/:homestay_id
 transaksiHomestayController.pesanHomestay = (req, res) => {
 	var homestay_id = req.params.homestay_id,   		
-   		check_in = req.body.check_in,
-   		check_out = req.body.check_out,
+   		check_in = req.body.check_in + " 13:00:00",
+   		check_out = req.body.check_out+ " 12:00:00",
    		jumlah_hari = moment.duration(moment(check_out, "YYYY-MM-DD").diff(moment(check_in, "YYYY-MM-DD"))).asDays(),
-   		transaction_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss')  	
-    if(!req.headers.authorization) {
-        res.status(401).json({status: false, message: 'Please Login !'});
+   		transaction_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss')  	  		  	
+    if(!req.body.token) {
+        res.json({status: 401, message: 'Please Login !'});
     }else if (!homestay_id){
-    	res.status(401).json({status: false, message: 'Something missing (ID Homestay)!'});
+    	res.json({status: 401, message: 'Something missing (ID Homestay)!'});
     }else if (jumlah_hari < 1){
-    	res.status(401).json({status: false, message: 'Minimal 1 hari pemesanan, jumlah tidak memenuhi syarat'});
+    	res.json({status: 400, message: 'Minimal 1 hari pemesanan, jumlah tidak memenuhi syarat'});
     }else{
     var queryHomestay = 'SELECT * FROM homestay WHERE homestay_id = ?'
     var queryPemandu = 'SELECT * FROM pemandu WHERE user_id = ?'
     var queryCheckTransaksi = 'SELECT * FROM transaksi_homestay WHERE homestay_id = ? AND check_in between ? AND ? AND check_out between ? AND ?'
     var queryAddTransaksi = 'INSERT INTO transaksi_homestay SET  pemandu_id = ? , user_id = ? , homestay_id = ?, check_in = ? , check_out = ?, jumlah_hari = ? ,transaction_date = ?' 
-    	var token = req.headers.authorization          
+    	var token = req.body.token        
         jwt.verify(token, secret, function(err, decoded) {
         	if(err) {
-            return res.status(401).send({message: 'invalid_token'});
+            	return res.json({status: 401, message: 'invalid_token'});
         	}else{
         	var user_id = decoded.user_id
     		req.getConnection(function(err,connection){
@@ -118,21 +118,21 @@ transaksiHomestayController.pesanHomestay = (req, res) => {
 	        			connection.query(queryPemandu,[user_id],function(err,rows){  
 	        				if(err) console.log("Error Selecting : %s ", err); 
 	        				if(pemandu_id == rows[0].pemandu_id ){
-	        					res.status(401).json({status: false, message: 'Pemandu tidak bisa memesan produk sendiri'});
+	        					res.json({status: 400, message: 'Pemandu tidak bisa memesan produk sendiri'});
 	        				}else if(status_avail == 0){
-	        					res.status(401).json({status: false, message: 'Homestay sedang tidak tersedia'});
+	        					res.json({status: 400, message: 'Homestay sedang tidak tersedia'});
 	        				}else{
 	        					req.getConnection(function(err,connection){
 				       				connection.query(queryCheckTransaksi,[homestay_id,check_in,check_out,check_in,check_out],function(err,rows){
 							        	if(err) console.log("Error Selecting : %s ", err);	
 							       		if(rows.length){
-							       			res.status(401).json({status: false, message: 'Homestay Sudah di Booking oleh wisatawan lain pada tanggal yang sama'});
+							       			res.json({status: 400, message: 'Homestay Sudah di Booking oleh wisatawan lain pada tanggal yang sama'});
 							       		}else{					        	
 							        		 req.getConnection(function(err,connection){
 							       				connection.query(queryAddTransaksi,[pemandu_id,user_id,homestay_id,check_in,check_out,jumlah_hari,transaction_date],function(err,rows){
 										        	if(err) console.log("Error Selecting : %s ", err);	
 										       		else{					        	
-										        		res.status(200).json({success:true,message: 'Success Transaksi Homestay' });   
+										        		res.json({status:200,message: 'Success Transaksi Homestay' });   
 										        	}	        
 									        	});
 									    	});
