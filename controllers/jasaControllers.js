@@ -78,4 +78,56 @@ jasaController.getPemanduJasa = (req, res) => {
 	    });   
 }
 
+
+//route = api/jasa/search
+jasaController.searchJasa  = (req, res) =>{
+ var provinsi = req.body.provinsi,
+	 kabupaten = req.body.kabupaten,
+	 kecamatan = req.body.kecamatan
+ var batasAtas = req.body.upper,
+     batasBawah = req.body.lower
+ var querySelectJasa = 'SELECT * FROM jasa'
+ var querySelectAlamatCategory = 'SELECT alamatcategory_id FROM alamatcategory WHERE provinsi = ? AND kabupaten = ? AND kecamatan = ?'
+ var querySearchJasaAlamatPrice = 'SELECT * FROM jasa WHERE status_avail = ? AND alamatcategory_id = ? AND harga_jasa BETWEEN ? AND ?'
+ 	 if(provinsi||kabupaten||kecamatan){
+ 		req.getConnection(function(err,connection){
+			connection.query(querySelectAlamatCategory,[provinsi,kabupaten,kecamatan],function(err,results){
+				if(err){
+					console.log("Error Selecting : %s ", err);
+				}else if(!results){
+					res.json({status:404, message: 'Alamat Category not Found' });
+				}else{
+					var alamatcategory_id = results[0].alamatcategory_id					
+					req.getConnection(function(err,connection){
+						connection.query(querySearchJasaAlamatPrice,[1,alamatcategory_id,batasBawah,batasAtas],function(err,results){
+							if(err){
+								console.log("Error Selecting : %s ", err);
+							}else if(results.length){
+								res.json({status:200,message:'Get data success', data: results});								
+							}else{
+								res.json({status:404, message: 'Theres No Homestay Available' });
+							}				
+							
+						});
+					});
+						
+				}
+			});
+		});
+ 	}else{
+ 		req.getConnection(function(err,connection){
+			connection.query(querySelectJasa,function(err,results){
+				if(err){
+					console.log("Error Selecting : %s ", err);
+				}else if(results.length){
+					res.json({status:200,message:'Get data success', data: results});								
+				}else{
+					res.json({status:404, message: 'Theres No Homestay Available' });
+				}					
+				
+			});
+		});
+ 	}
+}
+
 module.exports = jasaController;

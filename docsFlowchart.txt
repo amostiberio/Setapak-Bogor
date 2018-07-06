@@ -91,11 +91,12 @@ ionic :
 
 upload foto belum kelar
 kelarin transaksi homestay sampai selesai order (sudah)
-kelarin transaksi barang
+kelarin transaksi barang (baru sampai search)
 kelarin transaksi jasa
 
 kelarin mybooking (ini isinya history aja)
 
+cari info buat refresher, appcm, dan filter list
 buat realtime app cm ionic
 
 api:

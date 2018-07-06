@@ -54,6 +54,7 @@ var APIRoutes = function () {
 
     //Router Jasa
     router.get('/jasa/:jasa_id',jasaController.getOneJasa);
+    router.post('/jasa/search',jasaController.searchJasa);
     router.get('/jasa/pemandu/:pemandu_id',jasaController.getPemanduJasa);
 
     //Router Barang
