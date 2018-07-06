@@ -360,9 +360,9 @@ homestayController.searchHomestay = (req, res) =>{
 							if(err){
 								console.log("Error Selecting : %s ", err);
 							}else if(results.length){
-								res.json({status:200,message:'Get data success', data: results});								
+								res.json({status:200,message:'Search Sukses', data: results});								
 							}else{
-								res.json({status:404, message: 'Theres No Homestay Available' });
+								res.json({status:404, message: 'Tidak ada Homestay yang tersedia' });
 							}				
 							
 						});
@@ -379,7 +379,7 @@ homestayController.searchHomestay = (req, res) =>{
 				}else if(results.length){
 					res.json({status:200,message:'Get data success', data: results});								
 				}else{
-					res.json({status:404, message: 'Theres No Homestay Available' });
+					res.json({status:404, message: 'Tidak ada Homestay yang tersedia' });
 				}					
 				
 			});

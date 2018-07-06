@@ -6,7 +6,7 @@ var multer = require('multer');
 var path = require('path');
 var token;
 
-// Get View Homestay Satu Pemandu //router = api/homestay/:homestay_id
+// Get View Homestay Satu Pemandu //router = api/jasa/:jasa_id
 jasaController.getOneJasa = (req, res) => {
 	var jasa_id = req.params.jasa_id
 	var querySelectJasa  = 'SELECT * FROM jasa WHERE jasa_id = ?'
@@ -33,7 +33,7 @@ jasaController.getOneJasa = (req, res) => {
 											   console.log("Error Selecting : %s ", err);
 											if(alamatCategory.length){
 												 var dataAlamatCategory = alamatCategory[0]
-												 res.status(200).json({status: true, message: 'Select Jasa', dataJasa, dataPemandu, dataAlamatCategory});					         
+												 res.json({status: 200, message: 'Get Data Jasa Berhasil', dataJasa: dataJasa, dataPemandu: dataPemandu, dataAlamatCategory: dataAlamatCategory});					         
 											}
 										});
 									});					         
@@ -41,7 +41,7 @@ jasaController.getOneJasa = (req, res) => {
 					    	});
 					    });
 	            }else{
-					res.status(401).json({status: false, message: 'Jasa tidak ditemukan (Missing ID)'});
+					res.json({status: 401, message: 'Jasa tidak ditemukan (Missing ID)'});
 				}
 	    	});
 	    });
@@ -103,9 +103,9 @@ jasaController.searchJasa  = (req, res) =>{
 							if(err){
 								console.log("Error Selecting : %s ", err);
 							}else if(results.length){
-								res.json({status:200,message:'Get data success', data: results});								
+								res.json({status:200,message:'Search Sukses', data: results});								
 							}else{
-								res.json({status:404, message: 'Theres No Homestay Available' });
+								res.json({status:404, message: 'Tidak ada Jasa yang tersedia' });
 							}				
 							
 						});
@@ -120,9 +120,9 @@ jasaController.searchJasa  = (req, res) =>{
 				if(err){
 					console.log("Error Selecting : %s ", err);
 				}else if(results.length){
-					res.json({status:200,message:'Get data success', data: results});								
+					res.json({status:200,message:'Search Sukses', data: results});								
 				}else{
-					res.json({status:404, message: 'Theres No Homestay Available' });
+					res.json({status:404, message: 'Tidak ada Jasa yang tersedia' });
 				}					
 				
 			});

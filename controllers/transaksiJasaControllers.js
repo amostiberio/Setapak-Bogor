@@ -90,21 +90,21 @@ transaksiJasaController.pesanJasa = (req, res) => {
    		tanggal_booking = req.body.tanggal_booking,  		
 		transaction_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss'),
 		diffHari = moment.duration(moment(tanggal_booking, "YYYY-MM-DD").diff(moment(transaction_date, "YYYY-MM-DD"))).asDays()   
-    if(!req.headers.authorization) {
-        res.status(401).json({status: false, message: 'Please Login !'});
+    if(!req.body.token ) {
+        res.json({status: 401, message: 'Please Login !'});
     }else if (!jasa_id){
-    	res.status(401).json({status: false, message: 'Something missing (ID Jasa)!'});
+    	res.json({status: 401, message: 'Something missing (ID Jasa)!'});
     }else if (diffHari < 1){
-    	res.status(401).json({status: false, message: 'Pemesanan minimal dilakukan sehari sebelum tanggal booking'});
+    	res.json({status: 401, message: 'Pemesanan minimal dilakukan sehari sebelum tanggal booking'});
     }else{
     var queryJasa = 'SELECT * FROM jasa WHERE jasa_id = ?'
     var queryPemandu = 'SELECT * FROM pemandu WHERE user_id = ?'
     var queryCheckTransaksi = 'SELECT * FROM transaksi_jasa WHERE jasa_id = ? AND tanggal_booking = ? AND transaction_status < ?'
     var queryAddTransaksi = 'INSERT INTO transaksi_jasa SET  pemandu_id = ? , user_id = ? , jasa_id = ?, tanggal_booking = ?,transaction_date = ?' 
-    	var token = req.headers.authorization          
+    	var token = req.body.token         
         jwt.verify(token, secret, function(err, decoded) {
         	if(err) {
-            return res.status(401).send({message: 'invalid_token'});
+            return res.send({status: 401, message: 'invalid_token'});
         	}else{
         	var user_id = decoded.user_id
     		req.getConnection(function(err,connection){
@@ -117,21 +117,21 @@ transaksiJasaController.pesanJasa = (req, res) => {
 	        			connection.query(queryPemandu,[user_id],function(err,rows){  
 	        				if(err) console.log("Error Selecting : %s ", err); 
 	        				if(pemandu_id == rows[0].pemandu_id ){
-	        					res.status(401).json({status: false, message: 'Pemandu tidak bisa memesan Jasa sendiri'});
+	        					res.json({status: 401, message: 'Pemandu tidak bisa memesan Jasa sendiri'});
 	        				}else if(status_avail == 0){
-	        					res.status(401).json({status: false, message: 'Jasa sedang tidak tersedia'});
+	        					res.json({status: 401, message: 'Jasa sedang tidak tersedia'});
 	        				}else{
 	        					req.getConnection(function(err,connection){
 				       				connection.query(queryCheckTransaksi,[jasa_id,tanggal_booking,4],function(err,rows){
 							        	if(err) console.log("Error Selecting : %s ", err);	
 							       		if(rows.length){
-							       			res.status(401).json({status: false, message: 'Jasa Sudah di Booking oleh wisatawan lain pada tanggal yang sama'});
+							       			res.json({status: 401, message: 'Jasa Sudah di Booking oleh wisatawan lain pada tanggal yang sama'});
 							       		}else{					        	
 							        		 req.getConnection(function(err,connection){
 							       				connection.query(queryAddTransaksi,[pemandu_id,user_id,jasa_id,tanggal_booking,transaction_date],function(err,rows){
 										        	if(err) console.log("Error Selecting : %s ", err);	
 										       		else{					        	
-										        		res.status(200).json({success:true,message: 'Success Transaksi Jasa' });   
+										        		res.json({success:200, message: 'Success Transaksi Jasa' });   
 										        	}	        
 									        	});
 									    	});

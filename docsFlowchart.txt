@@ -70,22 +70,20 @@ status homestay
 (status 4 = User sudah pakai homestay) [Actor : user, konfirmasiPemakaianKelar]
 (status 5 = Admin sudah transfer uang ke pemandu + transaksi selesai) [Actor : admin, dibayar]
 
-#current kerjaan
+#current kerjaan API NODE JS (Amos)
 uplaod multiple pictures //tugas emiel
 emailcontroller pas sudah bayar
-
 
 #jasa
 slot di hapus, diganti avail atau enggak
 nanya di transaksi
 sistemnya kayak gojek
 
-
 #homestay
 book review pay
 
 
-#current kerjaan
+#current kerjaan IONIC (Amos)
 
 ionic :
 
@@ -105,3 +103,5 @@ advanced ionic 2 component
 
 ruang lingkup
 
+ionic notes:
+refresher ada di portal harga master pengetahuan artikel

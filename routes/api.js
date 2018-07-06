@@ -101,6 +101,7 @@ var APIRoutes = function () {
 
     //Picture 
     router.get('/picture/homestay/:idhomestay',pictureController.getHomestayPictures);
+    router.get('/picture/jasa/:idjasa',pictureController.getJasaPictures)
 
     // Email Controller
     router.post('/forgetpassword',emailController.forgetPassword);

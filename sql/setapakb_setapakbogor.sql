@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 03, 2018 at 12:29 PM
+-- Generation Time: Jul 06, 2018 at 08:14 PM
 -- Server version: 5.6.39-log
 -- PHP Version: 5.6.30
 
@@ -217,15 +217,16 @@ CREATE TABLE `jasa` (
   `harga_jasa` decimal(10,0) NOT NULL,
   `deskripsi` text NOT NULL,
   `lokasi_wisata` varchar(50) NOT NULL,
-  `status_avail` int(12) NOT NULL
+  `status_avail` int(12) NOT NULL,
+  `mainphoto` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `jasa`
 --
 
-INSERT INTO `jasa` (`jasa_id`, `pemandu_id`, `alamatcategory_id`, `nama_jasa`, `harga_jasa`, `deskripsi`, `lokasi_wisata`, `status_avail`) VALUES
-(1, 2, 17, 'Keliling Kampus IPB', '30000', 'Jasa oleh Emiel', 'Institut Pertanian Bogor', 1);
+INSERT INTO `jasa` (`jasa_id`, `pemandu_id`, `alamatcategory_id`, `nama_jasa`, `harga_jasa`, `deskripsi`, `lokasi_wisata`, `status_avail`, `mainphoto`) VALUES
+(1, 2, 17, 'Keliling Kampus IPB', '30000', 'Jasa oleh Emiel', 'Institut Pertanian Bogor', 1, '/public/uploads/homestayphoto/homestayPhoto-1.jpg');
 
 -- --------------------------------------------------------
 
@@ -300,7 +301,11 @@ INSERT INTO `pictures` (`picture_id`, `produk_id`, `user_id`, `kode_tipe`, `dire
 (17, 3, 22, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
 (18, 3, 22, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
 (19, 3, 22, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
-(20, 3, 22, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg');
+(20, 3, 22, 'HomestayPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(21, 1, 24, 'JasaPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(22, 1, 24, 'JasaPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(23, 1, 24, 'JasaPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg'),
+(24, 1, 24, 'JasaPhoto', '/public/uploads/homestayphoto/homestayPhoto-1.jpg');
 
 -- --------------------------------------------------------
 
@@ -1372,15 +1377,16 @@ CREATE TABLE `transaksi_jasa` (
   `jasa_id` int(13) NOT NULL,
   `tanggal_booking` date NOT NULL,
   `transaction_date` datetime NOT NULL,
-  `transaction_status` int(3) NOT NULL
+  `transaction_status` int(3) NOT NULL,
+  `notespemesan` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `transaksi_jasa`
 --
 
-INSERT INTO `transaksi_jasa` (`transaction_id`, `pemandu_id`, `user_id`, `jasa_id`, `tanggal_booking`, `transaction_date`, `transaction_status`) VALUES
-(1, 2, 22, 1, '2018-06-09', '2018-06-08 16:00:43', 1);
+INSERT INTO `transaksi_jasa` (`transaction_id`, `pemandu_id`, `user_id`, `jasa_id`, `tanggal_booking`, `transaction_date`, `transaction_status`, `notespemesan`) VALUES
+(1, 2, 22, 1, '2018-06-09', '2018-06-08 16:00:43', 1, '');
 
 -- --------------------------------------------------------
 
@@ -1611,7 +1617,7 @@ ALTER TABLE `pemandu`
 -- AUTO_INCREMENT for table `pictures`
 --
 ALTER TABLE `pictures`
-  MODIFY `picture_id` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `picture_id` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `review_produk`
@@ -1641,7 +1647,7 @@ ALTER TABLE `transaksi_barang`
 -- AUTO_INCREMENT for table `transaksi_homestay`
 --
 ALTER TABLE `transaksi_homestay`
-  MODIFY `transaction_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `transaction_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `transaksi_jasa`
