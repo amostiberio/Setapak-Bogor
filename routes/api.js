@@ -60,6 +60,8 @@ var APIRoutes = function () {
     //Router Barang
     router.get('/barang/:barang_id',barangController.getOneBarang);
     router.get('/barang/pemandu/:pemandu_id',barangController.getPemanduBarang);
+    router.post('/barang/search',barangController.searchBarang);
+
 
     // Router Transaksi Homestay
     // router.get('/transaksiHomestay/user/historyTransaksiku/:transaction_status',transaksiHomestayController.historyTransaksibyStatus);
@@ -102,6 +104,7 @@ var APIRoutes = function () {
     //Picture 
     router.get('/picture/homestay/:idhomestay',pictureController.getHomestayPictures);
     router.get('/picture/jasa/:idjasa',pictureController.getJasaPictures)
+    router.get('/picture/barang/:idbarang',pictureController.getBarangPictures)
 
     // Email Controller
     router.post('/forgetpassword',emailController.forgetPassword);

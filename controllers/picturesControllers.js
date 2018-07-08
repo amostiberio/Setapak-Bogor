@@ -51,5 +51,22 @@ pictureController.getJasaPictures = (req, res) => {
 	});   
 }
 
+//Get list picture Barang //router = api/picture/jasa/:idjasa
+pictureController.getBarangPictures = (req, res) => {	   		  
+	var idbarang = req.params.idbarang
+	var kode = 'BarangPhoto';
+	var querySelectJasaPicture  = 'SELECT * FROM pictures WHERE produk_id = ? and kode_tipe = ?'    	  	
+	req.getConnection(function(err,connection){
+		connection.query(querySelectJasaPicture,[idbarang,kode],function(err,rows){ //get pemandu id
+			if(err)
+			   console.log("Error Selecting : %s ", err);
+			if(rows.length){	            	
+				res.json({status: 200, message: 'Sukses', data: rows});
+			}
+		});
+	});   
+}
+
+
 
 module.exports = pictureController;

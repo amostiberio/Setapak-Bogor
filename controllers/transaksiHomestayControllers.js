@@ -89,6 +89,7 @@ transaksiHomestayController.pesanHomestay = (req, res) => {
 	var homestay_id = req.params.homestay_id,   		
    		check_in = req.body.check_in + " 13:00:00",
    		check_out = req.body.check_out+ " 12:00:00",
+   		total_harga= req.body.total_harga,
    		jumlah_hari = moment.duration(moment(check_out, "YYYY-MM-DD").diff(moment(check_in, "YYYY-MM-DD"))).asDays(),
    		transaction_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss')  	  		  	
     if(!req.body.token) {
@@ -101,7 +102,7 @@ transaksiHomestayController.pesanHomestay = (req, res) => {
     var queryHomestay = 'SELECT * FROM homestay WHERE homestay_id = ?'
     var queryPemandu = 'SELECT * FROM pemandu WHERE user_id = ?'
     var queryCheckTransaksi = 'SELECT * FROM transaksi_homestay WHERE homestay_id = ? AND check_in between ? AND ? AND check_out between ? AND ?'
-    var queryAddTransaksi = 'INSERT INTO transaksi_homestay SET  pemandu_id = ? , user_id = ? , homestay_id = ?, check_in = ? , check_out = ?, jumlah_hari = ? ,transaction_date = ?' 
+    var queryAddTransaksi = 'INSERT INTO transaksi_homestay SET  pemandu_id = ? , user_id = ? , homestay_id = ?, check_in = ? , check_out = ?, jumlah_hari = ? ,total_harga = ?,transaction_date = ?' 
     	var token = req.body.token        
         jwt.verify(token, secret, function(err, decoded) {
         	if(err) {
@@ -129,7 +130,7 @@ transaksiHomestayController.pesanHomestay = (req, res) => {
 							       			res.json({status: 400, message: 'Homestay Sudah di Booking oleh wisatawan lain pada tanggal yang sama'});
 							       		}else{					        	
 							        		 req.getConnection(function(err,connection){
-							       				connection.query(queryAddTransaksi,[pemandu_id,user_id,homestay_id,check_in,check_out,jumlah_hari,transaction_date],function(err,rows){
+							       				connection.query(queryAddTransaksi,[pemandu_id,user_id,homestay_id,check_in,check_out,jumlah_hari,total_harga,transaction_date],function(err,rows){
 										        	if(err) console.log("Error Selecting : %s ", err);	
 										       		else{					        	
 										        		res.json({status:200,message: 'Success Transaksi Homestay' });   

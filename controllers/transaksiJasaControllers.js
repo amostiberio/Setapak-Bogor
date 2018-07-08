@@ -87,7 +87,8 @@ transaksiJasaController.historyTransaksibyStatus = (req, res) => {
 // Add Transaksi jasa //route = api/transaksijasa/pesanjasa/:jasa_id
 transaksiJasaController.pesanJasa = (req, res) => {
 	var jasa_id = req.params.jasa_id,   		
-   		tanggal_booking = req.body.tanggal_booking,  		
+   		tanggal_booking = req.body.tanggal_booking,
+   		total_harga = req.body.total_harga,  		
 		transaction_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss'),
 		diffHari = moment.duration(moment(tanggal_booking, "YYYY-MM-DD").diff(moment(transaction_date, "YYYY-MM-DD"))).asDays()   
     if(!req.body.token ) {
@@ -100,7 +101,7 @@ transaksiJasaController.pesanJasa = (req, res) => {
     var queryJasa = 'SELECT * FROM jasa WHERE jasa_id = ?'
     var queryPemandu = 'SELECT * FROM pemandu WHERE user_id = ?'
     var queryCheckTransaksi = 'SELECT * FROM transaksi_jasa WHERE jasa_id = ? AND tanggal_booking = ? AND transaction_status < ?'
-    var queryAddTransaksi = 'INSERT INTO transaksi_jasa SET  pemandu_id = ? , user_id = ? , jasa_id = ?, tanggal_booking = ?,transaction_date = ?' 
+    var queryAddTransaksi = 'INSERT INTO transaksi_jasa SET  pemandu_id = ? , user_id = ? , jasa_id = ?, tanggal_booking = ?,total_harga = ?,transaction_date = ?' 
     	var token = req.body.token         
         jwt.verify(token, secret, function(err, decoded) {
         	if(err) {
@@ -128,7 +129,7 @@ transaksiJasaController.pesanJasa = (req, res) => {
 							       			res.json({status: 401, message: 'Jasa Sudah di Booking oleh wisatawan lain pada tanggal yang sama'});
 							       		}else{					        	
 							        		 req.getConnection(function(err,connection){
-							       				connection.query(queryAddTransaksi,[pemandu_id,user_id,jasa_id,tanggal_booking,transaction_date],function(err,rows){
+							       				connection.query(queryAddTransaksi,[pemandu_id,user_id,jasa_id,tanggal_booking,total_harga,transaction_date],function(err,rows){
 										        	if(err) console.log("Error Selecting : %s ", err);	
 										       		else{					        	
 										        		res.json({status:200, message: 'Success Transaksi Jasa' });   
