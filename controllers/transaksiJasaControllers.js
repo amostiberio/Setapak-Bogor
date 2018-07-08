@@ -131,7 +131,7 @@ transaksiJasaController.pesanJasa = (req, res) => {
 							       				connection.query(queryAddTransaksi,[pemandu_id,user_id,jasa_id,tanggal_booking,transaction_date],function(err,rows){
 										        	if(err) console.log("Error Selecting : %s ", err);	
 										       		else{					        	
-										        		res.json({success:200, message: 'Success Transaksi Jasa' });   
+										        		res.json({status:200, message: 'Success Transaksi Jasa' });   
 										        	}	        
 									        	});
 									    	});
