@@ -84,29 +84,30 @@ transaksiBarangController.historyTransaksibyStatus = (req, res) => {
     }
 }
 
-// Add Transaksi jasa //route = api/transaksibarang/pesanbarang/:barang_id
+// Add Transaksi Barang //route = api/transaksibarang/user/pesanbarang/:barang_id
 transaksiBarangController.pesanBarang = (req, res) => {
 	//total harga = math.ceil(total berat) *harga(tipe) reg,oke,yes
 	// total berat = jumlahbarang * berat_gram
 	var barang_id = req.params.barang_id,
+		tarif_id = req.body.tarif_id
 		jumlah_barang = req.body.jumlah_barang,
-		tarif_id = req.body.tarif_id,
-		type_pengiriman = req.body.type_pengiriman,		
+		alamatpengiriman = req.body.alamatpengiriman,		
+		type_pengiriman = req.body.paket_pengiriman,		
 		transaction_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss')
 		
-    if(!req.headers.authorization) {
-        res.status(401).json({status: false, message: 'Please Login !'});
+    if(!req.body.token) {
+        res.json({status: 401, message: 'Please Login !'});
     }else if (!barang_id){
-    	res.status(401).json({status: false, message: 'Something missing (ID Jasa)!'});
+    	res.json({status: 400, message: 'Something missing (ID Jasa)!'});
     }else{
 	var queryTarif = 'SELECT * FROM tarif WHERE tarif_id = ?'
     var queryBarang = 'SELECT * FROM barang WHERE barang_id = ?'
     var queryCheckPemandu = 'SELECT * FROM pemandu WHERE user_id = ?'
-    var queryAddTransaksi = 'INSERT INTO transaksi_barang SET  pemandu_id = ? , user_id = ? , barang_id = ?,jumlah_barang =?, ongkos_kirim = ?, total_harga =?, transaction_date = ?' 
-    	var token = req.headers.authorization          
+    var queryAddTransaksi = 'INSERT INTO transaksi_barang SET  pemandu_id = ? , user_id = ? , barang_id = ?,tarif_id = ?,jumlah_barang =?,alamatpengiriman=?,paket_pengiriman=?, ongkos_kirim = ?, total_harga =?, transaction_date = ?' 
+    	var token = req.body.token        
         jwt.verify(token, secret, function(err, decoded) {
         	if(err) {
-            return res.status(401).send({message: 'invalid_token'});
+            return res.json({status: 401,message: 'invalid_token'});
         	}else{
 			var user_id = decoded.user_id
 			req.getConnection(function(err,connection){
@@ -120,13 +121,13 @@ transaksiBarangController.pesanBarang = (req, res) => {
 						 ongkos_kirim = rows[0].yes
 					}					
 					if(ongkos_kirim == 0){
-						res.status(401).send({status: false,message: 'Maaf Layanan Tipe Pengiriman tersebut belum tersedia'});
+						res.json({status: 400, message: 'Maaf Layanan Tipe Pengiriman tersebut belum tersedia'});
 					}else{
 						req.getConnection(function(err,connection){
 							connection.query(queryBarang,[barang_id],function(err,rows){
 								if(err) console.log("Error Selecting : %s ", err);
 								if(rows[0].kuantitas < jumlah_barang){
-									res.status(401).json({status: false, message: 'Kuantitas barang yang tersedia tidak cukup untuk pesanan anda'});
+									res.json({status: 400, message: 'Kuantitas barang yang tersedia tidak cukup untuk pesanan anda'});
 								}else{
 									var pemandu_id = rows[0].pemandu_id
 									var total_berat = Math.ceil(jumlah_barang * rows[0].berat_gram/1000)
@@ -137,13 +138,13 @@ transaksiBarangController.pesanBarang = (req, res) => {
 										connection.query(queryCheckPemandu,[user_id],function(err,rows){  
 											if(err) console.log("Error Selecting : %s ", err); 
 											if(pemandu_id == rows[0].pemandu_id ){
-												res.status(401).json({status: false, message: 'Pemandu tidak bisa memesan Jasa sendiri'});
+												res.json({status: 400, message: 'Pemandu tidak bisa memesan Jasa sendiri',pemandu_id:pemandu_id,checkpemandu:rows[0].pemandu_id });
 											}else{
 												req.getConnection(function(err,connection){
-													connection.query(queryAddTransaksi,[pemandu_id,user_id,barang_id,jumlah_barang,total_ongkos_kirim,total_harga,transaction_date],function(err,rows){
+													connection.query(queryAddTransaksi,[pemandu_id,user_id,barang_id,tarif_id,jumlah_barang,alamatpengiriman,type_pengiriman,total_ongkos_kirim,total_harga,transaction_date],function(err,rows){
 													 	if(err) console.log("Error Selecting : %s ", err);	
 														else{					        	
-														 	res.status(200).json({success:true,message: 'Success Transaksi Jasa' });   
+														 	res.json({success:200,message: 'Success Transaksi Jasa' });   
 														}	        
 													});
 												});

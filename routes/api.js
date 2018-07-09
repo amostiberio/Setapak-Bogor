@@ -100,6 +100,10 @@ var APIRoutes = function () {
     router.get('/alamat/kabupaten',alamatController.getKabupaten);
     router.get('/alamat/kecamatan',alamatController.getKecamatan);
     router.get('/alamat/category/:idalamat',alamatController.getDetailCategory);
+    router.get('/alamat/provinsitarif',alamatController.getProvinsiTarif);
+    router.post('/alamat/kabupatentarif',alamatController.getKabupatenTarif);
+    router.post('/alamat/kecamatantarif',alamatController.getKecamatanTarif);
+    router.post('/alamat/tarif',alamatController.dataTarif);
 
     //Picture 
     router.get('/picture/homestay/:idhomestay',pictureController.getHomestayPictures);
