@@ -128,30 +128,20 @@ wisatawanController.loginUser = (req, res) => {
     });
 }
 
-// Get Current User Profile data /route = api/user/profile
-wisatawanController.getUserProfile = (req, res) => {
-    if(!req.headers.authorization) {
-        res.status(401).json({status: false, message: 'Please Login !'});
-    }else{
-        var token = req.headers.authorization
-        //Validation JWT          
-        jwt.verify(token, secret, function(err, decoded) {
-        if(err) {
-            return res.status(401).send({message: 'invalid_token'});
-        }else{
-          var user_id = decoded.user_id
-          var query = 'SELECT * FROM user WHERE user_id = ?'
-            req.getConnection(function (err, conn) {
-              conn.query(query, user_id, function (err, rows) {
-                res.json(rows)
-                })
-            })
-        }        
-      })        
-      } 
+// //router = api/user/profile/:user_id
+wisatawanController.getUserData = (req, res) => {  
+    var user_id = req.params.user_id
+    var querySelectUser  = 'SELECT * FROM user WHERE user_id = ? '       
+      req.getConnection(function(err,connection){
+        connection.query(querySelectUser,[user_id],function(err,rows){ //get pemandu id
+              if(err)
+                 console.log("Error Selecting : %s ", err);
+              if(rows.length){                
+                    res.json({status: 200, message: 'Data User', data: rows[0]});
+              }
+        });
+      });
 }
-
-
 
 // Update informasi Profile /route = api/user/updateprofile
 wisatawanController.updateProfileUserById = (req, res) => {        
