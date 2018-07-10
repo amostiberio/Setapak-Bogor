@@ -95,8 +95,8 @@ kelarin transaksi jasa (sudah)
 task to do :
 history, 
 melihat artikel, 
-review,  
-diskusi dan comment (sudah)
+review(sudah, tapi belum add review karena nunggu history dulu)
+diskusi dan comment (sudah, delete sudah)
 
 kelarin mybooking (ini isinya history aja)
 

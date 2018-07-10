@@ -155,6 +155,7 @@ diskusiController.deleteDiskusi = (req, res) => {
         		var user_id = decoded.user_id
 				var querySelectDiskusi  = 'SELECT * FROM diskusi_produk where diskusi_id = ?'
 				var queryDeleteDiskusi  = 'DELETE FROM diskusi_produk where diskusi_id = ?'
+				var queryDeleteComment = 'DELETE FROM comment_produk where diskusi_id = ? '
 				req.getConnection(function(err,connection){
 			    	connection.query(querySelectDiskusi,[diskusi_id],function(err,rows){ //get pemandu id
 			    	  	if(err)
@@ -168,7 +169,17 @@ diskusiController.deleteDiskusi = (req, res) => {
 							            if(!rows){
 						                  res.json({ status: 404 , message: 'Diskusi ID not Found' });
 						                }else{
-						                  res.json({ status: 200 ,message: 'Success Delete Diskusi' });  
+						                	req.getConnection(function(err,connection){
+										    	connection.query(queryDeleteComment,[diskusi_id],function(err,rows){ //get pemandu id
+										    	  	if(err)
+										               console.log("Error Selecting : %s ", err);
+										            if(!rows){
+									                  res.json({ status: 404 , message: 'Diskusi ID not Found' });
+									                }else{
+									                  res.json({ status: 200 ,message: 'Success Delete Diskusi' });  
+									                }
+										    	});
+										    });						                   
 						                }
 							    	});
 							    });  
