@@ -12,21 +12,34 @@ var token;
 reviewController.countAvgReview = (req, res) => {
 		var produk_id = req.body.produk_id,
 			tipe_produk = req.body.tipe_produk
-		var queryAVGReview = 'SELECT AVG(jumlah_star) as count FROM review_produk WHERE produk_id = ? AND tipe_produk = ? '
-		req.getConnection(function(err,connection){
-	    	connection.query(queryAVGReview,[produk_id,tipe_produk],function(err,rows){ //get pemandu id
-	    	  	if(err){
+		var queryAVGReview = 'SELECT AVG(jumlah_star) as avg FROM review_produk WHERE produk_id = ? AND tipe_produk = ?'
+		var queryCount = 'SELECT COUNT(*) as count FROM review_produk where produk_id = ? AND tipe_produk = ?'	
+	    req.getConnection(function(err,connection){
+	    	connection.query(queryCount,[produk_id,tipe_produk],function(err,rows){ //get pemandu id
+	    	  	if(err)
 	               console.log("Error Selecting : %s ", err);
-	            }if(rows[0].count){	
-	            	var jumlah = rows[0].count           	
- 					res.json({status: 200, message: 'Sukses get Data Review', average: jumlah});
-	            }else{	            	
-	            	res.json({status: 200, message: 'Belum Ada Review'});
-	            }	            	           	
-	            
+	            if(rows[0].count){
+	            	var jumlah = rows[0].count       	
+                     req.getConnection(function(err,connection){
+				    	connection.query(queryAVGReview,[produk_id,tipe_produk],function(err,rows){ //get pemandu id
+				    	  	if(err){
+				               console.log("Error Selecting : %s ", err);
+				            }if(rows[0].avg){	
+				            	var average = rows[0].avg           	
+			 					res.json({status: 200, message: 'Sukses get Data Review', average: average,jumlah:jumlah});
+				            }else{		                        	
+				            	res.json({status: 204, message: 'Belum Ada Review'});
+				            }            	        
+				    	});
+				    });
+
+	            }else{		                        	
+	            	res.json({status: 204, message: 'Belum Ada Review'});
+	            }	
 	    	});
 	    });     	  	     
-}
+}     	  	     
+
 
 // //router = api/review/all
 reviewController.dataReviewsProduk = (req, res) => {

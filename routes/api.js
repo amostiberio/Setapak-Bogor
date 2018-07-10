@@ -117,6 +117,7 @@ var APIRoutes = function () {
     router.get('/diskusi/produk/:produk_id',diskusiController.getDiskusiProduk);
     router.get('/diskusi/homestay/:produk_id',diskusiController.getDiskusiHomestay);
     router.get('/diskusi/jasa/:produk_id',diskusiController.getDiskusiJasa);
+    router.post('/diskusi/count',diskusiController.countDiskusi);
     router.post('/diskusi/create',diskusiController.createDiskusi);
     router.post('/diskusi/delete',diskusiController.deleteDiskusi);
     

@@ -18,7 +18,7 @@ diskusiController.getDiskusiProduk = (req, res) => {
 	    	connection.query(queryCount,[produk_id,tipe_produk],function(err,rows){ //get pemandu id
 	    	  	if(err)
 	               console.log("Error Selecting : %s ", err);
-	            if(count){
+	            if(rows.length){
 	            	var jumlah = rows[0].count       	
                      req.getConnection(function(err,connection){
 				    	connection.query(querySelectDiskusi,[produk_id,tipe_produk],function(err,rows){ //get pemandu id
@@ -93,6 +93,25 @@ diskusiController.getDiskusiJasa = (req, res) => {
 	    	});
 	    }); 
 }
+
+// //router = api/review/average
+diskusiController.countDiskusi = (req, res) => {
+		var produk_id = req.body.produk_id,
+			tipe_produk = req.body.tipe_produk
+		var queryCount = 'SELECT COUNT(*) as count FROM diskusi_produk where produk_id = ? AND tipe_produk = ?'	
+	    req.getConnection(function(err,connection){
+	    	connection.query(queryCount,[produk_id,tipe_produk],function(err,rows){ //get pemandu id
+	    	  	if(err)
+	               console.log("Error Selecting : %s ", err);
+	            if(rows[0].count){
+	            	var jumlah = rows[0].count	            	
+	            	res.json({status: 200, message: 'Sukses get Data Review',jumlah:jumlah});
+	            }else{		                        	
+	            	res.json({status: 204, message: 'Belum Ada Review'});
+	            }	
+	    	});
+	    });     	  	     
+}   
 
 
 //router = api/diskusi/create
