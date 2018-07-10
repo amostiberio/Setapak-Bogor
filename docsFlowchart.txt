@@ -89,8 +89,14 @@ ionic :
 
 upload foto belum kelar
 kelarin transaksi homestay sampai selesai order (sudah)
-kelarin transaksi barang (baru sampai search)
-kelarin transaksi jasa
+kelarin transaksi barang (sudah)
+kelarin transaksi jasa (sudah)
+
+task to do :
+history, 
+melihat artikel, 
+review,  
+diskusi dan comment (sudah)
 
 kelarin mybooking (ini isinya history aja)
 
@@ -105,3 +111,20 @@ ruang lingkup
 
 ionic notes:
 refresher ada di portal harga master pengetahuan artikel
+
+
+
+sql:
+
+diskusi_id
+user_id
+produk_id
+tipe_produk
+isi_diskusi
+created_date
+
+comment_id
+diskusi_id
+user_id
+isi_comment
+created_date

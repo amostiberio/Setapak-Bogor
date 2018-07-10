@@ -17,6 +17,9 @@ var uploadController = require('../controllers/uploadControllers');
 var emailController = require('../controllers/emailControllers');
 var alamatController = require ('../controllers/alamatControllers');
 var pictureController = require ('../controllers/picturesControllers');
+var diskusiController = require ('../controllers/diskusiControllers');
+var commentDiskusiController = require ('../controllers/commentDiskusiControllers');
+var reviewController = require ('../controllers/reviewControllers');
 
 //var notifikasiController = require('../controllers/notifikasiControllers');
 
@@ -26,7 +29,7 @@ var APIRoutes = function () {
     // Router Auth
 
     // Router User
-    router.get('/user/profile', wisatawanController.getUserProfile);
+    router.get('/user/profile/:user_id', wisatawanController.getUserData);
     router.post('/user/updateprofile',wisatawanController.updateProfileUserById);
     router.post('/user/changepassword',wisatawanController.changePasswordUserById);
     router.post('/user/register',wisatawanController.registerUser);
@@ -109,6 +112,23 @@ var APIRoutes = function () {
     router.get('/picture/homestay/:idhomestay',pictureController.getHomestayPictures);
     router.get('/picture/jasa/:idjasa',pictureController.getJasaPictures)
     router.get('/picture/barang/:idbarang',pictureController.getBarangPictures)
+
+    //Diskusi 
+    router.get('/diskusi/produk/:produk_id',diskusiController.getDiskusiProduk);
+    router.get('/diskusi/homestay/:produk_id',diskusiController.getDiskusiHomestay);
+    router.get('/diskusi/jasa/:produk_id',diskusiController.getDiskusiJasa);
+    router.post('/diskusi/create',diskusiController.createDiskusi);
+    router.post('/diskusi/delete',diskusiController.deleteDiskusi);
+    
+
+    //Comment 
+    router.get('/comment/:diskusi_id',commentDiskusiController.getCommentsProduk);
+    router.post('/comment/create',commentDiskusiController.createComment);
+    router.post('/comment/delete',commentDiskusiController.deleteComment);
+    
+    //Review 
+    router.post('/review/average',reviewController.countAvgReview);
+    router.post('/review/all',reviewController.dataReviewsProduk);
 
     // Email Controller
     router.post('/forgetpassword',emailController.forgetPassword);

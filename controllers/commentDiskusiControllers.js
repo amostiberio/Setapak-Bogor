@@ -11,7 +11,7 @@ var token;
 // //router = api/diskusi/produk/:produk_id
 commentDiskusiController.getCommentsProduk = (req, res) => {
 		var diskusi_id = req.params.diskusi_id	
-		var querySelectComment = 'SELECT * FROM comment_produk where diskusi_id = ?'
+		var querySelectComment = 'SELECT * FROM comment_produk where diskusi_id = ? ORDER BY created_date ASC'
 		req.getConnection(function(err,connection){
 	    	connection.query(querySelectComment,[diskusi_id],function(err,rows){ //get pemandu id
 	    	  	if(err)
@@ -19,7 +19,7 @@ commentDiskusiController.getCommentsProduk = (req, res) => {
 	            if(rows.length){	            	
                     res.json({status: 200, message: 'Sukses get Data Comment', data: rows});
 	            }else{
-	            	res.json({status: 400, message: 'Belum Ada Comment'});
+	            	res.json({status: 204, message: 'Belum Ada Comment'});
 
 	            }
 	    	});
@@ -32,19 +32,28 @@ commentDiskusiController.createComment = (req, res) => {
 		var diskusi_id = req.body.diskusi_id,
 			user_id = req.body.user_id,		
 			isi_comment = req.body.isi_comment,
-			created_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss')
-		var queryCreateComment = 'INSERT INTO comment_produk SET  diskusi_id = ? , user_id = ? , isi_comment = ?,created_date =?' 
-		req.getConnection(function(err,connection){
-	    	connection.query(queryCreateComment,[diskusi_id,user_id,isi_comment,created_date],function(err,rows){ //get pemandu id
-	    	  	if(err)
-	               console.log("Error Selecting : %s ", err);
-	            if(rows.length){
-	            	res.json({status: 200, message: 'Sukses Tambah Comment'});
-	            }else{
-	            	res.json({status: 400, message: 'Gagal Tambah Comment'});
-	            }
-	    	});
-	    });     	  	     
+			created_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss')		
+		var queryCreateComment = 'INSERT INTO comment_produk SET diskusi_id = ? , user_id = ? , isi_comment = ?,created_date =?,nama_user =? , photo_user = ?' 
+	    var querySelectUser  = 'SELECT * FROM user WHERE user_id = ? '       
+	      req.getConnection(function(err,connection){
+	        connection.query(querySelectUser,[user_id],function(err,rows){ //get pemandu id
+	              if(err)
+	                 console.log("Error Selecting : %s ", err);
+	              if(rows.length){
+	              		var nama_user = rows[0].nama,
+	              			photo_user = rows[0].photo            
+	                    req.getConnection(function(err,connection){
+					    	connection.query(queryCreateComment,[diskusi_id,user_id,isi_comment,created_date,nama_user,photo_user],function(err,rows){ //get pemandu id
+					    	  	if(err){
+					               console.log("Error Selecting : %s ", err);					            
+					    	  	}else{
+					            	res.json({status: 200, message: 'Sukses Tambah Comment'});
+					            }
+					    	});
+					    });
+	              }
+	        });
+	      });    	       	  	     
 }
 
 //router = api/diskusi/produk/:produk_id

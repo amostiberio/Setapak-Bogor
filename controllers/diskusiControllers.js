@@ -13,12 +13,12 @@ diskusiController.getDiskusiProduk = (req, res) => {
 		var produk_id = req.params.produk_id
 		var tipe_produk = 'Produk'
 		var queryCount = 'SELECT COUNT(produk_id) as count FROM diskusi_produk where produk_id = ? AND tipe_produk = ?'
-		var querySelectDiskusi  = 'SELECT * FROM diskusi_produk where produk_id = ? AND tipe_produk = ?'
+		var querySelectDiskusi  = 'SELECT * FROM diskusi_produk where produk_id = ? AND tipe_produk = ? ORDER BY created_date DESC '
 		req.getConnection(function(err,connection){
 	    	connection.query(queryCount,[produk_id,tipe_produk],function(err,rows){ //get pemandu id
 	    	  	if(err)
 	               console.log("Error Selecting : %s ", err);
-	            if(rows.length){
+	            if(count){
 	            	var jumlah = rows[0].count       	
                      req.getConnection(function(err,connection){
 				    	connection.query(querySelectDiskusi,[produk_id,tipe_produk],function(err,rows){ //get pemandu id
@@ -42,7 +42,7 @@ diskusiController.getDiskusiHomestay = (req, res) => {
 		var produk_id = req.params.produk_id
 		var tipe_produk = 'Homestay'
 		var queryCount = 'SELECT COUNT(produk_id) as count FROM diskusi_produk where produk_id = ? AND tipe_produk = ?'
-		var querySelectDiskusi  = 'SELECT * FROM diskusi_produk where produk_id = ? AND tipe_produk = ?'
+		var querySelectDiskusi  = 'SELECT * FROM diskusi_produk where produk_id = ? AND tipe_produk = ? ORDER BY created_date DESC'
 		req.getConnection(function(err,connection){
 	    	connection.query(queryCount,[produk_id,tipe_produk],function(err,rows){ //get pemandu id
 	    	  	if(err)
@@ -70,7 +70,7 @@ diskusiController.getDiskusiJasa = (req, res) => {
 		var produk_id = req.params.produk_id
 		var tipe_produk = 'Jasa'
 		var queryCount = 'SELECT COUNT(produk_id) as count FROM diskusi_produk where produk_id = ? AND tipe_produk = ?'
-		var querySelectDiskusi  = 'SELECT * FROM diskusi_produk where produk_id = ? AND tipe_produk = ?'
+		var querySelectDiskusi  = 'SELECT * FROM diskusi_produk where produk_id = ? AND tipe_produk = ? ORDER BY created_date DESC'
 		req.getConnection(function(err,connection){
 	    	connection.query(queryCount,[produk_id,tipe_produk],function(err,rows){ //get pemandu id
 	    	  	if(err)
@@ -95,25 +95,34 @@ diskusiController.getDiskusiJasa = (req, res) => {
 }
 
 
-//router = api/diskusi/produk/:produk_id
+//router = api/diskusi/create
 diskusiController.createDiskusi = (req, res) => {
 		var user_id = req.body.user_id,
 			produk_id = req.body.produk_id,
 			tipe_produk = req.body.tipe_produk,
 			isi_diskusi = req.body.isi_diskusi,
 			created_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss')
-		var queryCreateDiskusi = 'INSERT INTO diskusi_produk SET  user_id = ? , produk_id = ? , tipe_produk = ?,isi_diskusi = ?,created_date =?' 
-		req.getConnection(function(err,connection){
-	    	connection.query(queryCreateDiskusi,[user_id,produk_id,tipe_produk,isi_diskusi,created_date],function(err,rows){ //get pemandu id
-	    	  	if(err)
-	               console.log("Error Selecting : %s ", err);
-	            if(rows.length){
-	            	res.json({status: 200, message: 'Sukses Tambah Diskusi'});
-	            }else{
-	            	res.json({status: 400, message: 'Gagal Tambah Diskusi'});
-	            }
-	    	});
-	    });     	  	     
+		var queryCreateDiskusi = 'INSERT INTO diskusi_produk SET  user_id = ? , produk_id = ? , tipe_produk = ?,isi_diskusi = ?,created_date =?, nama_user = ?, photo_user =?' 				    
+	    var querySelectUser  = 'SELECT * FROM user WHERE user_id = ? '       
+	      req.getConnection(function(err,connection){
+	        connection.query(querySelectUser,[user_id],function(err,rows){ //get pemandu id
+	              if(err)
+	                 console.log("Error Selecting : %s ", err);
+	              if(rows.length){
+	              		var nama_user = rows[0].nama,
+	              			photo_user = rows[0].photo            
+	                    req.getConnection(function(err,connection){
+					    	connection.query(queryCreateDiskusi,[user_id,produk_id,tipe_produk,isi_diskusi,created_date,nama_user,photo_user],function(err,rows){ //get pemandu id
+					    	  	if(err){
+					               console.log("Error Selecting : %s ", err);
+					    	  	}else{
+									res.json({status: 200, message: 'Sukses Tambah Diskusi'});					            
+								}
+					    	});
+					    });    
+	              }
+	        });
+	      });    	  	     
 }
 
 //router = api/diskusi/produk/:produk_id
