@@ -24,30 +24,30 @@ var token;
 */
 // Get Semua History Transaksi Homestay //route = api/transaksiHomestay/user/historyTransaksi
 transaksiHomestayController.historyku = (req, res) => {
-    if(!req.headers.authorization) {
-        res.status(401).json({status: false, message: 'Please Login !'});
+    if(!req.body.token){
+        res.json({status: 401, message: 'Please Login !'});
     }else{
-    	var token = req.headers.authorization    
+    	var token = req.body.token  
 		//JWT VERIFY     
-	        jwt.verify(token, secret, function(err, decoded) {
-	        	if(err) {
-	            return res.status(401).send({message: 'invalid_token'});
-	        	}else{
-	        	var user_id = decoded.user_id
-	        	var querySelectTransactions = 'SELECT * FROM transaksi_homestay WHERE user_id = ?'	    
-				    req.getConnection(function(err,connection){
-				    	connection.query(querySelectTransactions,[user_id],function(err,rows){ //get pemandu id
-				    	  	if(err)
-				               console.log("Error Selecting : %s ", err);
-				            if(rows.length){
-				            	res.status(200).json({status: true, message: 'Sukses Ambil Transaksi User', data: rows});	            
-				            }else{
-				            	res.status(200).json({status: false, message: 'Kamu belum mempunyai transaksi homestay'});
-				            }
-				    	});
-				    }); 
-	        	}
-	        }); 
+        jwt.verify(token, secret, function(err, decoded) {
+        	if(err) {
+           		 return res.send({ status: 401, message: 'invalid_token'});
+        	}else{
+        	var user_id = decoded.user_id
+        	var querySelectTransactions = 'SELECT * FROM transaksi_homestay WHERE user_id = ?'	    
+			    req.getConnection(function(err,connection){
+			    	connection.query(querySelectTransactions,[user_id],function(err,rows){ //get pemandu id
+			    	  	if(err)
+			               console.log("Error Selecting : %s ", err);
+			            if(rows.length){
+			            	res.json({status: 200, message: 'Sukses Ambil Transaksi', data: rows});	            
+			            }else{
+			            	res.json({status: 204, message: 'Kamu belum mempunyai transaksi Homestay'});
+			            }
+			    	});
+			    }); 
+        	}
+        }); 
     }
 }
 

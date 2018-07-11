@@ -72,21 +72,21 @@ var APIRoutes = function () {
     router.get('/transaksiHomestay/pemandu/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSedangDipakai); //jadi status 2
     router.get('/transaksiHomestay/user/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSelesaiDipakai); //jadi status 3
     router.get('/transaksiHomestay/user/cancel/:transaction_id',transaksiHomestayController.cancelTransaksibyUser);
-    router.get('/transaksiHomestay/user/historytransaksiku',transaksiHomestayController.historyku);
+    router.post('/transaksiHomestay/user/historytransaksiku',transaksiHomestayController.historyku);
     router.get('/transaksiHomestay/user/historytransaksiku/:status',transaksiHomestayController.historyTransaksibyStatus);
 
     // Router Transaksi Jasa
     router.post('/transaksiJasa/user/pesanJasa/:jasa_id',transaksiJasaController.pesanJasa);
     router.get('/transaksiJasa/user/konfirmasi/:transaction_id',transaksiJasaController.konfirmasiTransaksiSelesaiDipakai); //jadi status 3
     router.get('/transaksiJasa/user/cancel/:transaction_id',transaksiJasaController.cancelTransaksibyUser);
-    router.get('/transaksiJasa/user/historytransaksiku',transaksiJasaController.historyku);
+    router.post('/transaksiJasa/user/historytransaksiku',transaksiJasaController.historyku);
     router.get('/transaksiJasa/user/historytransaksiku/:status',transaksiJasaController.historyTransaksibyStatus);
 
     // Router Transaksi Barang
     router.post('/transaksiBarang/user/pesanBarang/:barang_id',transaksiBarangController.pesanBarang);
     router.get('/transaksiBarang/user/konfirmasi/:transaction_id',transaksiBarangController.konfirmasiTransaksiBarangSampai); //jadi status 3
     router.get('/transaksiBarang/user/cancel/:transaction_id',transaksiBarangController.cancelTransaksibyUser);
-    router.get('/transaksiBarang/user/historytransaksiku',transaksiBarangController.historyku);
+    router.post('/transaksiBarang/user/historytransaksiku',transaksiBarangController.historyku);
     router.get('/transaksiJasa/user/historytransaksiku/:status',transaksiJasaController.historyTransaksibyStatus);
 
     
