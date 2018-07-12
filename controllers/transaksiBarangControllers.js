@@ -231,7 +231,6 @@ transaksiBarangController.konfirmasiTransaksiBarangSampai = (req, res) => {
 			if(!req.body.token) {
         		res.json({status: 401, message: 'Please Login !'});
     		}else if (rows[0].transaction_status < 4){
-				console.log(rows[0].transaction_status)
 				res.json({status:400,success:false,message:'Status transaksi : Penjual belum konfirmasi pengiriman barang'});
 			}else if(rows[0].transaction_status == 5){
 				res.json({status:400,success:false,message:'Status transaksi : Sudah dikonfirmasi barang sampai oleh User'});
