@@ -261,29 +261,29 @@ transaksiJasaController.konfirmasiTransaksiSelesaiDipakai = (req, res) => {
 	req.getConnection(function(err,connection){
 		connection.query(queryTransaksi,[transaction_id],function(err,rows){
 			if(err) console.log("Error Selecting : %s ", err);
-			if(!req.headers.authorization) {
-        		res.status(401).json({status: false, message: 'Please Login !'});
+			if(!req.body.token) {
+        		res.json({status:401, message: 'Please Login !'});
     		}else if (rows[0].transaction_status < 3){
 				console.log(rows[0].transaction_status)
-				res.status(400).json({status:400,success:false,message:'Status transaksi : Belum dikonfirmasi pemakaian oleh pemandu'});
+				res.json({status:400,success:false,message:'Status transaksi : Belum dikonfirmasi pemakaian oleh pemandu'});
 			}else if(rows[0].transaction_status == 4){
-				res.status(400).json({status:400,success:false,message:'Status transaksi : Sudah dikonfirmasi pemakaian selesai oleh User'});
+				res.json({status:400,success:false,message:'Status transaksi : Sudah dikonfirmasi pemakaian selesai oleh User'});
 			}else{		
-				var token = req.headers.authorization
+				var token = req.body.token
 				//JWT VERIFY     
 			        jwt.verify(token, secret, function(err, decoded) {
 			        	if(err) {
-			            return res.status(401).send({message: 'invalid_token'});
+			            return res.json({status:401, message: 'invalid_token'});
 			        	}else{
 			        	var user_id = decoded.user_id
 						let user_idTransaksi = rows[0].user_id
 							if(user_id != user_idTransaksi){
-								res.status(403).json({status:403,success:false,message:'Forbidden Otorisasi'});
+								res.json({status:403, success:false, message:'Forbidden Otorisasi'});
 							}else{
 								req.getConnection(function(err,connection){
 									connection.query(queryUpdateStatusKonfirmasi,[4,transaction_id],function(err,rows){
 										if(err) console.log("Error Selecting : %s ", err);				
-										res.json({status:200,success:true,message:'Konfirmasi Pemakaian Jasa oleh User Success'});					
+										res.json({status:200, success:true, message:'Konfirmasi Pemakaian Jasa oleh User Success'});					
 									});
 								});
 							}	
