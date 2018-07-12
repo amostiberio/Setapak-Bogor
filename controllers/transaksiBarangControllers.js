@@ -22,27 +22,29 @@ var token;
 	(status 3 = Admin sudah transfer uang ke pemandu + transaksi selesai) [Actor : admin, dibayar]
 
 */
-// Get Semua History Transaksi jasa //route = api/transaksibarang/user/historyTransaksiku
-transaksiBarangController.historyku = (req, res) => {
+
+// Get Semua History Transaksi Barang //route = api/transaksiBarang/user/transaksiaktif
+transaksiBarangController.transaksiaktif = (req, res) => {
     if(!req.body.token){
         res.json({status: 401, message: 'Please Login !'});
     }else{
-    	var token = req.body.token    
+    	var token = req.body.token  
 		//JWT VERIFY     
         jwt.verify(token, secret, function(err, decoded) {
         	if(err) {
            		 return res.send({ status: 401, message: 'invalid_token'});
         	}else{
         	var user_id = decoded.user_id
-        	var querySelectTransactions = 'SELECT * FROM transaksi_barang WHERE user_id = ?'	    
+        	var status_kelar = 6;
+        	var querySelectTransactions = 'SELECT * FROM transaksi_barang WHERE user_id = ? AND NOT transaction_status = ? ORDER BY transaction_date DESC  '	    
 			    req.getConnection(function(err,connection){
-			    	connection.query(querySelectTransactions,[user_id],function(err,rows){ //get pemandu id
+			    	connection.query(querySelectTransactions,[user_id,status_kelar],function(err,rows){ //get pemandu id
 			    	  	if(err)
 			               console.log("Error Selecting : %s ", err);
 			            if(rows.length){
 			            	res.json({status: 200, message: 'Sukses Ambil Transaksi', data: rows});	            
 			            }else{
-			            	res.json({status: 204, message: 'Kamu belum mempunyai transaksi Barang'});
+			            	res.json({status: 204, message: 'Kamu tidak mempunyai transaksi Barang'});
 			            }
 			    	});
 			    }); 
@@ -50,6 +52,37 @@ transaksiBarangController.historyku = (req, res) => {
         }); 
     }
 }
+
+// Get Semua History Transaksi Barang //route = api/transaksiBarang/user/history
+transaksiBarangController.history = (req, res) => {
+    if(!req.body.token){
+        res.json({status: 401, message: 'Please Login !'});
+    }else{
+    	var token = req.body.token  
+		//JWT VERIFY     
+        jwt.verify(token, secret, function(err, decoded) {
+        	if(err) {
+           		 return res.send({ status: 401, message: 'invalid_token'});
+        	}else{
+        	var user_id = decoded.user_id
+        	var status_kelar = 6;
+        	var querySelectTransactions = 'SELECT * FROM transaksi_barang WHERE user_id = ? AND transaction_status = ? ORDER BY transaction_date DESC '	    
+			    req.getConnection(function(err,connection){
+			    	connection.query(querySelectTransactions,[user_id,status_kelar],function(err,rows){ //get pemandu id
+			    	  	if(err)
+			               console.log("Error Selecting : %s ", err);
+			            if(rows.length){
+			            	res.json({status: 200, message: 'Sukses Ambil Transaksi', data: rows});	            
+			            }else{
+			            	res.json({status: 204, message: 'Kamu belum mempunyai transaksi Barang Selesai'});
+			            }
+			    	});
+			    }); 
+        	}
+        }); 
+    }
+}
+
 
 // Get Semua History Transaksi jasa berdasarkan status //route = api/transaksijasa/user/historyTransaksiku/:transaction_status
 transaksiBarangController.historyTransaksibyStatus = (req, res) => {
@@ -92,7 +125,8 @@ transaksiBarangController.pesanBarang = (req, res) => {
 		tarif_id = req.body.tarif_id
 		jumlah_barang = req.body.jumlah_barang,
 		alamatpengiriman = req.body.alamatpengiriman,		
-		type_pengiriman = req.body.paket_pengiriman,		
+		type_pengiriman = req.body.paket_pengiriman,
+		noteswisatawan = req.body.noteswisatawan		
 		transaction_date = moment_timezone().tz("Asia/Jakarta").format('YYYY/MM/DD HH:mm:ss')
 		
     if(!req.body.token) {
@@ -103,7 +137,7 @@ transaksiBarangController.pesanBarang = (req, res) => {
 	var queryTarif = 'SELECT * FROM tarif WHERE tarif_id = ?'
     var queryBarang = 'SELECT * FROM barang WHERE barang_id = ?'
     var queryCheckPemandu = 'SELECT * FROM pemandu WHERE user_id = ?'
-    var queryAddTransaksi = 'INSERT INTO transaksi_barang SET  pemandu_id = ? , user_id = ? , barang_id = ?,tarif_id = ?,jumlah_barang =?,alamatpengiriman=?,paket_pengiriman=?, ongkos_kirim = ?, total_harga =?, transaction_date = ?' 
+    var queryAddTransaksi = 'INSERT INTO transaksi_barang SET  pemandu_id = ? , user_id = ? , barang_id = ?,tarif_id = ?,jumlah_barang =?,alamatpengiriman=?,paket_pengiriman=?, ongkos_kirim = ?, total_harga =?, transaction_date = ?, noteswisatawan =?' 
     	var token = req.body.token        
         jwt.verify(token, secret, function(err, decoded) {
         	if(err) {
@@ -141,10 +175,10 @@ transaksiBarangController.pesanBarang = (req, res) => {
 												res.json({status: 400, message: 'Pemandu tidak bisa memesan Jasa sendiri',pemandu_id:pemandu_id,checkpemandu:rows[0].pemandu_id });
 											}else{
 												req.getConnection(function(err,connection){
-													connection.query(queryAddTransaksi,[pemandu_id,user_id,barang_id,tarif_id,jumlah_barang,alamatpengiriman,type_pengiriman,total_ongkos_kirim,total_harga,transaction_date],function(err,rows){
+													connection.query(queryAddTransaksi,[pemandu_id,user_id,barang_id,tarif_id,jumlah_barang,alamatpengiriman,type_pengiriman,total_ongkos_kirim,total_harga,transaction_date,noteswisatawan],function(err,rows){
 													 	if(err) console.log("Error Selecting : %s ", err);	
 														else{					        	
-														 	res.json({success:200,message: 'Success Transaksi Jasa' });   
+														 	res.json({status:200,message: 'Success Transaksi Jasa' });   
 														}	        
 													});
 												});

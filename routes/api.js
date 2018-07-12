@@ -72,21 +72,30 @@ var APIRoutes = function () {
     router.get('/transaksiHomestay/pemandu/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSedangDipakai); //jadi status 2
     router.get('/transaksiHomestay/user/konfirmasi/:transaction_id',transaksiHomestayController.konfirmasiTransaksiSelesaiDipakai); //jadi status 3
     router.get('/transaksiHomestay/user/cancel/:transaction_id',transaksiHomestayController.cancelTransaksibyUser);
-    router.post('/transaksiHomestay/user/historytransaksiku',transaksiHomestayController.historyku);
+    // router.post('/transaksiHomestay/user/historytransaksiku',transaksiHomestayController.historyku);
+    router.post('/transaksiHomestay/user/transaksiaktif',transaksiHomestayController.transaksiaktif);
+    router.post('/transaksiHomestay/user/history',transaksiHomestayController.history);
+
     router.get('/transaksiHomestay/user/historytransaksiku/:status',transaksiHomestayController.historyTransaksibyStatus);
 
     // Router Transaksi Jasa
     router.post('/transaksiJasa/user/pesanJasa/:jasa_id',transaksiJasaController.pesanJasa);
     router.get('/transaksiJasa/user/konfirmasi/:transaction_id',transaksiJasaController.konfirmasiTransaksiSelesaiDipakai); //jadi status 3
     router.get('/transaksiJasa/user/cancel/:transaction_id',transaksiJasaController.cancelTransaksibyUser);
-    router.post('/transaksiJasa/user/historytransaksiku',transaksiJasaController.historyku);
+    // router.post('/transaksiJasa/user/historytransaksiku',transaksiJasaController.historyku);
+    router.post('/transaksiJasa/user/transaksiaktif',transaksiJasaController.transaksiaktif);
+    router.post('/transaksiJasa/user/history',transaksiJasaController.history);
+
     router.get('/transaksiJasa/user/historytransaksiku/:status',transaksiJasaController.historyTransaksibyStatus);
 
     // Router Transaksi Barang
     router.post('/transaksiBarang/user/pesanBarang/:barang_id',transaksiBarangController.pesanBarang);
     router.get('/transaksiBarang/user/konfirmasi/:transaction_id',transaksiBarangController.konfirmasiTransaksiBarangSampai); //jadi status 3
     router.get('/transaksiBarang/user/cancel/:transaction_id',transaksiBarangController.cancelTransaksibyUser);
-    router.post('/transaksiBarang/user/historytransaksiku',transaksiBarangController.historyku);
+    //router.post('/transaksiBarang/user/historytransaksiku',transaksiBarangController.historyku);
+    router.post('/transaksiBarang/user/transaksiaktif',transaksiBarangController.transaksiaktif);
+    router.post('/transaksiBarang/user/history',transaksiBarangController.history);
+        
     router.get('/transaksiJasa/user/historytransaksiku/:status',transaksiJasaController.historyTransaksibyStatus);
 
     

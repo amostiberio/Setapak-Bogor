@@ -93,10 +93,10 @@ kelarin transaksi barang (sudah)
 kelarin transaksi jasa (sudah)
 
 task to do :
-history, 
+history (baru listing transaksi active, belum option and detail transaksi and history), 
 melihat artikel, 
 review(sudah, tapi belum add review karena nunggu history dulu)
-diskusi dan comment (sudah, delete sudah)
+diskusi dan comment (sudah, delete sudah) DONE
 
 kelarin mybooking (ini isinya history aja)
 
