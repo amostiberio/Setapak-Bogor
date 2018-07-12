@@ -93,12 +93,11 @@ kelarin transaksi barang (sudah)
 kelarin transaksi jasa (sudah)
 
 task to do :
-history (baru listing transaksi active, belum option and detail transaksi and history), 
-melihat artikel, 
+history (baru listing transaksi active dan history dan detail, belum option perubahan status), 
+melihat artikel sama event, 
 review(sudah, tapi belum add review karena nunggu history dulu)
-diskusi dan comment (sudah, delete sudah) DONE
+diskusi dan commentdiskusi (sudah, delete sudah) DONE
 
-kelarin mybooking (ini isinya history aja)
 
 cari info buat refresher, appcm, dan filter list
 buat realtime app cm ionic

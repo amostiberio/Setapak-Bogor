@@ -83,6 +83,24 @@ transaksiBarangController.history = (req, res) => {
     }
 }
 
+// Get nama data dari alamat category//router = api/transaksiBarang/user/transaksibyid/:transaction_id
+transaksiBarangController.transaksibyid= (req, res) => {	   		  
+	var transaction_id = req.params.transaction_id
+	var querySelectTransaction  = 'SELECT * FROM transaksi_barang WHERE transaction_id = ?'    	  	
+	req.getConnection(function(err,connection){
+		connection.query(querySelectTransaction,[transaction_id],function(err,rows){ //get pemandu id
+			if(err)
+			   console.log("Error Selecting : %s ", err);
+			if(rows.length){	            	
+				res.json({status: 200, message: 'Sukses', data: rows[0]});
+			}else{
+		        res.json({status: 204, message: 'Transaksi Barang tidak ditemukan'});
+		     }
+		});
+	});   
+}
+
+
 
 // Get Semua History Transaksi jasa berdasarkan status //route = api/transaksijasa/user/historyTransaksiku/:transaction_status
 transaksiBarangController.historyTransaksibyStatus = (req, res) => {
