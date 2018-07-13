@@ -305,27 +305,27 @@ transaksiJasaController.cancelTransaksibyUser = (req, res) => {
 		connection.query(queryTransaksi,[transaction_id],function(err,rows){
 			if(err) console.log("Error Selecting : %s ", err);
 			if(!rows.length){
-				res.status(400).json({status:400,success:false,message:'Transaksi tidak dapat di temukan'});
-			}else if(!req.headers.authorization) {
-        		res.status(401).json({status: false, message: 'Please Login !'});
+				res.json({status:400,success:false,message:'Transaksi tidak dapat di temukan'});
+			}else if(!req.body.token) {
+        		res.json({status: 401, message: 'Please Login !'});
     		}else if(rows[0].transaction_status != 0){
-				res.status(400).json({status:400,success:false,message:'Transaksi telah di verifikasi, tidak dapat di Cancel'});
+				res.json({status:400,success:false,message:'Transaksi telah berjalan atau telah diproses, tidak dapat di Cancel'});
 			}else{
-				var token = req.headers.authorization    
+				var token = req.body.token    
 				//JWT VERIFY     
 			        jwt.verify(token, secret, function(err, decoded) {
 			        	if(err) {
-			           	 return res.status(401).send({auth :false,message: 'invalid_token'});
+			           	 return res.json({status :401,message: 'invalid_token'});
 			        	}else{
 						var user_id = decoded.user_id
 							if(user_id != rows[0].user_id){
-								res.status(403).json({status:403,success:false,message:'Forbidden Otorisasi'});
+								res.json({status:403,success:false,message:'Forbidden Otorisasi'});
 							}else{
 								req.getConnection(function(err,connection){
 									connection.query(queryCancelTransaksi,[transaction_id],function(err,rows){
 										if(err) console.log("Error Selecting : %s ", err);
 										else{
-											res.status(200).json({status:200,message:"Transaksi telah sukses dicancel"});
+											res.json({status:200,message:"Transaksi telah sukses dicancel"});
 										}
 									});
 								});
