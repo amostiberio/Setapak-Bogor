@@ -8,6 +8,7 @@ var moment = require('moment');
 var moment_timezone = require('moment-timezone');
 var async = require('async');
 var token;
+var fs=require('fs');
 
 
 /*transaction status
@@ -470,70 +471,159 @@ uploadController.buktiPembayaranBarang = async (req, res) => {
       });
   }
 }
+// //api/user/upload/userphoto
+// uploadController.userPhoto = async (req, res) => {    
+//       if(!req.params.user_id){
+//          res.json({status: 400, message: 'User id gak ada',});
+//       }else{
+//         var user_id = req.params.user_id
+//         var newNameUpload;
+//         var direktori = './public/uploads/userphoto/';
+//         var savedbdirektori = './public/uploads/userphoto/';
+//         //Destination storage
+//         var storage = multer.diskStorage({      
+//           destination: direktori,
+//           filename: function (req, file, callback) {
+//             newNameUpload = file.fieldname + '-' + user_id + path.extname(file.originalname).toLowerCase();
+//             callback(null, newNameUpload);
+//           }
+//         });
+//         // multer buat function upload
+//         var upload = multer({ 
+//             storage : storage,
+//             fileFilter: function (req, file, callback) {
+//               var ext = path.extname(file.originalname).toLowerCase();
+//               if(ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
+//                   return callback(new Error('Only images are allowed'))
+//               }
+//               callback(null, true)
+//             },
+//             limits: {          
+//               fileSize: 5 * 1024 * 1024 //  file sized limits upload 5 MB
+//             } 
+//         }).single('UserPhoto');
+//       //upload function
+//           upload(req, res, function(err) {            
+//             if(err) {
+//               if (err.code == 'LIMIT_FILE_SIZE') {
+//                 res.json({status: 400, message: 'File berukuran melebihi yang diizinkan.', err: err});
+//               } else {
+//                 res.json({status: 500, message: 'File gagal diunggah.', err: err});
+//               }
+//             } else if (req.file == null || req.file == 0) {
+//               res.json({status: 400, message: 'File kosong, silahkan pilih file kembali'});
+//             } else {
+//               var direktoriPhoto = savedbdirektori + newNameUpload
+//               var queryUpdateUserPhoto = 'UPDATE user SET photo = ? WHERE user_id = ?';
+//               req.getConnection(function(err,connection){
+//                 connection.query(queryUpdateUserPhoto,[direktoriPhoto,user_id],function(err,results){
+//                     if(err)
+//                       console.log("Error Selecting : %s ", err);
+//                     else if(results.length){
+//                       res.json({status: 404, message: 'User ID not Found' });
+//                     }
+//                     else{
+//                       res.json({status: 200 , message: 'Success Update Photo User',picture : direktoriPhoto});   
+//                     }
+//                 });
+//               });
+//             }
+//           });
+//       }
+// }
+
+
+
+// //api/user/upload/userphoto
+// uploadController.uploadUser =  (req, res) => {    
+//   var ImageSaver   = require('image-saver-nodejs');
+//   var imageSaver  = new ImageSaver();
+//   var pictname  = 'UserPhoto-'+req.params.user_id+".jpg"
+//   var direktori = './public/uploads/userphoto/'
+//   var user_id = req.params.user_id
+//   //console.log('asdasd',pictname)    
+//     if(!req.params.user_id){
+//          res.json({status: 400, message: 'User id gak ada',});
+//     }else{
+//         var querySelectUser  = 'SELECT * FROM user WHERE user_id = ? '       
+//         req.getConnection(function(err,connection){
+//           connection.query(querySelectUser,[user_id],function(err,rows){ //get pemandu id
+//                 if(err)
+//                    console.log("Error Selecting : %s ", err);
+//                 if(rows){    
+//                    var dataUser = rows[0];
+//                       res.json({status:200,message:'picturegaada',rows:dataUser});
+                   
+//                    if (dataUser.photo != null){
+//                       fs.unlinkSync(direktori+pictname);                        
+//                    }                   
+//                    imageSaver.saveFile("./public/uploads/userphoto/"+pictname, req.body.picture).then((data)=>{
+//                      var direktoriPhoto = savedbdirektori + pictname
+//                      var queryUpdateUserPhoto = 'UPDATE user SET photo = ? WHERE user_id = ?';
+//                      req.getConnection(function(err,connection){
+//                         connection.query(queryUpdateUserPhoto,[direktoriPhoto,user_id],function(err,results){
+//                             if(err)
+//                               console.log("Error Selecting : %s ", err);
+//                             else if(results.length){
+//                               res.json({status: 404, message: 'User ID not Found' });
+//                             }
+//                             else{
+//                               res.json({status: 200 , message: 'Success Update Photo User',picture : direktoriPhoto});   
+//                             }
+//                         });
+//                       });
+//                    }).catch((err)=>{
+//                       res.status(400).json({status:400,message:err,token:req.token});
+//                    })
+//                    if(!req.body.picture){
+//                       res.json({status:200,message:'picturegaada',rows:rows});
+//                    }                       
+//                 }else{              
+//                    res.json({status:200,message:'gagal',rows:rows});
+//                 }
+//           });
+//          });
+//     }   
+// }
+
 //api/user/upload/userphoto
-uploadController.userPhoto = async (req, res) => {        
-          
-          if(!req.body.user_id){
-             res.json({status: 400, message: 'User id gak ada',});
-          }else{
-            var user_id = req.body.user_id
-          var newNameUpload;
-          var direktori = './public/uploads/userphoto/';
-          var savedbdirektori = './public/uploads/userphoto/';
-          //Destination storage
-          var storage = multer.diskStorage({      
-            destination: direktori,
-            filename: function (req, file, callback) {
-              newNameUpload = file.fieldname + '-' + user_id +'-'+ file.originalname
-              callback(null, newNameUpload);
-            }
-          });
-
-          // multer buat fungsi upload
-          var upload = multer({ 
-              storage : storage,
-              fileFilter: function (req, file, callback) {
-                var ext = path.extname(file.originalname).toLowerCase();
-                if(ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
-                    return callback(new Error('Only images are allowed'))
-                }
-                callback(null, true)
-              },
-              limits: {          
-                fileSize: 5 * 1024 * 1024 // mendefinisikan file size yang bisa diupload 5 MB
-              } 
-          }).single('UserPhoto');
-
-          //upload function
-          upload(req, res, function(err) {
-            // console.log(err, 'Im in post , inside upload'+path);
-            if(err) {
-              if (err.code == 'LIMIT_FILE_SIZE') {
-                res.status(400).json({status: false, message: 'File berukuran melebihi yang diizinkan.', err: err});
-              } else {
-                res.status(500).json({status: false, message: 'File gagal diunggah.', err: err});
-              }
-            } else if (req.file == null || req.file == 0) {
-              res.status(400).json({status: false, message: 'File kosong, silahkan pilih file kembali'});
-            } else {
-              var direktoriPhoto = savedbdirektori + newNameUpload
-              var queryUpdateUserPhoto = 'UPDATE user SET photo = ? WHERE user_id = ?';
+uploadController.userPhoto = async (req, res) => {    
+     if(!req.params.user_id){
+         res.json({status: 400, message: 'User id gak ada',});
+      }else if(!req.body.img){
+         res.json({status: 400, message: 'img ga ada',});
+      }else{        
+        var user_id = req.params.user_id
+        var img64string = req.body.img
+        let base64Image = img64string.split(';base64,').pop();
+        var newNameUpload;      
+        var pictname  = 'UserPhoto-'+req.params.user_id+".jpg"
+        var direktori = './public/uploads/userphoto/'
+        var newpict = direktori+pictname        
+        //console.log('asdasd',pictname)          
+          var querySelectUser  = 'SELECT * FROM user WHERE user_id = ? '       
               req.getConnection(function(err,connection){
-                connection.query(queryUpdateUserPhoto,[direktoriPhoto,user_id],function(err,results){
-                    if(err)
-                      console.log("Error Selecting : %s ", err);
-                    else if(results.length){
-                      res.status(404).json({ message: 'User ID not Found' });
-                    }
-                    else{
-                      res.status(200).json({status: true , message: 'Success Update Photo User',picture : direktoriPhoto});   
-                    }
+                connection.query(querySelectUser,[user_id],function(err,rows){ //get pemandu id
+                      if(err)
+                         console.log("Error Selecting : %s ", err);
+                      if(rows){    
+                         var dataUser = rows[0];                                                   
+                         if (dataUser.photo != null){
+                            fs.unlinkSync(direktori+pictname);                        
+                         }
+                         fs.writeFile(newpict, base64Image, {encoding: 'base64'}, function(err) {
+                              console.log('File created');
+                              res.json({status:200,message:'sukses'});
+
+                         });                                          
+                      }else{              
+                         res.json({status:200,message:'gagal',rows:rows});
+                      }
                 });
               });
-            }
-          });
-          }
+  }
 }
+
 
 //api/user/upload/userphoto
 uploadController.homestayMultiplePhoto = async (req, res) => {             

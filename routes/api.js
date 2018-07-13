@@ -100,8 +100,12 @@ var APIRoutes = function () {
     router.post('/user/upload/buktipembayaran/barang/:transaction_id',uploadController.buktiPembayaranBarang);
     router.post('/user/upload/buktipembayaran/homestay/:transaction_id',uploadController.buktiPembayaranHomestay);
     router.post('/user/upload/buktipembayaran/jasa/:transaction_id',uploadController.buktiPembayaranJasa);
-    router.post('/user/upload/userphoto',uploadController.userPhoto);
+    // router.post('/user/upload/userphoto/:user_id',uploadController.userPhoto);
+    // router.post('/user/upload/uploaduser/:user_id',uploadController.uploadUser);
+    router.post('/user/upload/userphoto/:user_id',uploadController.userPhoto);
+
     router.post('/pemandu/upload/homestay/:homestay_id',uploadController.homestayMultiplePhoto);
+    router.post('/user/upload/userphotocoba',uploadController.uploadUser);
 
 
     //Alamat 
@@ -118,7 +122,6 @@ var APIRoutes = function () {
     router.get('/picture/homestay/:idhomestay',pictureController.getHomestayPictures);
     router.get('/picture/jasa/:idjasa',pictureController.getJasaPictures)
     router.get('/picture/barang/:idbarang',pictureController.getBarangPictures)
-
     //Diskusi 
     router.get('/diskusi/produk/:produk_id',diskusiController.getDiskusiProduk);
     router.get('/diskusi/homestay/:produk_id',diskusiController.getDiskusiHomestay);

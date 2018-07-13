@@ -87,7 +87,7 @@ book review pay
 
 ionic :
 
-upload foto belum kelar
+upload foto belum kelar (upload foto profile sudah, upload buktipembayaran belum)
 kelarin transaksi homestay sampai selesai order (sudah)
 kelarin transaksi barang (sudah)
 kelarin transaksi jasa (sudah)
