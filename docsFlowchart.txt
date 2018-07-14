@@ -87,13 +87,13 @@ book review pay
 
 ionic :
 
-upload foto belum kelar (upload foto profile sudah, upload buktipembayaran belum)
+upload foto belum kelar (upload foto profile sudah, upload buktipembayaran sudah (apinya sudah dibenerin))
 kelarin transaksi homestay sampai selesai order (sudah)
 kelarin transaksi barang (sudah)
 kelarin transaksi jasa (sudah)
 
 task to do :
-history (baru listing transaksi active dan history dan detail, belum option perubahan status), 
+history (baru listing transaksi active dan history dan detail, belum option perubahan status(SUDAH)), 
 melihat artikel sama event, 
 review(sudah, tapi belum add review karena nunggu history dulu)
 diskusi dan commentdiskusi (sudah, delete sudah) DONE

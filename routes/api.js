@@ -97,15 +97,20 @@ var APIRoutes = function () {
 
     
     // Router Upload
-    router.post('/user/upload/buktipembayaran/barang/:transaction_id',uploadController.buktiPembayaranBarang);
-    router.post('/user/upload/buktipembayaran/homestay/:transaction_id',uploadController.buktiPembayaranHomestay);
-    router.post('/user/upload/buktipembayaran/jasa/:transaction_id',uploadController.buktiPembayaranJasa);
+    router.post('/user/upload/userphoto',uploadController.userPhoto);
+    router.post('/user/upload/buktipembayaran/homestay',uploadController.fotoPembayaranHomestay);
+    router.post('/user/upload/buktipembayaran/barang',uploadController.fotoPembayaranProduk);
+    router.post('/user/upload/buktipembayaran/jasa',uploadController.fotoPembayaranJasa);
+    // router.post('/user/upload/buktipembayaran/barang/:transaction_id',uploadController.buktiPembayaranBarang);
+    // router.post('/user/upload/buktipembayaran/homestay/:transaction_id',uploadController.buktiPembayaranHomestay);
+    // router.post('/user/upload/buktipembayaran/jasa/:transaction_id',uploadController.buktiPembayaranJasa);
     // router.post('/user/upload/userphoto/:user_id',uploadController.userPhoto);
     // router.post('/user/upload/uploaduser/:user_id',uploadController.uploadUser);
-    router.post('/user/upload/userphoto/:user_id',uploadController.userPhoto);
+   
+
 
     router.post('/pemandu/upload/homestay/:homestay_id',uploadController.homestayMultiplePhoto);
-    router.post('/user/upload/userphotocoba',uploadController.uploadUser);
+    //router.post('/user/upload/userphotocoba',uploadController.uploadUser);
 
 
     //Alamat 
