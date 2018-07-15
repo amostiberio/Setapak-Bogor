@@ -70,17 +70,60 @@ status homestay
 (status 4 = User sudah pakai homestay) [Actor : user, konfirmasiPemakaianKelar]
 (status 5 = Admin sudah transfer uang ke pemandu + transaksi selesai) [Actor : admin, dibayar]
 
-#current kerjaan
+#current kerjaan API NODE JS (Amos)
 uplaod multiple pictures //tugas emiel
-
+emailcontroller pas sudah bayar
 
 #jasa
 slot di hapus, diganti avail atau enggak
 nanya di transaksi
 sistemnya kayak gojek
 
+#homestay
+book review pay
+
+
+#current kerjaan IONIC (Amos)
+
+ionic :
+
+upload foto belum kelar (upload foto profile sudah, upload buktipembayaran sudah (apinya sudah dibenerin))
+kelarin transaksi homestay sampai selesai order (sudah)
+kelarin transaksi barang (sudah)
+kelarin transaksi jasa (sudah)
+
+task to do :
+history (baru listing transaksi active dan history dan detail, belum option perubahan status(SUDAH)), 
+melihat artikel sama event, 
+review(sudah, tapi belum add review karena nunggu history dulu)
+diskusi dan commentdiskusi (sudah, delete sudah) DONE
+
+
+cari info buat refresher, appcm, dan filter list
+buat realtime app cm ionic
+
+api:
+
+advanced ionic 2 component
+
+ruang lingkup
+
+ionic notes:
+refresher ada di portal harga master pengetahuan artikel
 
 
 
-#current kerjaan
-ionic : login dan simpan ke storage
+sql:
+
+diskusi_id
+user_id
+produk_id
+tipe_produk
+isi_diskusi
+created_date
+
+comment_id
+diskusi_id
+user_id
+isi_comment
+created_date

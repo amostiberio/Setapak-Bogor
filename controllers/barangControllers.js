@@ -24,12 +24,12 @@ barangController.getOneBarang = (req, res) => {
 					               console.log("Error Selecting : %s ", err);
 					            if(rows.length){
 									var dataPemandu = rows[0]
-									res.status(200).json({status: true, message: 'Select Barang', dataBarang, dataPemandu});					             					         
+									res.json({status: 200, message: 'Sukses Get Data Barang', dataBarang: dataBarang, dataPemandu : dataPemandu});					             					         
 					            }
 					    	});
 					    });
 	            }else{
-					res.status(401).json({status: false, message: 'Barang tidak ditemukan (Missing ID)'});
+					res.json({status: 401, message: 'Barang tidak ditemukan (Missing ID)'});
 				}
 	    	});
 	    });
@@ -63,6 +63,38 @@ barangController.getPemanduBarang = (req, res) => {
 	            }
 	    	});
 	    });   
+}
+
+barangController.searchBarang  = (req, res) =>{
+ var querySelectAllBarang = 'SELECT * FROM barang WHERE status_avail = ?'
+ var querySelectBarangKeyword = 'SELECT * FROM barang WHERE status_avail = ? AND nama_barang Like ? ORDER BY nama_barang'
+ 	 if(req.body.keyword != null && req.body.keyword != ''){
+ 	 	var keyword = req.body.keyword
+ 		req.getConnection(function(err,connection){
+			connection.query(querySelectBarangKeyword,[1,'%' + keyword + '%'],function(err,results){
+				if(err){
+					console.log("Error Selecting : %s ", err);
+				}else if(results.length){
+					res.json({status:200,message:'Search Suksesa', data: results});	
+				}else{
+					res.json({status:404, message: 'Tidak ditemukan barang dengan keyword tersebut' });
+				}
+			});
+		});
+ 	}else{
+ 		req.getConnection(function(err,connection){
+			connection.query(querySelectAllBarang,[1],function(err,results){
+				if(err){
+					console.log("Error Selecting : %s ", err);
+				}else if(results.length){
+					res.json({status:200,message:'Search Sukses', data: results});								
+				}else{
+					res.json({status:404, message: 'Tidak ada Barang yang tersedia' });
+				}					
+				
+			});
+		});
+ 	}
 }
 
 module.exports = barangController;

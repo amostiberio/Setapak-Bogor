@@ -6,7 +6,7 @@ var multer = require('multer');
 var path = require('path');
 var token;
 
-// Get View Homestay Satu Pemandu //router = api/homestay/:homestay_id
+// Get View Homestay Satu Pemandu //router = api/jasa/:jasa_id
 jasaController.getOneJasa = (req, res) => {
 	var jasa_id = req.params.jasa_id
 	var querySelectJasa  = 'SELECT * FROM jasa WHERE jasa_id = ?'
@@ -33,7 +33,7 @@ jasaController.getOneJasa = (req, res) => {
 											   console.log("Error Selecting : %s ", err);
 											if(alamatCategory.length){
 												 var dataAlamatCategory = alamatCategory[0]
-												 res.status(200).json({status: true, message: 'Select Jasa', dataJasa, dataPemandu, dataAlamatCategory});					         
+												 res.json({status: 200, message: 'Get Data Jasa Berhasil', dataJasa: dataJasa, dataPemandu: dataPemandu, dataAlamatCategory: dataAlamatCategory});					         
 											}
 										});
 									});					         
@@ -41,7 +41,7 @@ jasaController.getOneJasa = (req, res) => {
 					    	});
 					    });
 	            }else{
-					res.status(401).json({status: false, message: 'Jasa tidak ditemukan (Missing ID)'});
+					res.json({status: 401, message: 'Jasa tidak ditemukan (Missing ID)'});
 				}
 	    	});
 	    });
@@ -76,6 +76,58 @@ jasaController.getPemanduJasa = (req, res) => {
 	            }
 	    	});
 	    });   
+}
+
+
+//route = api/jasa/search
+jasaController.searchJasa  = (req, res) =>{
+ var provinsi = req.body.provinsi,
+	 kabupaten = req.body.kabupaten,
+	 kecamatan = req.body.kecamatan
+ var batasAtas = req.body.upper,
+     batasBawah = req.body.lower
+ var querySelectJasa = 'SELECT * FROM jasa'
+ var querySelectAlamatCategory = 'SELECT alamatcategory_id FROM alamatcategory WHERE provinsi = ? AND kabupaten = ? AND kecamatan = ?'
+ var querySearchJasaAlamatPrice = 'SELECT * FROM jasa WHERE status_avail = ? AND alamatcategory_id = ? AND harga_jasa BETWEEN ? AND ?'
+ 	 if(provinsi||kabupaten||kecamatan){
+ 		req.getConnection(function(err,connection){
+			connection.query(querySelectAlamatCategory,[provinsi,kabupaten,kecamatan],function(err,results){
+				if(err){
+					console.log("Error Selecting : %s ", err);
+				}else if(!results){
+					res.json({status:404, message: 'Alamat Category not Found' });
+				}else{
+					var alamatcategory_id = results[0].alamatcategory_id					
+					req.getConnection(function(err,connection){
+						connection.query(querySearchJasaAlamatPrice,[1,alamatcategory_id,batasBawah,batasAtas],function(err,results){
+							if(err){
+								console.log("Error Selecting : %s ", err);
+							}else if(results.length){
+								res.json({status:200,message:'Search Sukses', data: results});								
+							}else{
+								res.json({status:404, message: 'Tidak ada Jasa yang tersedia' });
+							}				
+							
+						});
+					});
+						
+				}
+			});
+		});
+ 	}else{
+ 		req.getConnection(function(err,connection){
+			connection.query(querySelectJasa,function(err,results){
+				if(err){
+					console.log("Error Selecting : %s ", err);
+				}else if(results.length){
+					res.json({status:200,message:'Search Sukses', data: results});								
+				}else{
+					res.json({status:404, message: 'Tidak ada Jasa yang tersedia' });
+				}					
+				
+			});
+		});
+ 	}
 }
 
 module.exports = jasaController;
