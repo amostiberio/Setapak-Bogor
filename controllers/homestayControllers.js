@@ -405,7 +405,7 @@ homestayController.searchHomestay = (req, res) =>{
 }
 
 //api/homestay/uploadphoto
-homestayController.uploadPhoto = async (req, res) => {        
+homestayController.uploadPhoto = async(req, res) => {        
     if(!req.headers.authorization) {
         res.status(401).json({status: false, message: 'Please Login !'});
     } else if(!req.params.homestay_id){

@@ -18,6 +18,14 @@ var emailController = require('../controllers/emailControllers');
 var alamatController = require ('../controllers/alamatControllers')
 //var notifikasiController = require('../controllers/notifikasiControllers');
 
+
+//**************// Dibawah ini routes pemandu
+
+var homestayPemanduController = require('../controllers/pemandu/homestayController');
+router.post('/create/homestay/post', homestayPemanduController.pemanduAddHomestay);
+
+//**************//
+
 var APIRoutes = function () {
 
 
