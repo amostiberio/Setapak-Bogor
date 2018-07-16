@@ -1,7 +1,11 @@
 var registpemanduController = {}
 var shortcutFunction = require('../programs/shortcutFunction')
+var authController = require("../authControllers")
+var secret = require('../settings/jwt').secret
+var jwt = require('jsonwebtoken');
 
-registpemanduController.register = (req, res) => {
+registpemanduController.register = function(req, res) {
+    console.log("Masuk Sini")
     var payload = shortcutFunction.authToken();
         currentUserId = payload.user_id
         provinsi = "Jawa Barat"
@@ -28,11 +32,12 @@ registpemanduController.register = (req, res) => {
                 if(row.length) {
                     daerahalamat_id = row[0].alamatcategory_id
                     req.getConnection(function(err, conn) {
-                        conn.query(queryWriteRegisPemandu, [user_id, daerahalamat_id, nama_company, alamat, deskripsi, 90, 0, "tes/img/ini hanya tes/asik.jpg"], function(err, result) {
+                        conn.query(queryWriteRegisPemandu, [user_id, daerahalamat_id, nama_company, alamat, deskripsi, 90, 0, "tes/img/ini hanya tes/asik.jpg"], function(err, res) {
                             if(err) {
                                 console.log(err)
                             }
                             else {
+                                console.log(result);
                                 res.status(200).json({ status: true ,message: 'Sukses Mendaftar' });
                             }
                         })

@@ -24,21 +24,21 @@ var reviewController = require ('../controllers/reviewControllers');
 
 //var notifikasiController = require('../controllers/notifikasiControllers');
 
-
-//**************// Dibawah ini routes pemandu
-
 var homestayPemanduController = require('../controllers/pemandu/homestayController');
 var registpemanduController = require("../controllers/pemandu/registpemanduController");
-
-router.post('/create/homestay/post', homestayPemanduController.pemanduAddHomestay);
-router.post('/create/regispemandu/post', registpemanduController.register);
-
-//**************//
+var pemanduController = require("../controllers/pemandu/pemanduController");
 
 var APIRoutes = function () {
 
-
-    // Router Auth
+    //**************// Dibawah ini routes pemandu
+    router.post('/homestay/create/post', homestayPemanduController.pemanduAddHomestay);
+    router.post('/regispemandu/create/post', function(req, res) {
+        registpemanduController.register
+    });
+    router.get('/pemandu/homestay', function(req,res) {
+        pemanduController.getPemanduProfile
+    });
+    //**************//
 
     // Router User
     router.get('/user/profile/:user_id', wisatawanController.getUserData);

@@ -1,5 +1,5 @@
 var homestayController = {}
-var secret = require('./settings/jwt').secret
+var secret = require("./settings/jwt").secret
 var shortcutFunction = require('./programs/shortcutFunction')
 var jwt = require('jsonwebtoken');
 var multer = require('multer');
