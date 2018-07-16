@@ -21,7 +21,19 @@ var diskusiController = require ('../controllers/diskusiControllers');
 var commentDiskusiController = require ('../controllers/commentDiskusiControllers');
 var reviewController = require ('../controllers/reviewControllers');
 
+
 //var notifikasiController = require('../controllers/notifikasiControllers');
+
+
+//**************// Dibawah ini routes pemandu
+
+var homestayPemanduController = require('../controllers/pemandu/homestayController');
+var registpemanduController = require("../controllers/pemandu/registpemanduController");
+
+router.post('/create/homestay/post', homestayPemanduController.pemanduAddHomestay);
+router.post('/create/regispemandu/post', registpemanduController.register);
+
+//**************//
 
 var APIRoutes = function () {
 
