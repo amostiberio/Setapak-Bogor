@@ -98,6 +98,7 @@ melihat artikel sama event,
 review(sudah, tapi belum add review karena nunggu history dulu)
 diskusi dan commentdiskusi (sudah, delete sudah) DONE
 
+review(benerin add review dari ionic dan view ionicnya)
 
 cari info buat refresher, appcm, dan filter list
 buat realtime app cm ionic

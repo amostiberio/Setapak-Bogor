@@ -144,6 +144,7 @@ var APIRoutes = function () {
     //Review 
     router.post('/review/average',reviewController.countAvgReview);
     router.post('/review/all',reviewController.dataReviewsProduk);
+    router.post('/review/addreview',reviewController.addReview);
 
     // Email Controller
     router.post('/forgetpassword',emailController.forgetPassword);
